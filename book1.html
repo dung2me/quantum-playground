@@ -81,9 +81,17 @@ h2{margin:0;font-size:30px;font-weight:400}
 .look{margin:0;font-size:18px;color:#7a4a00;background:#fff8d6;border-radius:14px;padding:8px 14px}
 #ntext{margin:0;font-size:34px;line-height:1.4}
 #ntext .term{display:inline-block;background:#fef3c7;color:#92400e;border:3px solid #f59e0b;border-radius:16px;padding:2px 16px;font-size:40px}
+#ntext .formal{display:block;margin-top:6px;font-size:18px;color:var(--sub)}
 #nsub{margin:0;font-size:21px;color:var(--sub);line-height:1.5}
 #nsub .habit{display:block;margin-top:10px;background:#ecfdf5;color:#065f46;border:2px solid #a7f3d0;border-radius:14px;padding:8px 14px;font-size:20px}
-#adult{margin:0;font-size:14px;color:var(--sub);font-family:system-ui,'Malgun Gothic',sans-serif;line-height:1.5}
+#adult{margin:0;font-size:14px;color:var(--sub);font-family:system-ui,'Malgun Gothic',sans-serif;line-height:1.55;display:flex;flex-direction:column;gap:6px}
+#adult .ad-h{color:var(--ink);font-weight:600}
+#adult ul{margin:2px 0 0;padding-left:18px}
+#adult li{margin:2px 0}
+#adult .ad-life{background:#f1f5f9;border-radius:10px;padding:6px 10px}
+#adult details{border-top:1px dashed var(--line);padding-top:4px}
+#adult summary{cursor:pointer;color:var(--accent);font-weight:600}
+#adult .ad-map,#adult .ad-more{margin-top:4px}
 nav{display:flex;justify-content:space-between;gap:10px;margin-top:auto}
 nav button{font:inherit;font-size:21px;padding:12px 22px;border-radius:18px;border:3px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
 nav button.go{border-color:var(--accent);background:var(--accent);color:#fff}
@@ -181,7 +189,7 @@ button:focus-visible{outline:4px solid #2b7fff;outline-offset:2px}
     <div id="name" class="mode">
       <p id="ntext"></p>
       <p id="nsub"></p>
-      <p id="adult"></p>
+      <div id="adult"></div>
       <div class="row"><button class="sbtn" id="againBtn">🎬 처음부터 다시 보기</button><button class="pbtn" id="nnextBtn">다음 이야기 ▶</button></div>
     </div>
     <nav>
@@ -480,6 +488,97 @@ function molecule(atoms, bonds = [], s = 1, face = false) {
 }
 // 물 분자 H₂O (산소 가운데)
 const water = (s = 1, face = false) => molecule([['O', 0, 0, 0], ['H', -.55, -.42, 0], ['H', .55, -.42, 0]], [[0, 1], [0, 2]], s, face);
+
+// ════════ 구슬 기차 (생물물리 2권 공통 그림말) ════════
+// nucCar('A') : DNA 글자 한 칸 = 기차 한 칸. +x 쪽이 진행 방향(5′→3′).
+//  보라 오각형 몸통(당), 왼쪽 파란 공 = 머리(5′, 인산), 오른쪽 주황 고리 = 꼬리(3′, 새 칸이 붙는 곳), 아래로 색 막대 = 글자(염기).
+//  car.rotation.z = Math.PI 로 뒤집으면 반대 방향 줄(역평행, 글자가 위를 봐요). 칸 사이 간격 CAR_GAP.
+const CAR_GAP = .56;
+const _carGeo = {};
+function nucCar(base = 'A', { s = 1, letter = false, body = '#c4b5fd' } = {}) {
+  const k = 'g' + s;
+  const G = _carGeo[k] || (_carGeo[k] = {
+    body: new THREE.CylinderGeometry(.2 * s, .2 * s, .16 * s, 5), head: new THREE.SphereGeometry(.085 * s, 14, 10),
+    hook: new THREE.TorusGeometry(.065 * s, .025 * s, 8, 16), stick: new THREE.CylinderGeometry(.075 * s, .075 * s, .44 * s, 12), cap: new THREE.SphereGeometry(.09 * s, 12, 8),
+  });
+  const g = new THREE.Group();
+  const b = new THREE.Mesh(G.body, mat(body)); b.rotation.x = Math.PI / 2; b.rotation.y = Math.PI / 10;
+  const h = new THREE.Mesh(G.head, mat('#38bdf8')); h.position.set(-.27 * s, 0, 0);
+  const t = new THREE.Mesh(G.hook, mat('#fb923c')); t.position.set(.27 * s, 0, 0); t.rotation.y = Math.PI / 2;
+  const c = BASE[base] || '#999', st = new THREE.Mesh(G.stick, mat(c)); st.position.set(0, -.36 * s, 0);
+  const cp = new THREE.Mesh(G.cap, mat(c)); cp.position.set(0, -.58 * s, 0);
+  g.add(b, h, t, st, cp);
+  if (letter) { const l = label(base, .3 * s, '#fff'); l.position.set(0, -.36 * s, .12 * s); g.add(l); g.userData.letter = l; }
+  Object.assign(g.userData, { base, head: h, hook: t, stick: st, cap: cp, bodyMesh: b });
+  return g;
+}
+// trainStrand('ATGC', {x0, y, flip}) → { group, cars, n }. flip=true 면 반대 방향(오른쪽이 5′) 줄
+function trainStrand(seq, { x0 = null, y = 0, z = 0, flip = false, letter = false, s = 1 } = {}) {
+  const g = new THREE.Group(), n = seq.length, start = x0 ?? -(n - 1) * CAR_GAP * s / 2;
+  const cars = [...seq].map((ch, i) => { const c = nucCar(ch, { s, letter }); c.position.set(start + i * CAR_GAP * s, y, z); if (flip) c.rotation.z = Math.PI; g.add(c); return c; });
+  return { group: g, cars, n, x: i => start + i * CAR_GAP * s };
+}
+
+// ════════ 7세판 공통: 동물 친구 · 장난감 블록 · 바닥 ════════
+// animal('bear'|'rabbit'|'pig'|'dog'|'cat'|'sheep', 색, 크기) → 발바닥 y=0, 앞(+z)을 봐요. 키 약 1.2*s
+//  userData: head, armL, armR(어깨에서 돌리면 손 흔들기: armR.rotation.z = -1.2 등), body
+function animal(kind = 'bear', c = '#c68642', s = 1, { belly = '#fff3e0', ear2 = null } = {}) {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const bd = ball(.32 * s, c, 0, .4 * s, 0); bd.scale.set(1, 1.1, .9); body.add(bd);
+  const bl = ball(.2 * s, belly, 0, .38 * s, .17 * s); bl.scale.set(1, 1.15, .5); body.add(bl);
+  for (const k of [-1, 1]) { const f = ball(.11 * s, c, k * .14 * s, .07 * s, .06 * s); f.scale.set(1, .6, 1.3); body.add(f); }
+  const arms = [-1, 1].map(k => { const a = new THREE.Group(); a.position.set(k * .28 * s, .55 * s, .02 * s); const h = ball(.09 * s, c, k * .08 * s, -.12 * s, 0); h.scale.set(.9, 1.4, .9); a.add(h); body.add(a); return a; });
+  const head = new THREE.Group(); head.position.set(0, .95 * s, 0); body.add(head);
+  const fc = kind === 'sheep' ? '#f5e1c8' : c; head.add(ball(.28 * s, fc));
+  for (const k of [-1, 1]) {
+    head.add(ball(.037 * s, '#1f2937', k * .095 * s, .05 * s, .245 * s), ball(.013 * s, '#ffffff', k * .095 * s + .012 * s, .065 * s, .275 * s));
+    const ck = ball(.045 * s, '#fda4af', k * .17 * s, -.04 * s, .2 * s); ck.scale.set(1, .6, .4); head.add(ck);
+    const ec = ear2 || c;
+    if (kind === 'bear') head.add(ball(.09 * s, ec, k * .19 * s, .2 * s, -.02 * s));
+    if (kind === 'rabbit') { const e = ball(.07 * s, ec, k * .1 * s, .42 * s, -.02 * s); e.scale.set(1, 3, .7); e.rotation.z = -k * .12; head.add(e); const ei = ball(.04 * s, '#fbcfe8', k * .1 * s, .42 * s, .03 * s); ei.scale.set(1, 3, .5); ei.rotation.z = -k * .12; head.add(ei); }
+    if (kind === 'pig' || kind === 'cat') { const e = mesh(new THREE.ConeGeometry(.08 * s, .17 * s, 12), ec, k * .16 * s, .26 * s, 0); e.rotation.z = -k * .35; head.add(e); }
+    if (kind === 'dog') { const e = ball(.09 * s, ec, k * .26 * s, .02 * s, -.02 * s); e.scale.set(.55, 1.5, .8); e.rotation.z = k * .25; head.add(e); }
+    if (kind === 'sheep') { for (let q = 0; q < 4; q++) head.add(ball(.1 * s, '#ffffff', k * (.08 + .07 * q) * s, (.24 - .05 * q) * s, -.04 * s)); }
+  }
+  if (kind === 'pig') { const sn = cyl(.08 * s, .08 * s, .06 * s, '#f9a8d4', 0, -.05 * s, .27 * s); sn.rotation.x = Math.PI / 2; head.add(sn); }
+  else if (kind === 'sheep') { head.add(ball(.03 * s, '#7c4a2d', 0, -.04 * s, .275 * s)); for (let q = 0; q < 7; q++) bd.add(ball(.14, '#ffffff', Math.cos(q) * .26, .05 + .2 * Math.sin(q * 2), Math.sin(q) * .2)); }
+  else { const mz = ball(.1 * s, kind === 'bear' || kind === 'dog' ? '#f5deb3' : fc, 0, -.06 * s, .2 * s); mz.scale.set(1.1, .8, .8); head.add(mz, ball(.035 * s, '#3b2a1a', 0, -.03 * s, .29 * s)); }
+  const sm = mesh(new THREE.TorusGeometry(.045 * s, .011 * s, 6, 12, Math.PI), '#3b2a1a', 0, -.1 * s, .275 * s); sm.rotation.z = Math.PI; head.add(sm);
+  g.userData = { head, armL: arms[0], armR: arms[1], body, kind };
+  return g;
+}
+// 걷는 흔들림: t초, 세기
+const waddle = (a, t, k = 1) => { a.userData.body.rotation.z = .08 * k * Math.sin(t * 9); a.userData.body.position.y = .03 * k * Math.abs(Math.sin(t * 9)); };
+// 바닥 (생활 장면용): floor(가로, 세로, 색)
+const floor = (w = 10, d = 5, c = '#fde7c4') => box(w, .1, d, c, 0, -.05, 0);
+
+// toyCar('A') : 7세판 DNA 장난감 블록 한 칸. +x 진행 방향.
+//  왼쪽 파란 자석 = 머리(5′), 오른쪽 주황 고리 = 꼬리(3′), 아래 퍼즐 모양 = 글자:
+//  A ▼ 꽉 찬 세모  ↔  T ▽ 세모 테두리(구멍)  /  G ● 꽉 찬 동그라미  ↔  C ○ 동그라미 테두리(구멍)
+//  짝은 모양이 같아서 쏙 들어가요. rotation.z = Math.PI 면 반대 방향 줄(모양이 위).
+const TOY_GAP = .64;
+function toyCar(base = 'A', { s = 1, face = false } = {}) {
+  const g = new THREE.Group(), c = BASE[base] || '#999';
+  const body = box(.48 * s, .34 * s, .34 * s, c); g.add(body);
+  const top = box(.5 * s, .06 * s, .36 * s, '#ffffff', 0, .19 * s, 0); setOpacity(top, .55); g.add(top);
+  const head = cyl(.1 * s, .1 * s, .07 * s, '#3b82f6', -.28 * s, 0, 0); head.rotation.z = Math.PI / 2; g.add(head);
+  const hook = mesh(new THREE.TorusGeometry(.07 * s, .025 * s, 8, 16), '#f97316', .31 * s, 0, 0); hook.rotation.y = Math.PI / 2; g.add(hook);
+  const stem = cyl(.04 * s, .04 * s, .12 * s, c, 0, -.22 * s, 0); g.add(stem);
+  let shape;
+  if (base === 'A') { shape = cyl(.15 * s, .15 * s, .14 * s, c, 0, -.36 * s, 0); shape.geometry = new THREE.CylinderGeometry(.15 * s, .15 * s, .14 * s, 3); shape.rotation.x = Math.PI / 2; }
+  else if (base === 'G') { shape = cyl(.13 * s, .13 * s, .14 * s, c, 0, -.38 * s, 0); shape.rotation.x = Math.PI / 2; }
+  else if (base === 'T') { shape = mesh(new THREE.TorusGeometry(.16 * s, .035 * s, 6, 3), c, 0, -.37 * s, 0); shape.rotation.z = Math.PI / 2; }
+  else { shape = mesh(new THREE.TorusGeometry(.14 * s, .035 * s, 8, 28), c, 0, -.38 * s, 0); }
+  g.add(shape);
+  if (face) for (const k of [-1, 1]) g.add(ball(.035 * s, '#1f2937', k * .09 * s, .04 * s, .175 * s));
+  Object.assign(g.userData, { base, body, head, hook, shape, stem });
+  return g;
+}
+function toyStrand(seq, { x0 = null, y = 0, z = 0, flip = false, s = 1, face = false } = {}) {
+  const g = new THREE.Group(), n = seq.length, start = x0 ?? -(n - 1) * TOY_GAP * s / 2;
+  const cars = [...seq].map((ch, i) => { const c = toyCar(ch, { s, face }); c.position.set(start + i * TOY_GAP * s, y, z); if (flip) c.rotation.z = Math.PI; g.add(c); return c; });
+  return { group: g, cars, n, x: i => start + i * TOY_GAP * s };
+}
 
 // ── 00_book.js ──
 // META {"TITLE":"양자물리 놀이터 · 첫째 권","DESC":"원자와 분자, 우주와 땅속과 플라스틱 속 원자를 움직이는 3D 영상으로 보는 아이용 교재","H1":"⚛️ 양자물리 놀이터","LV":"첫째 권 · 원자 세상","BG":"#eef4ff","STAGEBG":"#dde9ff","ACCENT":"#2563eb","ACCENT2":"#93c5fd","LVC":"#1d4ed8"}
@@ -1621,14 +1720,22 @@ resize(); new ResizeObserver(resize).observe(stage);
 
 let cur = 0, group = null, draw = null, mode = 'watch', wstep = 0, phase = 1, nameSprite = null;
 let tPlay = 0, playing = true, speed = 1, seeking = false, zoomed = -1;
+let segLoop = null, segSi = 0, autoCam = true, camKey = -9; // 확대 구간 반복, 자동 카메라
 const SPEEDS = [[1, '🐇 보통'], [.5, '🐢 느리게'], [.25, '🐌 아주 느리게']]; let si = 0;
+function setSpeedIdx(i) { si = i; speed = SPEEDS[si][0]; $('#speedBtn').textContent = SPEEDS[si][1]; $('#speedBtn').setAttribute('aria-pressed', si > 0); }
+function endLoop() { if (segLoop) { segLoop = null; setSpeedIdx(segSi); } }
 const clock = new THREE.Clock(), solved = new Set();
 const phaseT = () => phase === 0 ? LESSONS[cur].T : LESSONS[cur].watch[phase - 1][1];
 const fmt = s => `${Math.floor(s)}초`;
 
 renderer.setAnimationLoop(() => {
   const dt = Math.min(clock.getDelta(), .1);
-  if (playing && !seeking) tPlay = (tPlay + dt * speed) % phaseT();
+  if (playing && !seeking) {
+    tPlay += dt * speed;
+    if (segLoop) { if (tPlay > segLoop[1] || tPlay < segLoop[0]) tPlay = segLoop[0]; }
+    else tPlay %= phaseT();
+  }
+  runCam();
   controls.update(dt);
   if (draw) draw(tPlay, phase);
   if (!seeking) $('#seek').value = Math.round(tPlay / phaseT() * 1000);
@@ -1637,6 +1744,15 @@ renderer.setAnimationLoop(() => {
   renderer.render(scene, camera);
 });
 
+// ── 자동 카메라: draw.cam = { 2: [[초, 돋보기번호 | -1(전체)], ...] } → 큰 움직임을 보다가 정해진 순간에 다가가 작은 움직임을 보여 줘요 ──
+function runCam() {
+  const keys = draw?.cam?.[phase]; if (!keys || !autoCam || segLoop) return;
+  let k = -1; keys.forEach((c, i) => { if (c[0] <= tPlay) k = i; });
+  if (k === camKey) return;
+  const prev = camKey; camKey = k;
+  if (k === -1) { if (prev !== -9) home(.9); return; }
+  if (keys[k][1] < 0) home(1); else zoomSpot(keys[k][1], true);
+}
 function home(dur = 0) {
   const L = LESSONS[cur], [x, y, z] = L.cam || [0, 1.5, 9], [tx, ty, tz] = L.tgt || [0, 0, 0];
   const k = Math.max(1, (L.fit || 1.35) / camera.aspect); // 좁은 화면이면 뒤로 물러나 전체가 보이게
@@ -1652,31 +1768,42 @@ const spotsOf = () => (draw?.spots && (draw.spots[phase] || draw.spots.all)) || 
 function renderSpots() {
   const list = spotsOf(), box = $('#spots');
   box.replaceChildren(...list.map((s, i) => {
-    const b = document.createElement('button'); b.textContent = s[0]; b.className = zoomed === i ? 'on' : '';
+    const b = document.createElement('button'); b.textContent = s[0] + (zoomed === i && segLoop ? ' 🔁' : ''); b.className = zoomed === i ? 'on' : '';
     b.onclick = () => zoomSpot(i); return b;
-  }), ...(list.length ? [Object.assign(document.createElement('button'), { className: 'all', textContent: '🌍 전체', onclick: () => { home(.7); } })] : []));
+  }), ...(list.length ? [Object.assign(document.createElement('button'), { className: 'all', textContent: '🌍 전체', onclick: () => { autoCam = false; endLoop(); home(.7); } })] : []));
 }
-function zoomSpot(i) {
+//  6번째 칸(선택) { loop:[시작초, 끝초], slow:.5 } → 누르면 그 작은 움직임만 크게, 느리게 계속 되풀이 (🌍 전체 / ⏮ / 되감기 막대로 풀림)
+function zoomSpot(i, auto = false) {
   const s = spotsOf()[i]; if (!s) return;
+  const o = s[5] || {};
+  if (!auto) {
+    autoCam = false;
+    if (o.loop) { if (!segLoop) segSi = si; segLoop = o.loop; tPlay = o.loop[0]; setPlaying(true); if (o.slow) setSpeedIdx(Math.max(0, SPEEDS.findIndex(x => x[0] === o.slow))); }
+    else endLoop();
+  }
   zoomed = i; renderSpots();
   const to = Array.isArray(s[1]) ? V(...s[1]).applyMatrix4(group.matrixWorld) : s[1];
   controls.goTo(to, (s[2] || 2.5) * Math.max(1, 1.15 / camera.aspect), .8, s[4] || null);
   $('#hint').style.opacity = 0;
-  if (s[3]) { toast('🔍 ' + s[3]); say(s[3]); }
+  if (s[3] && !auto) { toast((o.loop ? '🔁 ' : '🔍 ') + s[3]); say(s[3]); }
 }
-controls.onUser = () => { $('#hint').style.opacity = 0; };
+controls.onUser = () => { $('#hint').style.opacity = 0; autoCam = false; };
 
 // ── 영상 조작 ──
 function setPlaying(v) { playing = v; $('#playBtn').textContent = v ? '⏸' : '▶'; $('#playBtn').setAttribute('aria-label', v ? '멈춤' : '재생'); }
 $('#playBtn').onclick = () => setPlaying(!playing);
-$('#restartBtn').onclick = () => { tPlay = 0; setPlaying(true); };
-$('#speedBtn').onclick = () => { si = (si + 1) % SPEEDS.length; speed = SPEEDS[si][0]; $('#speedBtn').textContent = SPEEDS[si][1]; $('#speedBtn').setAttribute('aria-pressed', si > 0); };
+$('#restartBtn').onclick = () => {
+  setPlaying(true);
+  if (segLoop) { tPlay = segLoop[0]; return; }   // 확대 반복 중이면 그 구간 처음으로
+  tPlay = 0; autoCam = true; camKey = -9; home(.6);
+};
+$('#speedBtn').onclick = () => { setSpeedIdx((si + 1) % SPEEDS.length); if (segLoop) segSi = si; };
 const seek = $('#seek');
-seek.addEventListener('input', () => { seeking = true; tPlay = seek.value / 1000 * phaseT() * .999; });
+seek.addEventListener('input', () => { seeking = true; endLoop(); autoCam = false; tPlay = seek.value / 1000 * phaseT() * .999; });
 seek.addEventListener('change', () => { seeking = false; });
 seek.addEventListener('pointerup', () => { seeking = false; });
 function startPhase(ph) {
-  phase = ph; tPlay = 0; setPlaying(true); home(.6); renderSpots();
+  endLoop(); phase = ph; tPlay = 0; setPlaying(true); home(.6); autoCam = true; camKey = -9; renderSpots();
 }
 
 // ── 읽어 주기 ──
@@ -1733,7 +1860,8 @@ function renderWatch() {
   $('#wtext').textContent = text;
   startPhase(wstep + 1);
   const sp = spotsOf();
-  $('#look').textContent = look || (sp.length ? `🔍 위의 「${sp[0][0].replace(/^🔍\s*/, '')}」 돋보기를 눌러 크게 봐요!` : '⏮ 버튼으로 몇 번이고 다시 볼 수 있어요.');
+  const lp = sp.find(s => s[5]?.loop) || sp[0];
+  $('#look').textContent = look || (lp ? (lp[5]?.loop ? `🔍 「${lp[0].replace(/^🔍\s*/, '')}」를 누르면 작은 움직임만 크게, 천천히 되풀이해요!` : `🔍 위의 「${lp[0].replace(/^🔍\s*/, '')}」 돋보기를 눌러 크게 봐요!`) : '⏮ 버튼으로 몇 번이고 다시 볼 수 있어요.');
   $('#wprevBtn').disabled = wstep === 0;
   $('#wnextBtn').textContent = wstep === n - 1 ? '✏️ 문제 풀기 ▶' : '다음 장면 ▶';
   say((wstep === 0 ? L.story + ' ' : '') + text);
@@ -1774,25 +1902,49 @@ $('#rewatchBtn').onclick = () => { wstep = 0; setMode('watch'); renderWatch(); }
 
 // ③ 이름표
 $('#nameBtn').onclick = () => {
-  const L = LESSONS[cur], term = L.name.term, jo = L.name.josa || irago(term);
+  // 큰 이름은 언제나 진짜 과학 이름. name.kid 가 있으면 아래에 작게 '쉬운 말' (7세판)
+  const L = LESSONS[cur], term = L.name.term, jo = L.name.josa || irago(term), formal = L.name.kid || '';
   setMode('name'); startPhase(0);
-  $('#ntext').replaceChildren('이걸 ', Object.assign(document.createElement('span'), { className: 'term', textContent: term }), ` ${jo} 해요!`.replace(' ' + jo, jo));
+  $('#ntext').replaceChildren('이걸 ', Object.assign(document.createElement('span'), { className: 'term', textContent: term }), ` ${jo} 해요!`.replace(' ' + jo, jo), ...(formal ? [Object.assign(document.createElement('span'), { className: 'formal', textContent: '쉬운 말로는 · ' + formal })] : []));
   $('#nsub').replaceChildren(L.name.what, ...(L.habit ? [Object.assign(document.createElement('span'), { className: 'habit', textContent: '🏠 생활 습관 · ' + L.habit })] : []));
-  $('#adult').textContent = L.adult;
+  renderAdult(L.adult);
   nameSprite = label(term, .34, '#fde047'); nameSprite.position.set(0, .95, -3.2);
   const maxW = 2.2 * camera.aspect; if (nameSprite.userData.base[0] > maxW) { const r = maxW / nameSprite.userData.base[0]; nameSprite.userData.base = nameSprite.userData.base.map(v => v * r); }
   camera.add(nameSprite);
   $('#nnextBtn').textContent = cur === LESSONS.length - 1 ? '처음으로 ▶' : '다음 이야기 ▶';
   $('#nextBtn').classList.add('go');
-  say(`이걸 ${term}${jo} 해요! ${L.name.what} ${L.habit ? '생활 습관. ' + L.habit : ''}`);
+  say(`이걸 ${term}${jo} 해요! ${formal ? '쉬운 말로는 ' + formal + '. ' : ''}${L.name.what} ${L.habit ? '생활 습관. ' + L.habit : ''}`);
 };
 $('#againBtn').onclick = () => { wstep = 0; setMode('watch'); renderWatch(); };
 $('#nnextBtn').onclick = () => show((cur + 1) % LESSONS.length);
 
+// ── 어른용 상자: 핵심 한 줄 + 알아둘 조건 + 생활 속에서 + 접히는 더 알아보기 ──
+//  adult 가 객체면 { core, cond:[...], life, map, more }, 문자열이면 첫 문장 = 핵심, (비유: …) = 그림 속 짝, 나머지 = 더 알아보기
+function renderAdult(a) {
+  const box = $('#adult'); box.replaceChildren(); if (!a) return;
+  let o = a;
+  if (typeof a === 'string') {
+    let s = a.replace(/^어른용\s*·\s*/, '').trim(), map = '';
+    s = s.replace(/\(비유:\s*([^)]*)\)/, (_, m) => { map = m; return ''; }).replace(/\s+\./g, '.').replace(/\s{2,}/g, ' ');
+    const parts = s.split(/(?<=다\.|요\.|\)\.)\s+/);
+    o = { core: parts[0], map, more: parts.slice(1).join(' ') };
+  }
+  const el = (tag, cls, txt) => Object.assign(document.createElement(tag), { className: cls || '', textContent: txt || '' });
+  const head = (t) => el('b', 'ad-h', t);
+  const core = el('div', 'ad-core'); core.append(head('어른용 · 핵심 '), o.core || ''); box.append(core);
+  if (o.cond?.length) { const d = el('div', 'ad-cond'); d.append(head('알아둘 조건')); const ul = el('ul'); (Array.isArray(o.cond) ? o.cond : [o.cond]).forEach(c => ul.append(el('li', '', c))); d.append(ul); box.append(d); }
+  if (o.life) { const d = el('div', 'ad-life'); d.append(head('생활 속에서 '), o.life); box.append(d); }
+  if (o.map || o.more) {
+    const det = document.createElement('details'); det.append(el('summary', '', '더 알아보기'));
+    if (o.map) { const p = el('div', 'ad-map'); p.append(head('그림 속 짝 '), o.map); det.append(p); }
+    if (o.more) det.append(el('div', 'ad-more', o.more));
+    box.append(det);
+  }
+}
 function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast.id); toast.id = setTimeout(() => el.hidden = true, 3200); }
 $('#prevBtn').onclick = () => cur > 0 && show(cur - 1);
 $('#nextBtn').onclick = () => show((cur + 1) % LESSONS.length);
-$('#homeBtn').onclick = () => home(.6);
+$('#homeBtn').onclick = () => { autoCam = false; endLoop(); home(.6); };
 $('#voiceBtn').onclick = e => {
   voice = !voice; e.currentTarget.setAttribute('aria-pressed', voice);
   if (voice) { if (mode === 'watch') say(LESSONS[cur].watch[wstep][0]); else if (mode === 'quiz') readQ(); else say(`이걸 ${LESSONS[cur].name.term}${LESSONS[cur].name.josa || irago(LESSONS[cur].name.term)} 해요! ${LESSONS[cur].name.what}`); }

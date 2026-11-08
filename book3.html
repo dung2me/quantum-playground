@@ -84,7 +84,14 @@ h2{margin:0;font-size:30px;font-weight:400}
 #ntext .formal{display:block;margin-top:6px;font-size:18px;color:var(--sub)}
 #nsub{margin:0;font-size:21px;color:var(--sub);line-height:1.5}
 #nsub .habit{display:block;margin-top:10px;background:#ecfdf5;color:#065f46;border:2px solid #a7f3d0;border-radius:14px;padding:8px 14px;font-size:20px}
-#adult{margin:0;font-size:14px;color:var(--sub);font-family:system-ui,'Malgun Gothic',sans-serif;line-height:1.5}
+#adult{margin:0;font-size:14px;color:var(--sub);font-family:system-ui,'Malgun Gothic',sans-serif;line-height:1.55;display:flex;flex-direction:column;gap:6px}
+#adult .ad-h{color:var(--ink);font-weight:600}
+#adult ul{margin:2px 0 0;padding-left:18px}
+#adult li{margin:2px 0}
+#adult .ad-life{background:#f1f5f9;border-radius:10px;padding:6px 10px}
+#adult details{border-top:1px dashed var(--line);padding-top:4px}
+#adult summary{cursor:pointer;color:var(--accent);font-weight:600}
+#adult .ad-map,#adult .ad-more{margin-top:4px}
 nav{display:flex;justify-content:space-between;gap:10px;margin-top:auto}
 nav button{font:inherit;font-size:21px;padding:12px 22px;border-radius:18px;border:3px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
 nav button.go{border-color:var(--accent);background:var(--accent);color:#fff}
@@ -182,7 +189,7 @@ button:focus-visible{outline:4px solid #2b7fff;outline-offset:2px}
     <div id="name" class="mode">
       <p id="ntext"></p>
       <p id="nsub"></p>
-      <p id="adult"></p>
+      <div id="adult"></div>
       <div class="row"><button class="sbtn" id="againBtn">🎬 처음부터 다시 보기</button><button class="pbtn" id="nnextBtn">다음 이야기 ▶</button></div>
     </div>
     <nav>
@@ -600,7 +607,13 @@ LESSONS[0] = {
   kid: '하나가 둘을 깨워요!',
   name: { term: '연쇄 반응', kid: '하나가 다음을 깨워요', what: '하나가 일어나면 그게 다음 것을 깨우고, 또 다음 것을 깨우며 줄줄이 이어지는 거예요. 도미노처럼요!' },
   habit: '도미노와 블록은 놀고 나서 상자에 차곡차곡 정리해요.',
-  adult: '어른용 · 연쇄 반응(chain reaction)과 핵분열(nuclear fission): 우라늄-235 원자핵이 중성자 하나를 흡수하면 불안정해져 두 조각(핵분열 생성물)으로 쪼개지며 중성자 2~3개와 큰 에너지를 낸다. 나온 중성자가 다른 우라늄-235 원자핵에 흡수되면 다시 분열이 일어나 반응이 이어진다(비유: 초록 도미노 = 우라늄 원자핵, 회색 구슬 = 중성자, 연두 조각 = 분열 생성물). 이번 편은 갈래가 둘씩 늘어나는 모습만 보여 주며, 계속 이어질 만큼 충분한 양(임계 질량)과 점점 늘어나는 상태(초임계)는 다음 편에서 다룬다.',
+  adult: {
+    core: '핵분열 연쇄 반응: 우라늄-235 원자핵이 중성자 하나를 받아 둘로 쪼개지며(핵분열) 중성자 2~3개와 에너지를 내고, 그 중성자가 다음 원자핵을 쪼개며 이어진다.',
+    cond: ['쪼개질 수 있는 원자(우라늄-235, 플루토늄-239 등)여야 한다.', '나온 중성자가 밖으로 새거나 다른 물질에 흡수되지 않고 다음 원자핵에 닿아야 이어진다(→ 2편 임계 질량).'],
+    life: '도미노, 불이 옆으로 번지는 것, 눈사태처럼 "앞의 것이 뒤의 것을 일으키는" 일을 모두 연쇄 반응이라고 한다.',
+    map: '초록 도미노·원자 = 우라늄-235 원자핵, 회색 구슬·알갱이 = 중성자, 연두 조각 = 분열 생성물',
+    more: '분열 한 번에 약 200 MeV의 에너지가 나오고 대부분은 조각들의 운동 에너지(열)가 된다. 이번 편은 갈래가 둘씩 늘어나는 모습만 보여 준다.',
+  },
 };
 
 SCENES.q3_chain = (g, ctx) => {
@@ -804,7 +817,12 @@ LESSONS[1] = {
   kid: '적으면 새고, 딱 충분하면 끝까지!',
   name: { term: '임계 질량', kid: '딱 충분한 양', what: '쪼개지기가 끝까지 이어지려면 원자가 이만큼은 모여야 해요. 그 "딱 충분한 양"이에요. 적으면 알갱이가 밖으로 새서 멈춰요.' },
   habit: '간식을 나눌 때는 모두 받을 만큼 충분한지 먼저 세어 봐요.',
-  adult: '어른용 · 임계 질량(critical mass): 핵분열 연쇄 반응이 스스로 유지되는 최소 질량. 유효 증배 계수 k(한 세대 중성자 수 ÷ 앞 세대)가 1이면 임계, 1보다 작으면 미임계로 반응이 꺼진다. 덩어리가 작으면 표면 비율이 커서 중성자가 밖으로 새는(누설) 비율이 크다(비유: 초록 도미노·원자 = 우라늄-235 원자핵, 회색 구슬·알갱이 = 중성자, 작은 판·작은 마당 = 누설이 많은 작은 덩어리). 맨 구(반사체 없음) 기준 우라늄-235 약 52 kg(지름 약 17 cm), 플루토늄-239 약 10 kg이며, 모양·밀도·반사체에 따라 크게 달라진다. 다음 편: k>1인 초임계.',
+  adult: {
+    core: '임계 질량: 연쇄 반응이 스스로 꺼지지 않고 이어지는 데 필요한 최소한의 양.',
+    cond: ['덩어리가 작으면 겉면 비율이 커서 중성자가 밖으로 많이 샌다 → 반응이 꺼진다(미임계).', '같은 양이라도 공 모양으로 뭉칠수록, 밀도가 높을수록, 둘레에 중성자를 되튕기는 반사체가 있을수록 임계 질량이 작아진다.', '순도도 중요하다. 천연 우라늄은 우라늄-235가 약 0.7%뿐이라 감속재 없이 그냥 모아서는 임계가 되지 않는다.'],
+    map: '초록 도미노·원자 = 우라늄-235 원자핵, 회색 구슬·알갱이 = 중성자, 작은 판·작은 마당 = 중성자가 많이 새는 작은 덩어리',
+    more: '유효 증배 계수 k(이번 세대 중성자 수 ÷ 앞 세대): k = 1이면 임계, k < 1이면 미임계. 반사체 없는 공 기준 우라늄-235 약 52 kg(지름 약 17 cm), 플루토늄-239 약 10 kg.',
+  },
 };
 
 SCENES.q3_critical = (g, ctx) => {
@@ -1013,7 +1031,13 @@ LESSONS[2] = {
   kid: '하나가 둘을, 둘이 넷을!',
   name: { term: '초임계', kid: '점점 많아져요', what: '딱 충분한 양보다 훨씬 많이 모이면, 쪼개지기가 1, 2, 4, 8처럼 점점 많아지고 빨라져요. 그래서 어른들이 아주아주 조심해요.' },
   habit: '들은 소식은 맞는지 확인하고 전해요. 틀린 소식도 점점 많이 퍼져요!',
-  adult: '어른용 · 초임계(supercritical): 유효 중성자 증배 계수 k > 1인 상태. 핵분열 한 번에서 나온 중성자(2~3개) 가운데 다음 핵분열을 일으키는 수가 평균 1보다 많아 반응 수가 세대마다 배수로 늘어난다(비유: 친구 = 우라늄-235 원자핵, 노란 소식 = 중성자, 주황 막대 = 세대별 핵분열 수, 1→2→4→8 = k = 2인 이상적인 경우). 세대 시간이 매우 짧아(빠른 중성자에서 약 10 나노초) 순식간에 엄청난 에너지가 나온다. k = 1이면 임계(일정하게 유지, 5장면의 "하나씩"), k < 1이면 미임계(꺼짐). 핵무기는 임계 질량 이상을 순간적으로 모아 초임계를 만드는 것이며 핵확산금지조약(NPT)으로 관리한다. 원자력 발전소는 제어봉으로 k ≈ 1을 유지한다(다음 편).',
+  adult: {
+    core: '초임계(원자력): 연쇄 반응에서 다음 세대 반응 수가 앞 세대보다 많아져(k > 1) 반응이 점점 빨리 늘어나는 상태.',
+    cond: ['임계 질량보다 많이, 또는 더 촘촘하게(압축) 모일 때 생긴다.', '세대 사이 시간이 아주 짧아(빠른 중성자 약 10 나노초) 순식간에 커진다. 핵무기는 이를 순간적으로 만드는 것이며 핵확산금지조약(NPT)으로 관리한다.', '원자력 발전소는 제어봉으로 k ≈ 1(임계)을 유지한다(→ 4편).'],
+    life: '"초임계 rTG 오메가3", "초임계 추출"의 초임계는 다른 뜻이다. 물질은 어떤 온도·압력(임계점)을 넘으면 기체도 액체도 아닌 "초임계 유체"가 된다. 이산화탄소는 약 31°C, 약 7.4 MPa(약 73기압)를 넘으면 초임계 유체가 되어 기름을 잘 녹여 내므로, 생선 기름을 높은 열이나 유기 용매 없이 뽑을 때 쓴다. 디카페인 커피의 카페인을 뺄 때도 쓴다. rTG는 추출 방식이 아니라 오메가3를 다시 중성지방 형태로 묶은 것(re-esterified triglyceride)이라는 뜻이다. 두 분야 모두 "임계(critical) = 성질이 바뀌는 경계"라는 같은 낱말을 쓸 뿐, 원자력과는 관계없다.',
+    map: '친구 = 우라늄-235 원자핵, 노란 소식 = 중성자, 주황 막대 = 세대별 핵분열 수',
+    more: '1→2→4→8 그림은 k = 2인 이상적인 경우다. k = 1이면 일정하게 유지(임계, 5장면의 "하나씩"), k < 1이면 꺼진다(미임계).',
+  },
 };
 
 SCENES.q3_superK = (g, ctx) => {
@@ -1232,7 +1256,13 @@ LESSONS[3] = {
   kid: '막대가 알갱이를 붙잡아서 천천히!',
   name: { term: '제어봉', kid: '붙잡는 막대', what: '원자 마당에 꽂아서 작은 알갱이를 붙잡는 막대예요. 그래서 원자가 하나씩 천천히 쪼개지고, 발전소는 그 따뜻한 열로 전기를 만들어요.' },
   habit: '전기는 아껴 쓰고, 콘센트에는 손가락이나 물건을 넣지 않아요.',
-  adult: '어른용 · 제어봉(control rod): 원자로 노심에 넣고 빼는 막대로, 붕소·카드뮴·하프늄처럼 중성자를 잘 흡수하는 물질로 만든다(비유: 남색 칸막이·막대 = 제어봉, 회색 구슬·알갱이 = 중성자, 초록 도미노·원자 = 우라늄-235 원자핵). 제어봉을 깊이 넣으면 중성자가 흡수되어 연쇄 반응이 느려지고, 빼면 빨라진다. 감속재(물 등)와 함께 유효 증배 계수 k ≈ 1(임계)을 유지해 일정한 출력을 낸다. 분열 에너지는 열 → 물을 끓여 증기 → 터빈 회전 → 발전기로 전기를 만든다. 이상이 생기면 제어봉을 한꺼번에 넣어 원자로를 멈춘다(스크램). 핵무기는 제어 없이 순간적으로 초임계를 만드는 것으로, 핵확산금지조약(NPT)으로 관리한다.',
+  adult: {
+    core: '제어봉: 원자로에 넣고 빼며 중성자를 흡수해 연쇄 반응의 빠르기를 조절하는 막대.',
+    cond: ['중성자를 잘 흡수하는 물질(붕소, 카드뮴, 하프늄)로 만든다.', '깊이 넣으면 느려지고 빼면 빨라진다. 감속재(물 등)와 함께 k ≈ 1(임계)을 유지해 일정한 열을 낸다.', '이상이 생기면 제어봉을 한꺼번에 넣어 원자로를 멈춘다(스크램).'],
+    life: '원자력 발전: 핵분열 열 → 물을 끓여 증기 → 터빈 회전 → 발전기 → 전기. 화력 발전과는 열을 만드는 방법만 다르다.',
+    map: '남색 칸막이·막대 = 제어봉, 회색 구슬·알갱이 = 중성자, 초록 도미노·원자 = 우라늄-235 원자핵',
+    more: '핵무기는 제어 없이 순간적으로 초임계를 만드는 것으로, 핵확산금지조약(NPT)으로 관리한다.',
+  },
 };
 
 SCENES.q3_rod = (g, ctx) => {
@@ -1717,7 +1747,7 @@ $('#nameBtn').onclick = () => {
   setMode('name'); startPhase(0);
   $('#ntext').replaceChildren('이걸 ', Object.assign(document.createElement('span'), { className: 'term', textContent: term }), ` ${jo} 해요!`.replace(' ' + jo, jo), ...(formal ? [Object.assign(document.createElement('span'), { className: 'formal', textContent: '쉬운 말로는 · ' + formal })] : []));
   $('#nsub').replaceChildren(L.name.what, ...(L.habit ? [Object.assign(document.createElement('span'), { className: 'habit', textContent: '🏠 생활 습관 · ' + L.habit })] : []));
-  $('#adult').textContent = L.adult;
+  renderAdult(L.adult);
   nameSprite = label(term, .34, '#fde047'); nameSprite.position.set(0, .95, -3.2);
   const maxW = 2.2 * camera.aspect; if (nameSprite.userData.base[0] > maxW) { const r = maxW / nameSprite.userData.base[0]; nameSprite.userData.base = nameSprite.userData.base.map(v => v * r); }
   camera.add(nameSprite);
@@ -1728,6 +1758,29 @@ $('#nameBtn').onclick = () => {
 $('#againBtn').onclick = () => { wstep = 0; setMode('watch'); renderWatch(); };
 $('#nnextBtn').onclick = () => show((cur + 1) % LESSONS.length);
 
+// ── 어른용 상자: 핵심 한 줄 + 알아둘 조건 + 생활 속에서 + 접히는 더 알아보기 ──
+//  adult 가 객체면 { core, cond:[...], life, map, more }, 문자열이면 첫 문장 = 핵심, (비유: …) = 그림 속 짝, 나머지 = 더 알아보기
+function renderAdult(a) {
+  const box = $('#adult'); box.replaceChildren(); if (!a) return;
+  let o = a;
+  if (typeof a === 'string') {
+    let s = a.replace(/^어른용\s*·\s*/, '').trim(), map = '';
+    s = s.replace(/\(비유:\s*([^)]*)\)/, (_, m) => { map = m; return ''; }).replace(/\s+\./g, '.').replace(/\s{2,}/g, ' ');
+    const parts = s.split(/(?<=다\.|요\.|\)\.)\s+/);
+    o = { core: parts[0], map, more: parts.slice(1).join(' ') };
+  }
+  const el = (tag, cls, txt) => Object.assign(document.createElement(tag), { className: cls || '', textContent: txt || '' });
+  const head = (t) => el('b', 'ad-h', t);
+  const core = el('div', 'ad-core'); core.append(head('어른용 · 핵심 '), o.core || ''); box.append(core);
+  if (o.cond?.length) { const d = el('div', 'ad-cond'); d.append(head('알아둘 조건')); const ul = el('ul'); (Array.isArray(o.cond) ? o.cond : [o.cond]).forEach(c => ul.append(el('li', '', c))); d.append(ul); box.append(d); }
+  if (o.life) { const d = el('div', 'ad-life'); d.append(head('생활 속에서 '), o.life); box.append(d); }
+  if (o.map || o.more) {
+    const det = document.createElement('details'); det.append(el('summary', '', '더 알아보기'));
+    if (o.map) { const p = el('div', 'ad-map'); p.append(head('그림 속 짝 '), o.map); det.append(p); }
+    if (o.more) det.append(el('div', 'ad-more', o.more));
+    box.append(det);
+  }
+}
 function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast.id); toast.id = setTimeout(() => el.hidden = true, 3200); }
 $('#prevBtn').onclick = () => cur > 0 && show(cur - 1);
 $('#nextBtn').onclick = () => show((cur + 1) % LESSONS.length);

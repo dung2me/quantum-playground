@@ -84,7 +84,14 @@ h2{margin:0;font-size:30px;font-weight:400}
 #ntext .formal{display:block;margin-top:6px;font-size:18px;color:var(--sub)}
 #nsub{margin:0;font-size:21px;color:var(--sub);line-height:1.5}
 #nsub .habit{display:block;margin-top:10px;background:#ecfdf5;color:#065f46;border:2px solid #a7f3d0;border-radius:14px;padding:8px 14px;font-size:20px}
-#adult{margin:0;font-size:14px;color:var(--sub);font-family:system-ui,'Malgun Gothic',sans-serif;line-height:1.5}
+#adult{margin:0;font-size:14px;color:var(--sub);font-family:system-ui,'Malgun Gothic',sans-serif;line-height:1.55;display:flex;flex-direction:column;gap:6px}
+#adult .ad-h{color:var(--ink);font-weight:600}
+#adult ul{margin:2px 0 0;padding-left:18px}
+#adult li{margin:2px 0}
+#adult .ad-life{background:#f1f5f9;border-radius:10px;padding:6px 10px}
+#adult details{border-top:1px dashed var(--line);padding-top:4px}
+#adult summary{cursor:pointer;color:var(--accent);font-weight:600}
+#adult .ad-map,#adult .ad-more{margin-top:4px}
 nav{display:flex;justify-content:space-between;gap:10px;margin-top:auto}
 nav button{font:inherit;font-size:21px;padding:12px 22px;border-radius:18px;border:3px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
 nav button.go{border-color:var(--accent);background:var(--accent);color:#fff}
@@ -182,7 +189,7 @@ button:focus-visible{outline:4px solid #2b7fff;outline-offset:2px}
     <div id="name" class="mode">
       <p id="ntext"></p>
       <p id="nsub"></p>
-      <p id="adult"></p>
+      <div id="adult"></div>
       <div class="row"><button class="sbtn" id="againBtn">🎬 처음부터 다시 보기</button><button class="pbtn" id="nnextBtn">다음 이야기 ▶</button></div>
     </div>
     <nav>
@@ -2915,7 +2922,7 @@ $('#nameBtn').onclick = () => {
   setMode('name'); startPhase(0);
   $('#ntext').replaceChildren('이걸 ', Object.assign(document.createElement('span'), { className: 'term', textContent: term }), ` ${jo} 해요!`.replace(' ' + jo, jo), ...(formal ? [Object.assign(document.createElement('span'), { className: 'formal', textContent: '쉬운 말로는 · ' + formal })] : []));
   $('#nsub').replaceChildren(L.name.what, ...(L.habit ? [Object.assign(document.createElement('span'), { className: 'habit', textContent: '🏠 생활 습관 · ' + L.habit })] : []));
-  $('#adult').textContent = L.adult;
+  renderAdult(L.adult);
   nameSprite = label(term, .34, '#fde047'); nameSprite.position.set(0, .95, -3.2);
   const maxW = 2.2 * camera.aspect; if (nameSprite.userData.base[0] > maxW) { const r = maxW / nameSprite.userData.base[0]; nameSprite.userData.base = nameSprite.userData.base.map(v => v * r); }
   camera.add(nameSprite);
@@ -2926,6 +2933,29 @@ $('#nameBtn').onclick = () => {
 $('#againBtn').onclick = () => { wstep = 0; setMode('watch'); renderWatch(); };
 $('#nnextBtn').onclick = () => show((cur + 1) % LESSONS.length);
 
+// ── 어른용 상자: 핵심 한 줄 + 알아둘 조건 + 생활 속에서 + 접히는 더 알아보기 ──
+//  adult 가 객체면 { core, cond:[...], life, map, more }, 문자열이면 첫 문장 = 핵심, (비유: …) = 그림 속 짝, 나머지 = 더 알아보기
+function renderAdult(a) {
+  const box = $('#adult'); box.replaceChildren(); if (!a) return;
+  let o = a;
+  if (typeof a === 'string') {
+    let s = a.replace(/^어른용\s*·\s*/, '').trim(), map = '';
+    s = s.replace(/\(비유:\s*([^)]*)\)/, (_, m) => { map = m; return ''; }).replace(/\s+\./g, '.').replace(/\s{2,}/g, ' ');
+    const parts = s.split(/(?<=다\.|요\.|\)\.)\s+/);
+    o = { core: parts[0], map, more: parts.slice(1).join(' ') };
+  }
+  const el = (tag, cls, txt) => Object.assign(document.createElement(tag), { className: cls || '', textContent: txt || '' });
+  const head = (t) => el('b', 'ad-h', t);
+  const core = el('div', 'ad-core'); core.append(head('어른용 · 핵심 '), o.core || ''); box.append(core);
+  if (o.cond?.length) { const d = el('div', 'ad-cond'); d.append(head('알아둘 조건')); const ul = el('ul'); (Array.isArray(o.cond) ? o.cond : [o.cond]).forEach(c => ul.append(el('li', '', c))); d.append(ul); box.append(d); }
+  if (o.life) { const d = el('div', 'ad-life'); d.append(head('생활 속에서 '), o.life); box.append(d); }
+  if (o.map || o.more) {
+    const det = document.createElement('details'); det.append(el('summary', '', '더 알아보기'));
+    if (o.map) { const p = el('div', 'ad-map'); p.append(head('그림 속 짝 '), o.map); det.append(p); }
+    if (o.more) det.append(el('div', 'ad-more', o.more));
+    box.append(det);
+  }
+}
 function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast.id); toast.id = setTimeout(() => el.hidden = true, 3200); }
 $('#prevBtn').onclick = () => cur > 0 && show(cur - 1);
 $('#nextBtn').onclick = () => show((cur + 1) % LESSONS.length);
