@@ -579,7 +579,7 @@ const BOOK = { sceneBg: '#dde9ff', champion: '꼬마 우주 박사' };
 const LESSONS = [];
 const SCENES = {};
 // ── L01.js ──
-// 양자물리 2권 · 공용 도우미 (L01~L03 작업자 A)
+// 양자물리 2권 · 공용 도우미 (L01~L03 작업자 A, BRIEF5 다시 만들기 W2)
 const Q2A = {
   light: '#dde9ff', dark: '#0b1026',
   rnd(seed) { let s = seed; return () => (s = (s * 9301 + 49297) % 233280) / 233280; },
@@ -608,6 +608,8 @@ const Q2A = {
       ms.transparent = true; ms.opacity = ms.userData.o0 * k;
     });
   },
+  // 보이기 + 투명도 한 번에 (거의 0이면 숨겨요)
+  show(o, k) { o.visible = k > .02; if (o.visible) Q2A.fade(o, Math.min(1, k)); },
   galaxy(R, seed, c = '#c7d2fe', n = 900) {
     const r = Q2A.rnd(seed), gr = new THREE.Group(), sz = Math.max(.035, .07 * R / 3);
     gr.add(dotCloud(n, i => {
@@ -620,33 +622,36 @@ const Q2A = {
 };
 
 LESSONS[0] = {
-  scene: 'q2_cosmos', law: '반듯반듯 질서 있는 우주', title: '보리 방 정리와 해 가족',
-  cam: [0, 1.9, 7.6], tgt: [0, 1.15, 0], fit: 1.2, T: 16,
+  scene: 'q2_cosmos', law: '반듯반듯 질서 있는 우주', title: '보리 방 정리와 기차 놀이',
+  cam: [0, 3.2, 6.2], tgt: [0, .55, .25], fit: 1.15, T: 14,
   story: '1권에서 모든 건 원자로 되어 있었지요? 오늘은 아주아주 큰 우주 이야기예요. 먼저 보리 방을 볼까요?',
   watch: [
     ['보리 방이 뒤죽박죽! 하나씩 제자리에 놓으니 반듯반듯해졌어요.', 10],
-    ['장난감이 제자리로 쏙! 가을에 피는 코스모스 꽃도 꽃잎이 반듯하게 돌려 나요.', 12, '🔍 「정리하는 곳」을 누르면 장난감이 제자리로 가는 순간이 천천히 되풀이돼요'],
-    ['우주도 똑같아요! 해 둘레를 행성들이 자기 길로 규칙대로 빙글빙글 돌아요.', 12],
+    ['정리한 방에서 기차 놀이! 기차마다 자기 길로만 빙글빙글 달려요. 안쪽 기차가 더 빨라요.', 11, '🔍 「안쪽 기차」를 누르면 짧은 길을 빨리 도는 모습이 천천히 되풀이돼요'],
+    ['불을 끄고 크게 보면… 기차가 같은 색 행성으로, 가운데 노란 공은 해로 바뀌어요!', 12, '🔍 「파란 기차」를 누르면 파란 기차가 파란 지구로 바뀌는 순간이 천천히 되풀이돼요'],
+    ['우주도 똑같아요! 해 둘레를 행성들이 자기 길로 규칙대로 빙글빙글 돌아요.', 10],
   ],
-  q: '보리는 장난감을 어떻게 했나요?',
-  choices: [['🧸', '제자리에 놓았어요!'], ['🗑️', '몽땅 버렸어요!'], ['🎲', '장난감을 더 던졌어요!']], answer: 0,
-  hint: '나중에 선반 위를 보세요. 장난감이 줄 맞춰 있지요?',
-  q2: '해 가족 행성들은 어떻게 돌까요?',
-  choices2: [['🪐', '자기 길로 돌아요!'], ['💥', '마구 부딪치며 돌아요!'], ['🛑', '가만히 멈춰 있어요!']], answer2: 0,
-  hint2: '행성마다 동그란 자기 길이 있었지요? 안쪽은 빠르게, 바깥쪽은 천천히!',
-  kid: '우주도 자기 길로 반듯반듯 돌아요!',
-  name: { term: '코스모스', kid: '질서 있는 우주', what: '규칙대로 반듯하게 움직이는 우주를 옛날 사람들은 코스모스라고 불렀어요. 뒤죽박죽은 카오스!' },
+  q: '보리의 기차들은 어떻게 달렸나요?',
+  choices: [['🚂', '자기 길로 빙글빙글!'], ['💥', '서로 꽝꽝 부딪쳤어요!'], ['🛤️', '한 길로 줄줄이 섰어요!']], answer: 0,
+  hint: '기차마다 색이 같은 동그란 자기 길이 있었지요? 그 길로만 돌았어요.',
+  q2: '파란 기차 길은 우주에서 무엇이 됐나요?',
+  choices2: [['🌍', '지구가 도는 길!'], ['🌙', '달이 숨는 큰 동굴!'], ['🍭', '사탕 가게 길이에요!']], answer2: 0,
+  hint2: '파란 기차가 있던 자리에 같은 파란색 지구가 나타났어요.',
+  kid: '지구도 자기 길로 빙글빙글 돌아요!',
+  name: { term: '코스모스', kid: '질서 있는 우주', what: '규칙대로 반듯하게 움직이는 우주를 옛날 사람들은 코스모스라고 불렀어요. 뒤죽박죽은 카오스! 꽃잎이 반듯한 가을 코스모스 꽃도 같은 말에서 이름을 얻었어요.' },
   habit: '놀고 나면 장난감을 제자리에 정리해요.',
-  adult: '어른용 · 코스모스(kosmos)는 그리스어로 "질서·조화·장식"이며 혼돈(chaos)의 반대말. 피타고라스가 우주를 처음 kosmos라 불렀다고 전해진다. 꽃 코스모스도 같은 말(꽃잎이 고르게 배열된 아름다움)에서 왔다. 칼 세이건 「코스모스」(1980). 행성은 케플러 법칙대로 돈다(안쪽일수록 빠름, T² ∝ a³).',
+  adult: '어른용 · 코스모스(kosmos)는 그리스어로 "질서·조화·장식"이며 혼돈(chaos)의 반대말. 피타고라스가 우주를 처음 kosmos라 불렀다고 전해진다. 꽃 코스모스도 같은 말(꽃잎이 고르게 배열된 아름다움)에서 왔다. 칼 세이건 「코스모스」(1980). 행성은 케플러 법칙대로 돈다(안쪽일수록 빠름, T² ∝ a³). 장난감 트랙은 궤도의 비유이며, 실제 궤도는 원이 아니라 약간 찌그러진 타원이다.',
 };
 
 SCENES.q2_cosmos = (g, ctx) => {
   const R = Q2A.rnd(11);
   // ── 보리 방 ──
   const room = new THREE.Group(); g.add(room);
-  room.add(floor(9.4, 4.6, '#fde7c4'), box(3.9, 2.2, .08, '#e7c39a', 0, 1.1, -1.66));
-  for (const y of [.75, 1.65]) room.add(box(3.9, .08, .7, '#a16207', 0, y, -1.3));
-  for (const x of [-1.95, 1.95]) room.add(box(.08, 2.2, .7, '#a16207', x, 1.1, -1.3));
+  const flr = floor(9.4, 4.6, '#fde7c4'); room.add(flr);
+  const shelf = new THREE.Group(); room.add(shelf);
+  shelf.add(box(3.9, 2.2, .08, '#e7c39a', 0, 1.1, -1.66));
+  for (const y of [.75, 1.65]) shelf.add(box(3.9, .08, .7, '#a16207', 0, y, -1.3));
+  for (const x of [-1.95, 1.95]) shelf.add(box(.08, 2.2, .7, '#a16207', x, 1.1, -1.3));
   const defs = [['b', '#ef4444'], ['s', '#f97316'], ['b', '#3b82f6'], ['c', '#ec4899'], ['b', '#22c55e'], ['s', '#a855f7'], ['k', '#06b6d4'], ['b', '#facc15']];
   const toys = defs.map(([k, c], i) => {
     let m, h;
@@ -658,37 +663,41 @@ SCENES.q2_cosmos = (g, ctx) => {
       for (const [x, z] of [[-.16, .15], [.16, .15], [-.16, -.15], [.16, -.15]]) { const w = cyl(.07, .07, .05, '#1f2937', x, -.1, z); w.rotation.x = Math.PI / 2; m.add(w); }
       h = .34;
     }
-    room.add(m);
+    shelf.add(m);
     const row = i < 4 ? 0 : 1, lie = k === 'c';
     return {
       m, a: V(-2.0 + 4.4 * R(), lie ? .2 : h / 2, -.1 + 1.6 * R()), ry: R() * 6.28, rz: lie ? Math.PI / 2 : 0,
       b: V(-1.35 + .9 * (i % 4), [.75, 1.65][row] + .04 + h / 2, -1.3),
     };
   });
-  const bori = animal('bear', '#c68642', 1.05); bori.position.set(-2.6, 0, .8); bori.rotation.y = .7; room.add(bori);
-  // 코스모스 꽃
-  const flower = new THREE.Group(); flower.position.set(2.65, 0, .3); room.add(flower);
-  flower.add(cyl(.22, .17, .32, '#c2410c', 0, .16, 0), cyl(.03, .03, 1.3, '#16a34a', 0, .95, 0));
-  const fhead = new THREE.Group(); fhead.position.set(0, 1.65, 0); flower.add(fhead);
-  fhead.add(ball(.12, '#facc15', 0, 0, .04));
-  const petals = Array.from({ length: 8 }, (_, k) => { const a = k * Math.PI / 4, p = ball(.12, '#f472b6', Math.cos(a) * .25, Math.sin(a) * .25, 0); p.rotation.z = a; fhead.add(p); return p; });
+  const bori = animal('bear', '#c68642', 1.05); room.add(bori);
 
-  // ── 해 가족 ──
+  // ── 기차 놀이 → 해 가족 (같은 자리, 같은 색) ──
   const stars = starField(350, 24); g.add(stars);
-  const sp = new THREE.Group(); sp.position.set(0, 1.1, 0); sp.rotation.x = .35; g.add(sp);
-  const sun = Q2A.sun(.55); sp.add(sun);
-  const earth = Q2A.earth(.22);
-  const plan = [[1.0, '#a8a29e', .12], [1.5, '#fcd34d', .17], [2.1, null, .22], [2.8, '#ef4444', .15]].map(([Rr, c, r], i) => {
-    sp.add(Q2A.ring(Rr));
-    const m = c ? ball(r, c) : earth; sp.add(m);
-    return { m, R: Rr, w: 1.6 / Math.pow(Rr, 1.5), ph: i * 1.7 };
+  const sys = new THREE.Group(); sys.position.set(0, .03, .25); g.add(sys);
+  const playMat = cyl(2.75, 2.75, .04, '#fef3c7', 0, 0, 0); sys.add(playMat);
+  const sunToy = critter(.4, '#facc15', { squash: 1 }); sunToy.position.y = .42; sys.add(sunToy);
+  const sunSp = Q2A.sun(.44); sunSp.position.y = .42; sys.add(sunSp);
+  const earth = Q2A.earth(.2);
+  const LANES = [[.9, '#a8a29e', .12], [1.35, '#fcd34d', .15], [1.85, '#3b82f6', .2], [2.4, '#ef4444', .15]];
+  const lanes = LANES.map(([Rr, c, r], i) => {
+    const track = mesh(new THREE.TorusGeometry(Rr, .055, 8, 96), c); track.rotation.x = Math.PI / 2; track.position.y = .06; sys.add(track);
+    const orbit = mesh(new THREE.TorusGeometry(Rr, .028, 6, 96), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: .9 })); orbit.rotation.x = Math.PI / 2; orbit.position.y = .22; sys.add(orbit);
+    const car = new THREE.Group(); sys.add(car);
+    const train = new THREE.Group(); car.add(train);
+    train.add(box(.38, .2, .22, c, 0, .2, 0), box(.16, .16, .2, '#e0f2fe', -.08, .36, 0), cyl(.04, .04, .14, '#334155', .12, .36, 0));
+    for (const [x, z] of [[-.12, .12], [.12, .12], [-.12, -.12], [.12, -.12]]) { const w = cyl(.06, .06, .04, '#1f2937', x, .08, z); w.rotation.x = Math.PI / 2; train.add(w); }
+    const planet = c === '#3b82f6' ? earth : ball(r, c); planet.position.y = .22; car.add(planet);
+    return { Rr, c, track, orbit, car, train, planet, w: 1.3 / Math.pow(Rr, 1.5), ph: i * 1.7 };
   });
 
   const lMess = label('뒤죽박죽!', .5, '#fde047'); lMess.position.set(.3, 2.6, 0);
   const lTidy = label('반듯반듯!', .5, '#fde047'); lTidy.position.set(0, 2.75, -1.3);
-  const lSpin = label('자기 길로 빙글빙글!', .42, '#fde047'); lSpin.position.set(0, 3.0, 0);
-  const lEarth = label('지구', .38, '#bfdbfe'); lEarth.position.set(0, .48, 0); earth.add(lEarth);
-  g.add(lMess, lTidy, lSpin);
+  const lOwn = label('자기 길로 빙글빙글!', .46, '#fde047'); lOwn.position.set(0, 2.55, 0);
+  const lBridge = label('기차 길 = 행성 길', .46, '#fde047'); lBridge.position.set(0, 2.55, 0);
+  const lBlue = label('● 파란 기차', .38, '#60a5fa'), lEarth = label('● 지구', .38, '#60a5fa');
+  g.add(lMess, lTidy, lOwn, lBridge, lBlue, lEarth);
+  const lightC = new THREE.Color(Q2A.light), darkC = new THREE.Color(Q2A.dark), bgC = new THREE.Color();
 
   const roomAt = (t, t0, gap) => {
     toys.forEach((o, i) => {
@@ -701,64 +710,82 @@ SCENES.q2_cosmos = (g, ctx) => {
     bori.userData.armR.rotation.z = busy ? -.4 - .9 * Math.abs(Math.sin(t * 4)) : 0;
     bori.userData.head.rotation.y = busy ? .3 * Math.sin(t * 2) : 0;
   };
-  const spaceAt = ts => {
-    plan.forEach(o => { const a = o.ph + o.w * ts; o.m.position.set(Math.cos(a) * o.R, 0, -Math.sin(a) * o.R); });
-    wobble(sun, ts, .5);
+  // k: 0 = 장난감 기차 놀이, 1 = 해 가족
+  const playAt = (ts, k) => {
+    lanes.forEach(o => {
+      const a = o.ph + o.w * ts; o.car.position.set(Math.cos(a) * o.Rr, 0, -Math.sin(a) * o.Rr);
+      o.train.rotation.y = a + Math.PI / 2;
+      Q2A.show(o.train, 1 - k); Q2A.show(o.track, 1 - k); Q2A.show(o.planet, k); Q2A.show(o.orbit, k);
+      o.planet.scale.setScalar(lerp(.5, 1.5, k));
+    });
+    wobble(sunToy, ts, .4); wobble(sunSp, ts, .4);
+    Q2A.show(sunToy, 1 - k); Q2A.show(sunSp, k); Q2A.show(playMat, 1 - k);
+    Q2A.show(flr, 1 - k); Q2A.show(bori, 1 - k); Q2A.show(stars, k);
+    bgC.copy(lightC).lerp(darkC, k); ctx.bg(bgC);
+    bori.position.set(-2.75, 0, 1.75); bori.rotation.y = .6;
+    bori.userData.armR.rotation.z = -1 - .4 * Math.sin(ts * 5); waddle(bori, ts, .4);
   };
-  const setRoom = v => { room.visible = v; sp.visible = stars.visible = !v; ctx.bg(v ? Q2A.light : Q2A.dark); };
+  const tag = (lab, o, show) => { lab.position.copy(sys.position).add(o.car.position).add(V(0, .75, 0)); lab.visible = show && camera.position.distanceTo(g.localToWorld(lab.position.clone())) > 3.2; };
   const draw = (t, ph) => {
-    hideAll(lMess, lTidy, lSpin, lEarth); flower.visible = ph === 2;
-    if (ph === 1) { setRoom(true); roomAt(t, 2, .5); lMess.visible = t < 1.9; lTidy.visible = t > 6.3; }
-    else if (ph === 2) {
-      setRoom(true); roomAt(t, 1.5, .5); lMess.visible = t < 1.4; lTidy.visible = t > 5.6 && t < 6.6;
-      petals.forEach((p, k) => { const f = seg(t, 6.6 + .32 * k, 6.95 + .32 * k); p.visible = f > 0; p.scale.set(1.9 * f, .7 * f, .4 * f); });
-      fhead.rotation.z = .05 * Math.sin(t * 2);
+    hideAll(lMess, lTidy, lOwn, lBridge, lBlue, lEarth);
+    if (ph === 1) {
+      shelf.visible = true; sys.visible = false; Q2A.show(flr, 1); Q2A.show(bori, 1); stars.visible = false; ctx.bg(Q2A.light);
+      bori.position.set(-2.4, 0, .9); bori.rotation.y = .7;
+      roomAt(t, 2, .5); lMess.visible = t < 1.9; lTidy.visible = t > 6.3;
+    } else {
+      shelf.visible = false; sys.visible = true;
+      const k = ph === 2 ? 0 : ph === 3 ? seg(t, 2.5, 7.5) : ph === 4 ? 1 : seg(t, 6, 10);
+      playAt(t, k);
+      const blue = lanes[2];
+      if (ph === 2) { lOwn.visible = true; tag(lBlue, blue, true); }
+      else if (ph === 3) { tag(lBlue, blue, t < 3.2); lBridge.visible = t > 3 && t < 9; tag(lEarth, blue, t > 7.5); }
+      else if (ph === 4) { lOwn.visible = true; tag(lEarth, blue, true); }
+      else { tag(lBlue, blue, t < 6.5); lBridge.visible = t > 6 && t < 11; tag(lEarth, blue, t > 10); }
     }
-    else if (ph === 3) { setRoom(false); spaceAt(t); lSpin.visible = true; lEarth.visible = t > 2; }
-    else {
-      const r = t < 7.2; setRoom(r);
-      if (r) { roomAt(t, 1, .45); lMess.visible = t < .9; lTidy.visible = t > 4.8; }
-      else { spaceAt(t - 7.2); lSpin.visible = true; lEarth.visible = true; }
-    }
-    if (Q2A.naming()) hideAll(lMess, lTidy, lSpin, lEarth);
+    if (Q2A.naming()) hideAll(lMess, lTidy, lOwn, lBridge, lBlue, lEarth);
   };
   const boriHead = () => bori.localToWorld(V(0, .75, 0));
+  const blueCar = lanes[2].car, innerCar = lanes[0].car;
   draw.spots = {
     1: [['🔍 정리하는 곳', [0, 1.3, -1.3], 3.4, '장난감이 하나씩 제자리로 쏙!', null, { loop: [2, 6.2], slow: .5 }], ['🔍 보리', boriHead, 2.6, '보리가 하나씩 정리해요']],
-    2: [['🔍 정리하는 곳', [0, 1.3, -1.3], 3.4, '장난감이 하나씩 제자리로 쏙!', null, { loop: [1.5, 5.8], slow: .5 }], ['🔍 코스모스 꽃', fhead, 1.9, '꽃잎이 고르게 빙 둘러 나요', null, { loop: [6.4, 9.8], slow: .5 }]],
-    3: [['🔍 지구', earth, 2.3, '지구도 자기 길로 해 둘레를 돌아요'], ['🔍 해 가까이', sun, 4.2, '해와 가까운 행성일수록 더 빨리 돌아요', null, { loop: [0, 6], slow: .5 }]],
-    0: [['🔍 정리하는 곳', [0, 1.3, -1.3], 3.4, '장난감이 하나씩 제자리로 쏙!', null, { loop: [.8, 4.8], slow: .5 }], ['🔍 지구', earth, 2.3, '지구도 자기 길로 돌아요', null, { loop: [7.3, 12], slow: .5 }]],
+    2: [['🔍 안쪽 기차', innerCar, 2.0, '안쪽 기차는 짧은 길을 빨리 돌아요', null, { loop: [0, 5], slow: .5 }], ['🔍 파란 기차', blueCar, 2.2, '파란 기차도 자기 길로만 달려요']],
+    3: [['🔍 파란 기차', blueCar, 2.2, '파란 기차가 파란 지구로 바뀌어요!', null, { loop: [2.5, 7.8], slow: .5 }], ['🔍 가운데 노란 공', [0, .45, .25], 2.4, '가운데 노란 공이 해가 돼요', null, { loop: [2.5, 7.8], slow: .5 }]],
+    4: [['🔍 지구', blueCar, 2.2, '지구도 자기 길로 해 둘레를 돌아요'], ['🔍 해 가까이', [0, .45, .25], 3.6, '해와 가까운 행성일수록 더 빨리 돌아요', null, { loop: [0, 6], slow: .5 }]],
+    0: [['🔍 파란 기차', blueCar, 2.2, '파란 기차가 파란 지구로 바뀌어요', null, { loop: [5.6, 10.4], slow: .5 }]],
   };
-  draw.cam = { 2: [[1.6, 0], [5.9, -1], [6.4, 1], [10.6, -1]], 3: [[4, 0], [8.5, -1]], 0: [[1.2, 0], [5, -1]] };
+  draw.cam = { 2: [[1.2, 0], [5.5, -1]], 3: [[2.2, 0], [8.4, -1]], 4: [[3.5, 1], [8, -1]], 0: [[5.4, 0], [10.6, -1]] };
   return draw;
 };
 
 // ── L02.js ──
-// 2. 은하 (우주 주소)
+// 2. 은하 (우주 주소) · BRIEF5: 편지 봉투 주소 한 줄 = 화면의 같은 색 '여기!' 동그라미
 LESSONS[1] = {
-  scene: 'q2_galaxy', law: '우리 집 우주 주소', title: '우리 집에서 별 마을까지',
-  cam: [0, 1.6, 7.7], tgt: [0, 1.05, 0], fit: 1.2, T: 15,
-  story: '지난번엔 해 가족이 규칙대로 돌았지요? 오늘은 편지 주소처럼 우리 집에서 우주까지 멀리멀리 가 봐요.',
+  scene: 'q2_galaxy', law: '우리 집 우주 주소', title: '보리의 우주 주소 편지',
+  cam: [0, 1.5, 8.2], tgt: [0, 1.15, 0], fit: 1.25, T: 15,
+  story: '지난번엔 해 가족이 자기 길로 돌았지요? 오늘은 보리가 편지 봉투에 우주 주소를 한 줄씩 써요.',
   watch: [
-    ['우리 집에서 점점 멀리! 동네, 지구, 해 가족, 별 마을, 그리고 우주예요.', 18, '🔍 「별 마을로」를 누르면 해 가족이 작은 점이 되는 순간을 천천히 다시 봐요'],
-    ['별 마을을 크게 봐요. 우리 해는 반짝이는 작은 점 하나예요!', 12, '🔍 「우리 해」를 누르면 별 마을 속 우리 해를 천천히 다시 봐요'],
-    ['우주에는 이런 별 마을이 아주아주 많아요.', 12],
+    ['보리가 편지 봉투에 주소를 써요. 우리 집 → 동네 → 나라! 한 줄 쓸 때마다 멀리멀리 가요.', 12, '🔍 「여기!」를 누르면 우리 집이 작아지는 순간이 천천히 되풀이돼요. 봉투 줄 색과 동그라미 색이 같아요!'],
+    ['더 멀리! 지구 → 해 가족 → 별 마을. 파란 줄 지구가 노란 줄 해 가족 속 작은 점이 돼요.', 12, '🔍 「여기!」를 누르면 파란 지구가 작은 점이 되는 순간이 천천히 되풀이돼요'],
+    ['분홍 줄 별 마을을 크게 봐요. 노란 동그라미 속 우리 해는 반짝이는 작은 점 하나예요!', 10],
+    ['마지막 줄은 우주! 우주에는 이런 별 마을이 아주아주 많아요.', 10],
   ],
-  q: '우리 집에서 점점 멀리 가면?',
-  choices: [['🌍', '동네, 지구, 해 가족!'], ['🍪', '과자 나라가 나와요!'], ['🧱', '큰 벽에 꽉 막혀 끝나요!']], answer: 0,
-  hint: '노란 동그라미가 방금 본 곳이에요. 집 → 동네 → 지구 → 해 가족 순서였지요?',
-  q2: '별 마을에서 우리 해는 어떤가요?',
-  choices2: [['✨', '작은 별 하나예요!'], ['👑', '제일 큰 대장 별이에요!'], ['🌑', '해는 거기 없어요!']], answer2: 0,
-  hint2: '별 마을을 크게 보면 우리 해는 반짝이는 작은 점 하나였어요.',
+  q: '우리 집에서 점점 멀리 가면 무엇이 나왔나요?',
+  choices: [['🌍', '동네, 나라, 지구!'], ['🍪', '과자 나라만 잔뜩 나와요!'], ['🧱', '큰 벽에 꽉 막혀 끝나요!']], answer: 0,
+  hint: '봉투에 한 줄씩 써졌지요? 우리 집 → 동네 → 나라 → 지구 순서였어요.',
+  q2: '분홍 줄 별 마을에서 우리 해는 어땠나요?',
+  choices2: [['✨', '작은 별 하나예요!'], ['👑', '제일 큰 대장 별이에요!'], ['🌑', '해는 거기 아예 없어요!']], answer2: 0,
+  hint2: '노란 동그라미 속을 보세요. 우리 해는 반짝이는 작은 점 하나였어요.',
   kid: '우리 해는 별 마을의 작은 별 하나!',
   name: { term: '은하', kid: '별들의 큰 마을', what: '별이 아주아주 많이 모인 큰 마을이에요. 우리 해는 우리 은하 속 별 하나예요!' },
   habit: '우리 집 주소를 외워 두어요. 길을 잃으면 가까운 어른에게 말해요.',
-  adult: '어른용 · 은하(galaxy): 별·가스·먼지가 중력으로 묶인 거대한 무리. 우리은하(Milky Way)는 지름 약 10만 광년의 막대 나선 은하로 별이 1000억~4000억 개, 태양은 중심에서 약 2만 6천 광년 떨어진 나선팔 근처에 있다. 관측 가능한 우주의 은하 수는 약 2조 개로 추정(2016 추정치, 이후 수천억 개로 보는 연구도 있음).',
+  adult: '어른용 · 은하(galaxy): 별·가스·먼지가 중력으로 묶인 거대한 무리. 우리은하(Milky Way)는 지름 약 10만 광년의 막대 나선 은하로 별이 1000억~4000억 개, 태양은 중심에서 약 2만 6천 광년 떨어진 나선팔 근처에 있다. 관측 가능한 우주의 은하 수는 약 2조 개로 추정(2016 추정치, 이후 수천억 개로 보는 연구도 있음). 주소 비유: 집 → 동네 → 나라 → 지구 → 태양계 → 우리은하 → 우주.',
 };
 
 SCENES.q2_galaxy = (g, ctx) => {
   const stars = starField(350, 24); g.add(stars);
-  const mk = (y = 0) => { const x = new THREE.Group(); x.position.set(0, y, 0); g.add(x); return x; };
+  // 오른쪽: 점점 멀어지는 세상 (작게 줄여서 왼쪽 봉투와 나란히)
+  const world = new THREE.Group(); world.position.set(1.6, 0, 0); world.scale.setScalar(.72); g.add(world);
+  const mk = (y = 0) => { const x = new THREE.Group(); x.position.set(0, y, 0); world.add(x); return x; };
   const house = (s, c) => {
     const h = new THREE.Group(); h.add(box(1 * s, .8 * s, .8 * s, c, 0, .4 * s, 0));
     const r = mesh(new THREE.ConeGeometry(.82 * s, .55 * s, 4), '#dc2626', 0, 1.07 * s, 0); r.rotation.y = Math.PI / 4; h.add(r);
@@ -768,156 +795,203 @@ SCENES.q2_galaxy = (g, ctx) => {
   // 0 우리 집
   const L0 = mk(); L0.add(floor(4.8, 2.6, '#bbf7d0'));
   const h0 = house(1.6, '#fde68a'); h0.position.set(-.5, 0, -.3); L0.add(h0);
-  const bori = animal('bear', '#c68642', 1.05); bori.position.set(1.3, 0, .6); bori.rotation.y = -.4; L0.add(bori);
+  const bori = animal('bear', '#c68642', 1.2); bori.position.set(1.4, 0, .6); bori.rotation.y = -.4; L0.add(bori);
   // 1 동네
-  const L1 = mk(); L1.add(floor(7.4, 3.4, '#bbf7d0'), box(7.4, .02, .5, '#cbd5e1', 0, .01, .5));
-  [[-2.7, -.6, '#fca5a5'], [-1.4, -.7, '#93c5fd'], [0, -.5, '#fde68a'], [1.4, -.7, '#c4b5fd'], [2.7, -.6, '#86efac']].forEach(([x, z, c]) => { const h = house(.6, c); h.position.set(x, 0, z); L1.add(h); });
-  L1.add(tree(-2, 1.2), tree(.7, 1.3), tree(2.4, 1.1));
-  // 2 지구
-  const L2 = mk(1.1); const e2 = Q2A.earth(1.45); L2.add(e2);
-  const here2 = V(.35, .55, .76).normalize().multiplyScalar(1.48);
-  // 3 해 가족
-  const L3 = mk(1.05); const tilt3 = new THREE.Group(); tilt3.rotation.x = .4; L3.add(tilt3);
-  tilt3.add(Q2A.sun(.45));
-  const e3 = Q2A.earth(.18, false);
-  const p3 = [[1, '#a8a29e', .1], [1.5, '#fcd34d', .14], [2.1, null, .18], [2.8, '#ef4444', .13]].map(([Rr, c, r], i) => { tilt3.add(Q2A.ring(Rr)); const m = c ? ball(r, c) : e3; tilt3.add(m); return { m, R: Rr, w: .9 / Math.pow(Rr, 1.5), ph: i * 1.9 + .8 }; });
-  // 4 별 마을 (우리 은하)
-  const L4 = mk(1.05); const tilt4 = new THREE.Group(); tilt4.rotation.x = .95; L4.add(tilt4);
-  const spin4 = Q2A.galaxy(3.0, 5); tilt4.add(spin4);
-  const sunDot = ball(.09, emat('#fde047', 1.2)); sunDot.position.set(1.85, 0, .42); spin4.add(sunDot);
-  // 5 우주
-  const L5 = mk(1.0);
-  const gal5 = [[-1.1, .2, 0, .85, '#c7d2fe'], [1.3, 1.1, -.3, .6, '#fbcfe8'], [2.5, -.4, 0, .55, '#bae6fd'], [-2.6, 1.2, -.4, .55, '#fde68a'], [.5, -1.0, .3, .5, '#fbcfe8'], [-2.4, -.9, 0, .45, '#bae6fd'], [2.6, 1.6, -.8, .45, '#c7d2fe'], [.1, 1.8, -.6, .5, '#bae6fd']]
-    .map(([x, y, z, Rr, c], i) => { const t = new THREE.Group(); t.position.set(x, y, z); t.rotation.set(.6 + .5 * Math.sin(i * 2), i, .4 * Math.cos(i * 3)); const gx = Q2A.galaxy(Rr, 20 + i, c, 420); t.add(gx); L5.add(t); return { t, gx, i }; });
-  const ours = gal5[0].t;
+  const L1 = mk(); L1.add(floor(6.4, 3.4, '#bbf7d0'), box(6.4, .02, .5, '#cbd5e1', 0, .01, .5));
+  [[-2.4, -.6, '#fca5a5'], [-1.2, -.7, '#93c5fd'], [0, -.5, '#fde68a'], [1.2, -.7, '#c4b5fd'], [2.4, -.6, '#86efac']].forEach(([x, z, c]) => { const h = house(.6, c); h.position.set(x, 0, z); L1.add(h); });
+  L1.add(tree(-1.8, 1.2), tree(.7, 1.3), tree(2.1, 1.1));
+  // 2 나라 (바다 위 초록 땅, 작은 마을 점)
+  const L2 = mk(); L2.add(cyl(3.2, 3.2, .08, '#7dd3fc', 0, 0, 0));
+  for (const [x, z, r] of [[0, 0, 1.3], [-.6, -.9, .9], [.7, .8, .8], [.2, -1.6, .55], [-.3, 1.4, .6]]) L2.add(cyl(r, r, .16, '#86efac', x, .06, z));
+  for (const [x, z, c] of [[-.7, -.6, '#f87171'], [.6, .5, '#f87171'], [.1, -1.3, '#f87171']]) L2.add(ball(.09, c, x, .2, z));
+  const here2 = V(.25, .2, .35);
+  // 3 지구
+  const L3 = mk(1.25); const e3 = Q2A.earth(1.6); L3.add(e3);
+  const here3 = V(.35, .55, .76).normalize().multiplyScalar(1.63);
+  // 4 해 가족
+  const L4 = mk(1.2); const tilt4 = new THREE.Group(); tilt4.rotation.x = .4; L4.add(tilt4);
+  tilt4.add(Q2A.sun(.5));
+  const e4 = Q2A.earth(.2, false);
+  const p4 = [[1.1, '#a8a29e', .11], [1.65, '#fcd34d', .15], [2.3, null, .2], [3.0, '#ef4444', .14]].map(([Rr, c, r], i) => { tilt4.add(Q2A.ring(Rr, c || '#3b82f6', .7)); const m = c ? ball(r, c) : e4; tilt4.add(m); return { m, R: Rr, w: .9 / Math.pow(Rr, 1.5), ph: i * 1.9 + .8 }; });
+  // 5 별 마을 (우리 은하)
+  const L5 = mk(1.2); const tilt5 = new THREE.Group(); tilt5.rotation.x = .95; L5.add(tilt5);
+  const spin5 = Q2A.galaxy(3.2, 5, '#f9a8d4'); tilt5.add(spin5);
+  const sunDot = ball(.11, emat('#fde047', 1.2)); sunDot.position.set(1.95, 0, .44); spin5.add(sunDot);
+  // 6 우주
+  const L6 = mk(1.1);
+  const gal6 = [[-1.0, .2, 0, .95, '#f9a8d4'], [1.5, 1.3, -.3, .65, '#c7d2fe'], [2.6, -.6, 0, .6, '#bae6fd'], [-2.6, 1.4, -.4, .6, '#fde68a'], [.5, -1.3, .3, .55, '#c7d2fe'], [-2.4, -1.1, 0, .5, '#bae6fd'], [2.7, 1.9, -.8, .5, '#c7d2fe'], [.1, 2.0, -.6, .55, '#bae6fd']]
+    .map(([x, y, z, Rr, c], i) => { const t = new THREE.Group(); t.position.set(x, y, z); t.rotation.set(.6 + .5 * Math.sin(i * 2), i, .4 * Math.cos(i * 3)); const gx = Q2A.galaxy(Rr, 20 + i, c, 420); t.add(gx); L6.add(t); return { t, gx, i }; });
+  const ours = gal6[0].t;
+  // 주소 줄 색 (봉투 줄 색 = 그 줄 장소를 가리키는 '여기!' 동그라미 색)
   const levels = [
-    { grp: L0, name: '우리 집', here: null },
-    { grp: L1, name: '동네', here: () => L1.localToWorld(V(0, .6, -.5)) },
-    { grp: L2, name: '지구', here: () => L2.localToWorld(here2.clone()) },
-    { grp: L3, name: '해 가족', here: () => e3.getWorldPosition(V()) },
-    { grp: L4, name: '별 마을', here: () => sunDot.getWorldPosition(V()) },
-    { grp: L5, name: '우주', here: () => ours.getWorldPosition(V()) },
+    { grp: L0, name: '우리 집', c: '#f97316', here: null },
+    { grp: L1, name: '동네', c: '#22c55e', here: () => L1.localToWorld(V(0, .5, -.5)) },
+    { grp: L2, name: '나라', c: '#a855f7', here: () => L2.localToWorld(here2.clone()) },
+    { grp: L3, name: '지구', c: '#3b82f6', here: () => L3.localToWorld(here3.clone()) },
+    { grp: L4, name: '해 가족', c: '#facc15', here: () => e4.getWorldPosition(V()) },
+    { grp: L5, name: '별 마을', c: '#ec4899', here: () => sunDot.getWorldPosition(V()) },
+    { grp: L6, name: '우주', c: '#f8fafc', here: () => ours.getWorldPosition(V()) },
   ];
-  levels.forEach(l => { l.base = l.grp.position.clone(); l.lab = label(l.name, .5, '#fde047'); l.lab.position.set(0, 3.25, 0); g.add(l.lab); });
-  // 여기! 표시 (노란 동그라미 + 화살표, 늘 화면을 봐요)
+  levels.forEach(l => { l.base = l.grp.position.clone(); });
+
+  // 왼쪽: 보리의 편지 봉투
+  const env = new THREE.Group(); env.position.set(-2.62, 1.35, .6); g.add(env);
+  const EW = 2.45, EH = 4.15;
+  env.add(box(EW, EH, .05, '#fffbeb'));
+  for (let k = 0; k < 14; k++) { const top = k < 7, x = -EW / 2 + .17 + (EW - .34) * (k % 7) / 6; env.add(box(.14, .07, .06, k % 2 ? '#ef4444' : '#3b82f6', x, (top ? 1 : -1) * (EH / 2 - .06), 0)); }
+  env.add(box(.36, .42, .06, '#fca5a5', EW / 2 - .3, EH / 2 - .38, .01), ball(.08, '#fde047', EW / 2 - .3, EH / 2 - .38, .05));
+  const eTitle = label('우주 주소', .36, '#7c2d12', '#fffbeb'); eTitle.position.set(-.25, EH / 2 - .4, .06); env.add(eTitle);
+  const rows = levels.map((l, i) => {
+    const y = EH / 2 - .95 - i * .47;
+    const bar = box(EW - .2, .42, .02, l.c, 0, y, .035); setOpacity(bar, .28);
+    const dot = ball(.12, l.c === '#f8fafc' ? '#cbd5e1' : l.c, -EW / 2 + .27, y, .07);
+    const tx = label(l.name, .36, '#23324a', '#fffbeb'); tx.position.set(-EW / 2 + .5 + tx.userData.base[0] / 2, y, .07);
+    env.add(bar, dot, tx); return { bar, dot, tx };
+  });
+
+  // 여기! 표시: 동그라미 + 화살표, 색은 줄 색과 같아요
   const marker = new THREE.Group(); g.add(marker);
-  const mRing = mesh(new THREE.TorusGeometry(.26, .035, 8, 40), emat('#fde047', 1)); marker.add(mRing);
-  const mArr = arrow(.55, '#fde047', .05); mArr.position.set(0, .9, 0); marker.add(mArr);
-  const lSun = label('우리 해', .42, '#fde047'), lMany = label('은하가 아주아주 많아요', .42, '#fde047');
-  lMany.position.set(0, 3.25, 0); g.add(lSun, lMany);
-  const lightC = new THREE.Color(Q2A.light), darkC = new THREE.Color(Q2A.dark), bgC = new THREE.Color();
+  const mMat = emat('#fde047', 1), mRing = mesh(new THREE.TorusGeometry(.28, .045, 8, 40), mMat); marker.add(mRing);
+  const mArr = arrow(.55, '#fde047', .05); mArr.position.set(0, .95, 0); marker.add(mArr);
+  const lHere = label('여기!', .4, '#fde047'); lHere.position.set(0, 1.25, 0); marker.add(lHere);
+  const lSun = label('● 우리 해', .36, '#fde047'), lMany = label('별 마을이 아주아주 많아요', .4, '#fde047');
+  lMany.position.set(1.4, 3.3, 0); g.add(lSun, lMany);
+  const lightC = new THREE.Color(Q2A.light), darkC = new THREE.Color(Q2A.dark), bgC = new THREE.Color(), tmpC = new THREE.Color();
 
   const animate = t => {
-    p3.forEach(o => { const a = o.ph + o.w * t; o.m.position.set(Math.cos(a) * o.R, 0, -Math.sin(a) * o.R); });
-    spin4.rotation.y = -t * .08;
-    gal5.forEach(o => o.gx.rotation.y = -t * (.12 + .03 * o.i));
-    e2.rotation.y = .3 * Math.sin(t * .5); wobble(bori, t, .4);
+    p4.forEach(o => { const a = o.ph + o.w * t; o.m.position.set(Math.cos(a) * o.R, 0, -Math.sin(a) * o.R); });
+    spin5.rotation.y = -t * .08;
+    gal6.forEach(o => o.gx.rotation.y = -t * (.12 + .03 * o.i));
+    e3.rotation.y = .3 * Math.sin(t * .5); wobble(bori, t, .4);
     bori.userData.armR.rotation.z = -.8 - .5 * Math.sin(t * 5);
   };
-  const reset = () => levels.forEach(l => { l.grp.visible = false; l.lab.visible = false; l.grp.scale.setScalar(1); l.grp.position.copy(l.base); Q2A.fade(l.grp, 1); Q2A.fade(l.lab, 1); });
-  const showMarker = (pos, k = 1) => { marker.visible = k > .05; marker.position.copy(pos); mRing.scale.setScalar(k * (1 + .15 * Math.sin(performance.now() / 160))); mArr.position.y = .5 + .1 * Math.sin(performance.now() / 200); Q2A.fade(marker, k); };
-  // 주소 따라 멀리 가기: 칸 D초마다 한 단계
-  const address = (t, D) => {
-    const L = Math.min(5, Math.floor(t / D)), u = t - L * D, f = L === 0 ? 1 : seg(u, 0, .9);
-    const cur = levels[L]; cur.grp.visible = cur.lab.visible = true;
-    cur.grp.scale.setScalar(lerp(2.2, 1, f)); Q2A.fade(cur.grp, f); Q2A.fade(cur.lab, f);
-    cur.grp.updateMatrixWorld(true);
+  const reset = () => levels.forEach(l => { l.grp.visible = false; l.grp.scale.setScalar(1); l.grp.position.copy(l.base); Q2A.fade(l.grp, 1); });
+  const showMarker = (pos, c, k = 1, t = 0) => {
+    marker.visible = k > .05; if (!marker.visible) return;
+    marker.position.copy(pos); mMat.color.set(c); mMat.emissive.set(c);
+    mArr.children.forEach(m => { m.material.color.set(c); });
+    mRing.scale.setScalar(k * (1 + .15 * Math.sin(t * 6))); mArr.position.y = .55 + .1 * Math.sin(t * 5); Q2A.fade(marker, k);
+  };
+  // 봉투 줄: 0..L 보여요, L 줄이 반짝
+  const envAt = (L, f, t) => rows.forEach((r, i) => {
+    const on = i < L ? 1 : i === L ? f : 0;
+    r.dot.visible = r.tx.visible = on > .02; r.bar.visible = i === L && f > .02;
+    Q2A.fade(r.tx, on); Q2A.fade(r.dot, on);
+    r.dot.scale.setScalar(i === L ? 1 + .25 * Math.sin(t * 6) : 1);
+    if (i === L) Q2A.fade(r.bar, .3 * f);
+  });
+  // 주소 따라 멀리 가기: start~end 단계를 D초마다 한 단계
+  const address = (t, D, start, end) => {
+    const L = Math.min(end, start + Math.floor(t / D)), u = t - (L - start) * D, f = L === 0 ? 1 : seg(u, 0, .9);
+    const cur = levels[L]; cur.grp.visible = true;
+    cur.grp.scale.setScalar(lerp(2.2, 1, f)); Q2A.fade(cur.grp, f);
+    world.updateMatrixWorld(true);
     if (L > 0) {
-      const here = cur.here();
+      const here = g.worldToLocal(cur.here());
       if (f < 1) {
         const old = levels[L - 1]; old.grp.visible = true;
-        old.grp.scale.setScalar(lerp(1, .12, f)); old.grp.position.lerpVectors(old.base, here, f); Q2A.fade(old.grp, 1 - f);
+        old.grp.scale.setScalar(lerp(1, .12, f)); old.grp.position.lerpVectors(old.base, world.worldToLocal(cur.here()), f); Q2A.fade(old.grp, 1 - f);
       }
-      showMarker(here, seg(u, .7, 1.2));
+      showMarker(here, levels[L - 1].c, seg(u, .7, 1.2), t);
     }
-    bgC.copy(lightC).lerp(darkC, L < 2 ? 0 : L === 2 ? f : 1); ctx.bg(bgC);
-    stars.visible = L >= 2;
+    envAt(L, L === 0 ? 1 : seg(u, .3, 1.1), t);
+    bgC.copy(lightC).lerp(darkC, L < 3 ? 0 : L === 3 ? f : 1); ctx.bg(bgC);
+    stars.visible = L >= 3;
+    return L;
   };
   const draw = (t, ph) => {
     reset(); marker.visible = false; hideAll(lSun, lMany); animate(t);
-    if (ph === 1) address(t, 2.8);
-    else if (ph === 0) address(t, 2.4);
-    else if (ph === 2) {
-      ctx.bg(Q2A.dark); stars.visible = true; L4.visible = true; L4.updateMatrixWorld(true);
-      const p = sunDot.getWorldPosition(V()); lSun.visible = t > 2.6 && t < 8.6; lSun.position.copy(p).add(V(0, .32, 0));
-      showMarker(p, seg(t, .5, 1.2) * (t > 2.6 && t < 8.6 ? .55 : 1));
-      levels[4].lab.visible = t < 2.4;
+    if (ph === 1) address(t, 4, 0, 2);
+    else if (ph === 2) address(t, 4, 3, 5);
+    else if (ph === 0) address(t, 2.1, 0, 6);
+    else if (ph === 3) {
+      ctx.bg(Q2A.dark); stars.visible = true; L5.visible = true; world.updateMatrixWorld(true); envAt(5, 1, t);
+      const p = g.worldToLocal(sunDot.getWorldPosition(V())); lSun.visible = t > 1.8; lSun.position.copy(p).add(V(0, .42, 0));
+      showMarker(p, levels[4].c, seg(t, .4, 1.1), t);
     }
     else {
-      ctx.bg(Q2A.dark); stars.visible = true; L5.visible = true; L5.updateMatrixWorld(true);
-      showMarker(ours.getWorldPosition(V()), seg(t, .5, 1.2)); lMany.visible = t > 1;
+      ctx.bg(Q2A.dark); stars.visible = true; L6.visible = true; world.updateMatrixWorld(true); envAt(6, 1, t);
+      showMarker(g.worldToLocal(ours.getWorldPosition(V())), levels[5].c, seg(t, .4, 1.1), t); lMany.visible = t > 1;
     }
-    if (Q2A.naming()) hideAll(lSun, lMany, ...levels.map(l => l.lab));
+    if (Q2A.naming()) { hideAll(lSun, lMany); lHere.visible = false; } else lHere.visible = true;
   };
-  const mPos = () => marker.position.clone();
+  const mPos = () => marker.getWorldPosition(V());
   draw.spots = {
-    1: [['🔍 별 마을로', mPos, 4.6, '해 가족이 작아지며 별 마을 속 점 하나가 돼요', null, { loop: [10.9, 13.9], slow: .5 }], ['🔍 지구로', mPos, 3.4, '동네가 작아지며 지구 위 한 점이 돼요', null, { loop: [5.3, 8.1], slow: .5 }]],
-    2: [['🔍 우리 해', sunDot, 1.5, '이 작은 점이 우리 해예요. 둘레에 별이 가득!', null, { loop: [2.6, 7.8], slow: .5 }]],
-    3: [['🔍 우리 은하', ours, 2.6, '이 어딘가에 우리 해와 지구가 있어요', null, { loop: [0, 6], slow: .5 }], ['🔍 다른 은하', gal5[1].t, 2.0, '다른 별 마을도 빙글빙글 돌아요']],
-    0: [['🔍 별 마을로', mPos, 4.6, '해 가족이 작아지며 별 마을 속 점이 돼요', null, { loop: [9.3, 12], slow: .5 }]],
+    1: [['🔍 여기!', mPos, 3.4, '주황 줄 우리 집이 작아져서 동네 속 한 점이 돼요', null, { loop: [3.8, 6.6], slow: .5 }], ['🔍 봉투', env, 3.6, '한 줄 쓸 때마다 한 걸음 더 멀리!']],
+    2: [['🔍 여기!', mPos, 3.6, '파란 줄 지구가 해 가족 속 작은 점이 돼요', null, { loop: [3.8, 6.8], slow: .5 }], ['🔍 봉투', env, 3.6, '지구, 해 가족, 별 마을 줄이 써져요']],
+    3: [['🔍 우리 해', sunDot, 1.6, '노란 동그라미 속 작은 점이 우리 해예요. 둘레에 별이 가득!', null, { loop: [.4, 6], slow: .5 }]],
+    4: [['🔍 우리 은하', ours, 2.6, '이 분홍 별 마을 어딘가에 우리 해와 지구가 있어요', null, { loop: [0, 6], slow: .5 }], ['🔍 다른 은하', gal6[1].t, 2.0, '다른 별 마을도 빙글빙글 돌아요']],
+    0: [['🔍 여기!', mPos, 3.6, '한 줄 쓸 때마다 방금 있던 곳이 작은 점이 돼요', null, { loop: [8.2, 11], slow: .5 }], ['🔍 봉투', env, 3.6, '봉투 줄 색 = 동그라미 색']],
   };
-  draw.cam = { 2: [[2.6, 0], [8.6, -1]], 3: [[3, 0], [7.5, -1]], 0: [[9.8, 0], [12.4, -1]] };
+  draw.cam = { 1: [[4.2, 0], [7.4, -1]], 2: [[4.2, 0], [7.6, -1]], 3: [[2, 0], [7.4, -1]], 4: [[3, 0], [7, -1]], 0: [[8.6, 0], [11.4, -1]] };
   return draw;
 };
 
 // ── L03.js ──
-// 3. 자기장 (지구 자석 방패)
+// 3. 자기장 (지구 자석 방패) · BRIEF5: 자석 하나로 끝까지, 주황 자석 길은 모든 장면에서 같은 색
 LESSONS[2] = {
-  scene: 'q2_field', law: '지구가 숨겨 둔 자석 방패', title: '바둑이의 나침반',
-  cam: [0, 2.5, 7.4], tgt: [0, 1.15, 0], fit: 1.2, T: 14,
-  story: '지난번엔 우주 주소를 알아봤지요? 오늘은 바둑이와 함께 지구가 숨겨 둔 방패를 찾아봐요.',
+  scene: 'q2_field', law: '지구가 숨겨 둔 자석 방패', title: '바둑이의 자석 놀이',
+  cam: [0, 2.4, 7.6], tgt: [0, 1.15, 0], fit: 1.2, T: 12,
+  story: '지난번엔 우주 주소를 알아봤지요? 오늘은 바둑이가 자석 놀이를 해요. 지구가 숨겨 둔 방패를 찾아봐요.',
   watch: [
-    ['바둑이가 나침반을 들고 빙글 돌아요. 그래도 빨간 바늘은 늘 북쪽을 봐요!', 10],
-    ['자석 둘레에 쇳가루를 뿌리면, 보이지 않는 자석 길을 따라 줄을 서요.', 12, '🔍 「쇳가루」를 누르면 쇳가루가 줄 서는 순간이 천천히 되풀이돼요'],
-    ['지구 속 뜨거운 쇳물이 돌아 지구도 큰 자석! 해 바람을 막고 오로라를 만들어요.', 12],
+    ['바둑이가 자석을 클립에 가까이 대요. 클립이 착! 자석에 달라붙어요.', 9.5, '🔍 「착! 붙는 곳」을 누르면 클립이 붙는 순간이 천천히 되풀이돼요'],
+    ['같은 자석에 쇳가루를 뿌리면, 보이지 않는 주황 자석 길을 따라 줄을 서요.', 11, '🔍 「쇳가루」를 누르면 쇳가루가 줄 서는 순간이 천천히 되풀이돼요'],
+    ['나침반을 자석 둘레로 옮겨 봐요. 빨간 바늘도 주황 자석 길을 따라 빙글 돌아요!', 11, '🔍 「나침반」을 누르면 바늘이 주황 길을 따라 도는 모습이 천천히 되풀이돼요'],
+    ['자석과 주황 길을 그대로 지구 속에 넣어 봐요. 지구 속 쇳물이 빙글빙글 돌아 큰 자석이 돼요. 그래서 바늘이 북쪽을 봐요!', 12, '🔍 「지구 속 자석」을 누르면 자석이 지구 속으로 들어가는 순간이 천천히 되풀이돼요'],
+    ['지구의 주황 자석 길은 방패예요! 해 바람을 비켜 내고, 끝으로 들어온 알갱이는 오로라로 빛나요.', 12],
   ],
-  q: '바둑이가 빙글 돌면 바늘은?',
-  choices: [['🧭', '늘 북쪽을 봐요!'], ['🌀', '같이 빙글빙글 돌아요!'], ['💤', '바늘이 멈춰서 쉬어요!']], answer: 0,
-  hint: '바둑이가 돌아도 빨간 바늘 끝은 늘 "북쪽" 표지판을 가리켰어요.',
+  q: '쇳가루와 빨간 바늘은 무엇을 따라 줄을 섰나요?',
+  choices: [['🟠', '주황 자석 길을요!'], ['🌬️', '부는 바람을 따라요!'], ['🐶', '바둑이 꼬리를요!']], answer: 0,
+  hint: '쇳가루도, 나침반의 빨간 바늘도 주황 선을 따라 줄을 섰지요?',
   q2: '지구가 큰 자석인 까닭은?',
   choices2: [['🔥', '속의 쇳물이 돌아서!'], ['🧲', '누가 큰 자석을 붙여서!'], ['🌙', '달이 꼭 붙잡아서!']], answer2: 0,
-  hint2: '지구 속을 보면 뜨거운 쇳물(철)이 빙글빙글 돌고 있었어요.',
+  hint2: '자석이 지구 속으로 들어가니, 둘레에 주황 쇳물이 빙글빙글 돌았어요.',
   kid: '지구 속 쇳물이 돌아서 큰 자석!',
   name: { term: '자기장', kid: '지구 자석 방패', what: '자석 둘레에 생기는 보이지 않는 자석 길이에요. 지구의 자기장은 해 바람을 막아 주는 방패예요!' },
   habit: '자석은 휴대폰이나 카드 가까이 두지 않아요.',
-  adult: '어른용 · 자기장(magnetic field): 자석·전류 둘레에 생기는 힘의 장. 지구 자기장은 외핵의 액체 철·니켈이 대류하며 만드는 지구 다이너모로 생기고, 자기권이 태양풍(대전 입자)을 비켜 내 대기를 지킨다. 극지방으로 들어온 입자가 공기 원자(산소·질소)를 들뜨게 하면 오로라가 빛난다(초록은 산소). 나침반 N극은 지리상 북극 근처의 자기 S극에 끌린다.',
+  adult: '어른용 · 자기장(magnetic field): 자석·전류 둘레에 생기는 힘의 장. 쇳가루와 나침반 바늘은 자기력선 방향으로 정렬한다. 지구 자기장은 외핵의 액체 철·니켈이 대류하며 만드는 지구 다이너모로 생기며(지구 속에 실제 막대자석이 있는 것은 아님, 쌍극자 모양이 비슷할 뿐), 자기권이 태양풍(대전 입자)을 비켜 내 대기를 지킨다. 극지방으로 들어온 입자가 공기 원자(산소·질소)를 들뜨게 하면 오로라가 빛난다(초록은 산소). 나침반 N극(빨강)은 지리상 북극 근처의 자기 S극에 끌린다.',
 };
 
 SCENES.q2_field = (g, ctx) => {
-  // ── 장면 1: 바둑이와 나침반 ──
+  const ORANGE = '#f97316';
+  const magnetBody = (s = 1) => { const m = new THREE.Group(); m.add(box(.9 * s, .38 * s, .3 * s, '#ef4444', .45 * s, 0, 0), box(.9 * s, .38 * s, .3 * s, '#3b82f6', -.45 * s, 0, 0)); return m; };
+  const compass = (s = 1) => {
+    const c = new THREE.Group();
+    const face = cyl(.34 * s, .34 * s, .06 * s, '#f8fafc'); face.rotation.x = Math.PI / 2; c.add(face);
+    const rim = mesh(new THREE.TorusGeometry(.34 * s, .035 * s, 8, 32), '#64748b'); c.add(rim);
+    const needle = new THREE.Group(); needle.position.z = .06 * s; c.add(needle);
+    const nr = mesh(new THREE.ConeGeometry(.06 * s, .28 * s, 8), '#ef4444', .14 * s, 0, 0); nr.rotation.z = -Math.PI / 2;
+    const nw = mesh(new THREE.ConeGeometry(.06 * s, .28 * s, 8), '#e5e7eb', -.14 * s, 0, 0); nw.rotation.z = Math.PI / 2;
+    needle.add(nr, nw, ball(.045 * s, '#334155')); c.userData.needle = needle; return c;
+  };
+
+  // ── 장면 1: 바둑이와 클립 ──
   const yard = new THREE.Group(); g.add(yard);
   yard.add(floor(9, 4.4, '#bbf7d0'));
-  const dog = animal('dog', '#e7c08a', 1.15, { ear2: '#a16207' }); dog.position.set(-1.0, 0, .4); yard.add(dog);
-  dog.userData.armL.rotation.x = dog.userData.armR.rotation.x = -1.1;
-  const comp = new THREE.Group(); yard.add(comp);
-  comp.add(cyl(.34, .34, .07, '#f8fafc'));
-  const rim = mesh(new THREE.TorusGeometry(.34, .035, 8, 32), '#64748b'); rim.rotation.x = Math.PI / 2; comp.add(rim);
-  const needle = new THREE.Group(); needle.position.y = .07; comp.add(needle);
-  const nr = mesh(new THREE.ConeGeometry(.06, .28, 8), '#ef4444', .14, 0, 0); nr.rotation.z = -Math.PI / 2;
-  const nw = mesh(new THREE.ConeGeometry(.06, .28, 8), '#e5e7eb', -.14, 0, 0); nw.rotation.z = Math.PI / 2;
-  needle.add(nr, nw, ball(.045, '#334155'));
-  comp.scale.setScalar(1.3);
-  const sign = new THREE.Group(); sign.position.set(2.6, 0, -.3); yard.add(sign);
-  sign.add(cyl(.05, .05, 1.6, '#92400e', 0, .8, 0), box(1.1, .5, .06, '#fef3c7', 0, 1.5, 0));
-  const ar = arrow(.7, '#ef4444', .06); ar.rotation.z = Math.PI / 2; ar.position.set(-.35, 1.5, .06); sign.add(ar);
-  const lNorth = label('북쪽', .42, '#b91c1c', '#fffbeb'); lNorth.position.set(2.6, 2.2, -.3);
-  const lAlways = label('늘 북쪽!', .48, '#fde047'); g.add(lNorth, lAlways);
+  const dog = animal('dog', '#e7c08a', 1.0, { ear2: '#a16207' }); dog.position.set(-2.5, 0, .3); dog.rotation.y = 1.0; yard.add(dog);
+  dog.userData.armR.rotation.x = -1.2;
+  const hand = magnetBody(); yard.add(hand);
+  const clipGeo = new THREE.TorusGeometry(.12, .03, 6, 20);
+  const clips = Array.from({ length: 3 }, (_, i) => { const c = mesh(clipGeo, '#64748b'); c.scale.set(1.7, 1, 1); yard.add(c); return { c, a: V(1.25 + .45 * i, .04, .3 + (i % 2 ? .2 : -.05)), b: V(.92, .5 - .26 * i, .3), t0: 3.4 + .5 * i }; });
+  const lStick = label('착! 붙어요', .46, '#fde047'); lStick.position.set(1.1, 1.75, .3); g.add(lStick);
 
-  // ── 장면 2: 자석과 쇳가루 ──
+  // ── 장면 2~4: 같은 자석, 판 위의 쇳가루 → 나침반 → 지구 속 ──
   const lab = new THREE.Group(); g.add(lab);
-  lab.add(box(6.6, 3.6, .1, '#f8fafc', 0, 1.25, -.3));
-  const mag = new THREE.Group(); mag.position.set(0, 1.25, 0); lab.add(mag);
-  mag.add(box(.9, .38, .3, '#ef4444', .45, 0, 0), box(.9, .38, .3, '#3b82f6', -.45, 0, 0));
-  const fGeo = new THREE.BoxGeometry(.2, .035, .03), fMat = mat('#475569'), R = Q2A.rnd(3);
+  const board = box(6.6, 3.6, .1, '#f8fafc', 0, 1.25, -.3); lab.add(board);
+  const dip = new THREE.Group(); dip.position.set(0, 1.25, 0); lab.add(dip);
+  const body = magnetBody(); dip.add(body);
+  const fil = new THREE.Group(); dip.add(fil);
+  const fGeo = new THREE.BoxGeometry(.2, .035, .03), R = Q2A.rnd(3);
   const filings = [];
   for (let x = -2.94; x <= 2.95; x += .42) for (let y = -1.55; y <= 1.56; y += .39) {
     if (Math.abs(x) < 1.15 && Math.abs(y) < .42) continue;
-    const r2 = x * x + y * y, r = Math.sqrt(r2), rx = x / r, ry = y / r, bx = 3 * rx * rx - 1, by = 3 * rx * ry;
+    const r = Math.hypot(x, y), rx = x / r, ry = y / r, bx = 3 * rx * rx - 1, by = 3 * rx * ry;
     const target = Math.atan2(by, bx), a0 = R() * Math.PI;
-    let d = ((target - a0) % Math.PI + Math.PI * 1.5) % Math.PI - Math.PI / 2;
-    const m = new THREE.Mesh(fGeo, fMat); m.position.set(x + (R() - .5) * .1, y + (R() - .5) * .1, .02); mag.add(m);
+    const d = ((target - a0) % Math.PI + Math.PI * 1.5) % Math.PI - Math.PI / 2;
+    const m = new THREE.Mesh(fGeo, mat('#475569')); m.position.set(x + (R() - .5) * .1, y + (R() - .5) * .1, .02); fil.add(m);
     filings.push({ m, a0, d, delay: .9 + .32 * r });
   }
+  const linesG = new THREE.Group(); dip.add(linesG);
   const fLines = [];
   for (const L of [1.3, 1.9, 2.7, 3.7]) for (const sy of [1, -1]) {
     const pts = [];
@@ -927,12 +1001,26 @@ SCENES.q2_field = (g, ctx) => {
       pts.push(V(x, y, .06));
     }
     if (pts.length < 2) continue;
-    const l = line(pts, '#f59e0b'); l.material.linewidth = 2; mag.add(l); fLines.push(l);
+    const l = line(pts, ORANGE); linesG.add(l); fLines.push(l);
   }
-  const lPath = label('보이지 않는 자석 길', .44, '#b45309', '#fffbeb'); lPath.position.set(0, 2.75, .1); g.add(lPath);
-
-  // ── 장면 3: 지구 자석 방패 ──
+  // 나침반이 따라가는 길 (L = 1.9 위쪽 선): 빨간 끝에서 나와 파란 끝으로
+  const pathAt = u => { const p = .32 + (Math.PI - .64) * u, r = 1.9 * Math.sin(p) ** 2; return V(r * Math.cos(p), r * Math.sin(p), .25); };
+  const comp3 = compass(.85); dip.add(comp3);
+  const lPath = label('● 주황 자석 길', .42, '#ea580c', '#fffbeb'); lPath.position.set(0, 3.7, .1); g.add(lPath);
+  const lFollow = label('바늘도 길을 따라요', .42, '#fde047'); lFollow.position.set(0, -.35, .3); g.add(lFollow);
+  // 지구 (같은 자리에서 자석을 감싸요)
+  const ER4 = 1.05;
+  const earth4 = new THREE.Group(); earth4.position.set(0, 1.25, 0); lab.add(earth4);
+  earth4.add(mesh(new THREE.SphereGeometry(ER4, 32, 20), tmat('#3b82f6', .38)));
+  for (const [x, y, z, s] of [[.6, .4, .5, .35], [-.6, -.2, .6, .33], [.1, -.7, .5, .3]]) { const d = V(x, y, z).normalize().multiplyScalar(ER4 * .86); earth4.add(mesh(new THREE.SphereGeometry(ER4 * s, 16, 10), tmat('#22c55e', .5), d.x, d.y, d.z)); }
+  const swirl = new THREE.Group(); earth4.add(swirl);
+  const sw = [0, 1, 2].map(i => { const m = mesh(new THREE.TorusGeometry(.42 + .06 * i, .03, 8, 40), emat('#fb923c', .9)); m.rotation.x = Math.PI / 2 + .3 * (i - 1); swirl.add(m); return m; });
+  const compE = compass(.5); compE.position.set(.35, .25, ER4 + .02); earth4.add(compE);
+  compE.userData.needle.rotation.z = Math.PI / 2;
+  const lBig = label('지구도 큰 자석!', .46, '#fde047'), lN = label('북쪽', .4, '#bfdbfe'); lBig.position.set(0, 3.2, 0); lN.position.set(0, 2.62, 0); g.add(lBig, lN);
   const stars = starField(350, 24); g.add(stars);
+
+  // ── 장면 5: 지구 자석 방패 ──
   const sp = new THREE.Group(); sp.position.set(0, 1.15, 0); g.add(sp);
   const sun = Q2A.sun(.6); sun.position.set(-2.7, 0, 0); sp.add(sun);
   const EX = 1.25, ER = .72;
@@ -940,81 +1028,100 @@ SCENES.q2_field = (g, ctx) => {
   earth.add(mesh(new THREE.SphereGeometry(ER, 32, 20), tmat('#3b82f6', .4)));
   for (const [x, y, z, s] of [[.6, .4, .5, .35], [-.6, -.2, .6, .33], [.1, -.7, .5, .3]]) { const d = V(x, y, z).normalize().multiplyScalar(ER * .85); earth.add(mesh(new THREE.SphereGeometry(ER * s, 16, 10), tmat('#22c55e', .55), d.x, d.y, d.z)); }
   const core = new THREE.Group(); earth.add(core);
-  core.add(ball(.3, emat('#f97316', .9)));
-  const sw1 = mesh(new THREE.TorusGeometry(.36, .035, 8, 32), emat('#fde047', .9)), sw2 = mesh(new THREE.TorusGeometry(.36, .035, 8, 32), emat('#fde047', .9));
-  sw1.rotation.x = 1.2; sw2.rotation.y = 1.2; core.add(sw1, sw2);
+  const mini = magnetBody(.3); mini.rotation.z = -Math.PI / 2; core.add(mini);
+  const sw1 = mesh(new THREE.TorusGeometry(.33, .03, 8, 32), emat('#fb923c', .9)), sw2 = mesh(new THREE.TorusGeometry(.37, .03, 8, 32), emat('#fb923c', .9));
+  sw1.rotation.x = 1.3; sw2.rotation.x = 1.8; core.add(sw1, sw2);
   const eLines = [];
   for (const L of [1.25, 1.7, 2.3]) for (const sx of [1, -1]) {
     const pmin = Math.asin(Math.sqrt(ER / L)), pts = [];
     for (let k = 0; k <= 60; k++) { const p = pmin + (Math.PI - 2 * pmin) * k / 60, r = L * Math.sin(p) ** 2; pts.push(V(sx * r * Math.sin(p), r * Math.cos(p), 0)); }
-    const l = line(pts, '#93c5fd'); earth.add(l); eLines.push(l);
+    const l = line(pts, ORANGE); earth.add(l); eLines.push(l);
   }
   const aurMat = new THREE.MeshBasicMaterial({ color: '#4ade80', transparent: true, opacity: .5, side: THREE.DoubleSide, depthWrite: false });
   const aurN = new THREE.Group(), aurS = new THREE.Group();
-  for (const [a, s] of [[aurN, 1], [aurS, -1]]) {
-    a.position.set(0, s * (ER - .12), 0); earth.add(a);
-    a.add(new THREE.Mesh(new THREE.CylinderGeometry(.42, .34, .32, 32, 1, true), aurMat));
-  }
+  for (const [a, s] of [[aurN, 1], [aurS, -1]]) { a.position.set(0, s * (ER - .12), 0); earth.add(a); a.add(new THREE.Mesh(new THREE.CylinderGeometry(.42, .34, .32, 32, 1, true), aurMat)); }
   const pGeo = new THREE.SphereGeometry(.06, 10, 8), pMat = emat('#fde047', 1);
   const parts = Array.from({ length: 26 }, (_, i) => { const m = new THREE.Mesh(pGeo, pMat); sp.add(m); const lane = i % 9; return { m, i, y0: -1.7 + 3.4 * lane / 8 + (i % 2 ? .07 : -.07), aur: i % 6 === 0 && lane >= 2 && lane <= 6 }; });
-  const lShield = label('자석 방패', .44, '#bfdbfe'), lAur = label('오로라', .44, '#86efac');
+  const lShield = label('● 자석 방패', .42, '#fdba74'), lAur = label('오로라', .42, '#86efac');
   lShield.position.set(EX, 2.3, 0); lAur.position.set(EX + 1.1, 1.05, 0); sp.add(lShield, lAur);
+  const lightC = new THREE.Color(Q2A.light), darkC = new THREE.Color(Q2A.dark), bgC = new THREE.Color();
 
-  const dogAt = (t, t0, t1) => {
-    const a = 2 * Math.PI * seg(t, t0, t1), act = Math.max(0, Math.sin(Math.PI * clamp((t - t0) / (t1 - t0), 0, 1)));
-    dog.rotation.y = a; waddle(dog, t, act > .05 ? 1 : .2);
-    comp.position.set(dog.position.x + Math.sin(a) * .62, .78, dog.position.z + Math.cos(a) * .62);
-    comp.rotation.y = a; needle.rotation.y = -a + .25 * Math.sin(t * 8) * act;
-    lAlways.position.copy(comp.position).add(V(0, 1.1, 0));
+  const yardAt = t => {
+    const mx = lerp(-1.4, .45, seg(t, 1, 3)); hand.position.set(mx, .78, .3);
+    clips.forEach(o => { const f = seg(t, o.t0, o.t0 + .45); o.c.position.lerpVectors(o.a, o.b, f); o.c.position.y += .35 * Math.sin(Math.PI * f); o.c.rotation.set(lerp(Math.PI / 2, 0, f), 0, lerp(0, Math.PI / 2, f)); });
+    waddle(dog, t, t > 1 && t < 3 ? 1 : .2); dog.userData.head.rotation.y = t > 3.4 ? -.4 : 0;
+    lStick.visible = t > 3.8;
   };
-  const labAt = t => {
-    filings.forEach(o => { const f = seg(t, o.delay, o.delay + .8); o.m.rotation.z = o.a0 + o.d * f + .25 * Math.sin(t * 13 + o.a0 * 5) * (f > 0 && f < 1 ? 1 : 0); });
-    const k = seg(t, 5, 7.2); fLines.forEach(l => { l.visible = k > 0; l.geometry.setDrawRange(0, Math.ceil(l.geometry.attributes.position.count * k)); });
+  const filAt = (t, k = 1) => filings.forEach(o => { const f = seg(t, o.delay, o.delay + .8); o.m.rotation.z = o.a0 + o.d * f * k + .25 * Math.sin(t * 13 + o.a0 * 5) * (f > 0 && f < 1 ? 1 : 0); });
+  const linesAt = k => fLines.forEach(l => { l.visible = k > 0; l.geometry.setDrawRange(0, Math.ceil(l.geometry.attributes.position.count * k)); });
+  const comp3At = u => {
+    const p = pathAt(u), q = pathAt(Math.min(1, u + .01)), p2 = pathAt(Math.max(0, u - .01));
+    comp3.position.copy(p); comp3.userData.needle.rotation.z = Math.atan2(q.y - p2.y, q.x - p2.x);
+  };
+  // m: 0 = 판 위 자석, 1 = 지구 속 자석
+  const morphAt = (m, ts) => {
+    dip.rotation.z = -Math.PI / 2 * m; body.scale.setScalar(lerp(1, .42, m)); linesG.scale.setScalar(lerp(1, .5, m));
+    Q2A.show(board, 1 - m); Q2A.show(fil, 1 - m); Q2A.show(comp3, 1 - m);
+    Q2A.show(earth4, m); earth4.scale.setScalar(lerp(.5, 1, m));
+    Q2A.show(stars, m); bgC.copy(lightC).lerp(darkC, m); ctx.bg(bgC);
+    const s = seg(ts, 0, 1); swirl.visible = m > .9; swirl.rotation.y = ts * 2.4; sw.forEach((r, i) => r.scale.setScalar(s * (1 + .05 * Math.sin(ts * 4 + i))));
+    compE.userData.needle.rotation.z = Math.PI / 2 + .12 * Math.sin(ts * 6) * Math.exp(-ts);
   };
   const RS = 1.6;
   const spaceAt = ts => {
     core.rotation.y = ts * 2.2; wobble(sun, ts, .5);
-    const kl = seg(ts, .6, 2.2); eLines.forEach(l => { l.visible = kl > 0; l.geometry.setDrawRange(0, Math.ceil(61 * kl)); });
+    const kl = seg(ts, .3, 1.8); eLines.forEach(l => { l.visible = kl > 0; l.geometry.setDrawRange(0, Math.ceil(61 * kl)); });
     const ka = seg(ts, 5, 6.5); aurN.visible = aurS.visible = ka > 0; aurMat.opacity = ka * (.35 + .2 * Math.sin(ts * 5));
     aurN.scale.y = aurS.scale.y = 1 + .3 * Math.sin(ts * 3);
     parts.forEach(o => {
-      const p = (ts * .16 + o.i * .618) % 1, x = -2.0 + 5.6 * p, dx = x - EX, s = o.y0 === 0 ? (o.i % 2 ? 1 : -1) : Math.sign(o.y0);
-      let y = o.y0, vis = true;
+      const p = (ts * .16 + o.i * .618) % 1, x = -2.0 + 5.6 * p, dx = x - EX, s = Math.sign(o.y0) || 1;
+      let y = o.y0;
       if (Math.abs(o.y0) < RS && dx > -RS) {
         if (o.aur) {
-          const f = clamp((dx + RS) / 1.3, 0, 1); vis = f < .98;
-          const tx = lerp(EX - RS, EX - .15, f); y = lerp(o.y0, s * (ER + .05), f) + s * .7 * Math.sin(Math.PI * f);
-          o.m.position.set(tx, y, 0); o.m.visible = vis && ts > .3; return;
+          const f = clamp((dx + RS) / 1.3, 0, 1);
+          y = lerp(o.y0, s * (ER + .05), f) + s * .7 * Math.sin(Math.PI * f);
+          o.m.position.set(lerp(EX - RS, EX - .15, f), y, 0); o.m.visible = f < .98 && ts > .3; return;
         }
         y = s * Math.max(Math.abs(o.y0), Math.sqrt(Math.max(0, RS * RS - dx * dx)));
       }
       o.m.position.set(x, y, 0); o.m.visible = x < 3.5;
     });
-    lShield.visible = ts > 2; lAur.visible = ts > 6.2;
+    lShield.visible = ts > 1.8; lAur.visible = ts > 6.2;
   };
-  const which = w => { yard.visible = w === 1; lab.visible = w === 2; sp.visible = stars.visible = w === 3; ctx.bg(w === 3 ? Q2A.dark : Q2A.light); };
+  const which = w => {
+    yard.visible = w === 1; lab.visible = w === 2; sp.visible = w === 3;
+    if (w !== 2) { stars.visible = w === 3; if (stars.visible) Q2A.fade(stars, 1); ctx.bg(w === 3 ? Q2A.dark : Q2A.light); }
+  };
   const draw = (t, ph) => {
-    hideAll(lNorth, lAlways, lPath);
-    if (ph === 1) { which(1); dogAt(t, 1.2, 7.4); lNorth.visible = true; lAlways.visible = t > 2.4; }
-    else if (ph === 2) { which(2); labAt(t); lPath.visible = t > 6; }
-    else if (ph === 3) which(3), spaceAt(t);
-    else if (t < 5) { which(1); dogAt(t, .5, 4.3); lNorth.visible = true; lAlways.visible = t > 1.4; }
-    else { which(3); spaceAt(t - 3); }
-    if (Q2A.naming()) hideAll(lNorth, lAlways, lPath, lShield, lAur);
+    hideAll(lStick, lPath, lFollow, lBig, lN);
+    if (ph === 1) { which(1); yardAt(t); }
+    else if (ph === 2) { which(2); morphAt(0, 0); comp3.visible = false; filAt(t); linesAt(seg(t, 5, 7.2)); lPath.visible = t > 6; }
+    else if (ph === 3) { which(2); morphAt(0, 0); filAt(9); Q2A.fade(fil, .35); linesAt(1); comp3At(seg(t, 1.2, 9.5)); lPath.visible = true; lFollow.visible = t > 2; }
+    else if (ph === 4) {
+      which(2); const m = seg(t, 1.5, 5.5); morphAt(m, t - 5.5); filAt(9); linesAt(1); comp3At(.5);
+      Q2A.show(fil, .35 * (1 - m));
+      lPath.visible = t < 1.5; lBig.visible = t > 5.8; lN.visible = t > 7;
+    }
+    else if (ph === 5) { which(3); spaceAt(t); }
+    else { which(2); const m = seg(t, 1, 5); morphAt(m, t - 5); filAt(9); linesAt(1); comp3At(.5); Q2A.show(fil, .35 * (1 - m)); lPath.visible = t < 1; lBig.visible = t > 5.3; lN.visible = t > 6.3; }
+    if (Q2A.naming()) hideAll(lStick, lPath, lFollow, lBig, lN, lShield, lAur);
   };
   draw.spots = {
-    1: [['🔍 나침반 바늘', comp, 2.0, '바둑이가 돌아도 빨간 바늘은 늘 북쪽!', [0, .7], { loop: [1.2, 7.4], slow: .5 }], ['🔍 북쪽 표지판', [2.6, 1.4, -.3], 2.6, '바늘 끝이 가리키는 쪽이 북쪽이에요']],
-    2: [['🔍 쇳가루', [1.6, 2.0, 0], 2.4, '쇳가루가 자석 길을 따라 줄을 서요', null, { loop: [.8, 4.2], slow: .5 }], ['🔍 자석 끝', [1.2, 1.25, 0], 2.4, '자석 길은 빨간 끝에서 나와 파란 끝으로 들어가요', null, { loop: [5, 7.6], slow: .5 }]],
-    3: [['🔍 속의 쇳물', core, 2.0, '지구 속 뜨거운 쇳물이 빙글빙글 돌아 큰 자석이 돼요', null, { loop: [0, 3.5], slow: .5 }], ['🔍 오로라', aurN, 2.0, '방패 끝으로 들어온 알갱이가 하늘을 빛나게 해요', null, { loop: [6, 10], slow: .5 }], ['🔍 비켜 가는 곳', () => sp.localToWorld(V(EX - 1.5, 1.0, 0)), 2.8, '해 바람이 방패를 만나 옆으로 비켜 가요', null, { loop: [2, 6], slow: .5 }]],
-    0: [['🔍 나침반 바늘', comp, 2.0, '바늘은 늘 북쪽!', [0, .7], { loop: [.5, 4.3], slow: .5 }], ['🔍 오로라', aurN, 2.0, '방패 끝에서 하늘이 빛나요', null, { loop: [10, 13.5], slow: .5 }]],
+    1: [['🔍 착! 붙는 곳', [.95, .45, .3], 2.3, '자석 빨간 끝에 클립이 착 달라붙어요', null, { loop: [3, 5.6], slow: .5 }], ['🔍 바둑이', dog, 2.6, '바둑이가 자석을 클립에 대요']],
+    2: [['🔍 쇳가루', [1.6, 2.0, 0], 2.4, '쇳가루가 주황 자석 길을 따라 줄을 서요', null, { loop: [.8, 4.2], slow: .5 }], ['🔍 자석 끝', [1.2, 1.25, 0], 2.4, '주황 길은 빨간 끝에서 나와 파란 끝으로 들어가요', null, { loop: [5, 7.6], slow: .5 }]],
+    3: [['🔍 나침반', comp3, 1.9, '빨간 바늘이 주황 길을 따라 빙글 돌아요', null, { loop: [1.2, 6.5], slow: .5 }]],
+    4: [['🔍 지구 속 자석', [0, 1.25, 0], 3.0, '판 위 자석이 작아져서 지구 속으로 쏙! 쇳물이 빙글빙글', null, { loop: [1.3, 7], slow: .5 }], ['🔍 나침반', compE, 1.5, '지구 위 나침반 빨간 바늘은 북쪽을 봐요']],
+    5: [['🔍 속의 쇳물', core, 2.0, '지구 속 쇳물이 빙글빙글 돌아 큰 자석이 돼요', null, { loop: [0, 3.5], slow: .5 }], ['🔍 오로라', aurN, 2.0, '방패 끝으로 들어온 알갱이가 하늘을 빛나게 해요', null, { loop: [6, 10], slow: .5 }], ['🔍 비켜 가는 곳', () => sp.localToWorld(V(EX - 1.5, 1.0, 0)), 2.8, '해 바람이 주황 방패를 만나 옆으로 비켜 가요', null, { loop: [2, 6], slow: .5 }]],
+    0: [['🔍 지구 속 자석', [0, 1.25, 0], 3.0, '판 위 자석이 지구 속으로 쏙!', null, { loop: [.8, 6], slow: .5 }], ['🔍 나침반', compE, 1.5, '빨간 바늘은 북쪽을 봐요', null, { loop: [5, 9], slow: .5 }]],
   };
-  draw.cam = { 2: [[1.4, 0], [4.6, -1], [5.2, 1], [9.4, -1]], 3: [[1.5, 0], [4.2, -1], [6.6, 1], [10.6, -1]], 0: [[10.2, 1], [13.7, -1]] };
+  draw.cam = { 1: [[3.2, 0], [6.6, -1]], 2: [[1.4, 0], [4.6, -1], [5.2, 1], [9.4, -1]], 3: [[1.5, 0], [9.2, -1]], 4: [[1.6, 0], [6.4, -1], [7.4, 1], [10.6, -1]], 5: [[1.5, 0], [4.2, -1], [6.6, 1], [10.6, -1]], 0: [[1, 0], [5.4, -1], [6.2, 1], [10, -1]] };
   return draw;
 };
 
 // ── L04.js ──
-// 양자물리 2권 4. 파울리 배타 원리 — 의자 앉기 놀이 → 책상 누르기 → 원자 세상 전자 구름
-// L04·L05·L08 공용 도우미 (이름 충돌 없게 Q2B 안에)
+// 양자물리 2권 4. 파울리 배타 원리 (이어지는 장면판)
+// 의자 놀이 → 책상 꾹 → 손 닿은 곳을 크게 크게(손=갈색 알갱이, 책상=나무색 알갱이로 바뀜) → 풍선 옷끼리 꾹… 통! → 풍선 속 의자도 꽉 찼어요
+// L04·L05·L08 공용 도우미 (이름 충돌 없게 Q2B 안에). 기존 멤버(flash, pop, naming, hop, vis)는 그대로 두고 fade만 더했어요.
 const Q2B = {
   flash(c = '#fde047', r = .2) { const f = ball(r, emat(c, 1)); f.material.transparent = true; f.visible = false; return f; },
   pop(f, t, t0, pos, dur = .45, grow = 2.5) {
@@ -1028,60 +1135,70 @@ const Q2B = {
     const k = ease(u); return { x: lerp(x0, x1, k), y: lerp(y0, y1, k) + h * Math.sin(Math.PI * u) };
   },
   vis: (on, ...o) => o.forEach(x => x && (x.visible = on)),
+  // 그룹 전체를 k(0~1)만큼 보이게. 처음 불투명도를 기억해 두었다가 k=1이면 원래대로.
+  fade(grp, k) {
+    grp.visible = k > .01;
+    grp.traverse(o => {
+      const m = o.material; if (!m || m.isSpriteMaterial) return;
+      if (m.userData.o0 === undefined) { m.userData.o0 = m.opacity; m.userData.tr0 = m.transparent; m.userData.dw0 = m.depthWrite; }
+      m.opacity = m.userData.o0 * k; m.transparent = m.userData.tr0 || k < .999; m.depthWrite = k < .999 ? false : m.userData.dw0;
+    });
+  },
 };
 
 LESSONS[3] = {
-  scene: 'q2_pauli', law: '한 자리에 하나씩', title: '의자 하나에 한 친구만!',
-  cam: [0, 1.7, 6.3], tgt: [0, .7, 0], fit: 1.2, T: 14,
+  scene: 'q2_pauli', law: '한 자리에 하나씩', title: '의자 놀이와 보리 손',
+  cam: [0, 1.7, 6.3], tgt: [0, .8, 0], fit: 1.2, T: 16.5,
   story: '지난번엔 지구가 커다란 자석이었지요? 오늘은 친구들이 의자 앉기 놀이를 해요.',
   watch: [
     ['빙글빙글 돌다가 앉아요! 나비가 보리 의자에 앉으려다 콩! 의자 하나에는 한 친구만 앉아요.', 12, '🔍 「콩! 부딪힌 곳」을 누르면 콩 부딪히는 순간이 천천히 되풀이돼요'],
-    ['보리가 책상을 손으로 꾹 눌러요. 아무리 눌러도 손이 책상 속으로 안 들어가요!', 10, '🔍 「꾹 누르는 손」을 누르면 누르는 순간이 천천히 되풀이돼요'],
-    ['원자 세상에서도 똑같아요! 손 원자와 책상 원자의 전자 구름은 같은 자리에 못 들어가서 서로 밀어내요.', 14, '🔍 「구름이 닿는 곳」을 누르면 밀어내는 순간이 천천히 되풀이돼요'],
+    ['보리가 갈색 손으로 나무색 책상을 꾹 눌러요. 아무리 눌러도 손이 책상 속으로 안 들어가요!', 9, '🔍 「꾹 누르는 손」을 누르면 누르는 순간이 천천히 되풀이돼요'],
+    ['손이 닿은 곳을 크게, 더 크게! 갈색 손은 갈색 알갱이, 나무색 책상은 나무색 알갱이로 되어 있어요.', 9, '🔍 「바뀌는 곳」을 누르면 손과 책상이 알갱이로 바뀌는 모습이 천천히 되풀이돼요'],
+    ['알갱이마다 같은 색 풍선 옷을 입었어요. 갈색 손 풍선이 나무색 책상 풍선에 닿으면 꾹… 통! 밀어내요.', 9, '🔍 「풍선이 닿는 곳」을 누르면 꾹… 통! 순간이 천천히 되풀이돼요'],
+    ['풍선 속에도 의자가 있어요. 책상 풍선 의자는 꽉 찼어요. 손 풍선 친구가 앉으려다 콩! 의자 놀이랑 똑같아요.', 9, '🔍 「꽉 찬 의자」를 누르면 콩 부딪히는 순간이 천천히 되풀이돼요'],
   ],
-  q: '나비는 보리 의자에 앉았나요?',
-  choices: [['🙅', '못 앉았어요!'], ['🪑', '둘이 같이 앉았어요!'], ['🐻', '보리를 밀어냈어요!']], answer: 0,
-  hint: '의자 하나에 몇 친구가 앉을 수 있었지요?',
-  q2: '손이 책상에 안 들어가는 까닭은?',
-  choices2: [['☁️', '구름끼리 밀어내서!'], ['🧲', '책상이 자석이라서!'], ['💪', '손 힘이 너무 약해서!']], answer2: 0,
-  hint2: '원자 둘레의 전자 구름은 같은 자리에 겹쳐 들어가지 못해요.',
-  kid: '구름끼리 밀어내서!',
-  name: { term: '파울리 배타 원리', kid: '한 자리에 하나씩', what: '전자는 같은 자리에 둘이 들어가지 못해요. 그래서 손이 책상을 뚫지 못하고, 땅이 단단해서 우리가 서 있을 수 있어요!' },
+  q: '보리가 손으로 책상을 꾹 누르면?',
+  choices: [['✋', '손이 안 들어가요!'], ['🕳️', '책상 속에 쏙 들어가요!'], ['🪵', '책상이 쑥 꺼져요!']], answer: 0,
+  hint: '보리가 아무리 눌러도 손은 책상 위에 있었어요.',
+  q2: '갈색 손 풍선과 나무색 책상 풍선은?',
+  choices2: [['🎈', '꾹 닿고 통 밀어내요!'], ['🫧', '하나로 섞여 버려요!'], ['💥', '나무색 풍선이 터져 버려요!']], answer2: 0,
+  hint2: '두 풍선이 닿아서 찌그러졌다가 어떻게 됐지요? 풍선 속 의자도 꽉 차 있었어요.',
+  kid: '꾹 닿고 통 밀어내요!',
+  name: { term: '파울리 배타 원리', kid: '한 자리에 하나씩', what: '원자 풍선 속 의자 하나에는 전자 친구 하나만 앉아요. 자리가 꽉 차서 손 풍선이 책상 풍선 속으로 못 들어가요. 그래서 땅이 단단하고 우리가 서 있을 수 있어요!' },
   habit: '의자 하나에는 한 명씩 앉아요. 둘이 앉으면 넘어질 수 있어요!',
-  adult: '어른용 · 파울리 배타 원리(Pauli exclusion principle, 1925): 같은 양자 상태에 두 페르미온(전자 등)이 동시에 있을 수 없다. 원자들이 가까워지면 전자 구름이 겹치지 못해 강하게 밀어내며(전자기 반발과 함께), 이것이 물질이 단단하고 부피를 갖는 근원이다. 비유: 의자 하나 = 양자 상태 하나, 친구 = 전자.',
+  adult: '어른용 · 파울리 배타 원리(Pauli exclusion principle, 1925): 같은 양자 상태에 두 페르미온(전자 등)이 동시에 있을 수 없다. 원자가 가까워지면 채워진 전자 구름(오비탈)이 겹치지 못해 강하게 밀어내며(전자기 반발과 함께), 이것이 물질이 단단하고 부피를 갖는 근원이다. 비유: 풍선 옷 = 전자 구름, 풍선 속 의자 = 양자 상태, 작은 파란 친구 = 전자. 실제 원자는 손바닥 한 줄에도 수천만 개가 늘어설 만큼 작다.',
 };
 
 SCENES.q2_pauli = (g, ctx) => {
-  const S1 = new THREE.Group(), S2 = new THREE.Group(), A = new THREE.Group(); g.add(S1, S2, A);
+  const HAND = '#c68642', DESK = '#f3c98b', DESK_LEG = '#a16207', HAND_B = '#dda36d', DESK_B = '#f8ddb0', ELEC = '#38bdf8', CHAIR = '#f59e0b';
+  const S1 = new THREE.Group(), S2 = new THREE.Group(), M = new THREE.Group(), C5 = new THREE.Group(); g.add(S1, S2, M, C5);
+  const nm = Q2B.naming;
 
   // ── 장면 1: 의자 앉기 놀이 ──
   S1.add(floor(8.4, 4.2, '#fde7c4'));
-  const chair = (x, c = '#f59e0b') => {
+  const chair = (x, c = CHAIR, s = 1, parent = S1) => {
     const ch = new THREE.Group(); ch.position.x = x;
-    ch.add(box(.62, .08, .62, c, 0, .42, 0), box(.62, .62, .08, c, 0, .75, -.29));
-    for (const [a, b] of [[-.26, -.26], [.26, -.26], [-.26, .26], [.26, .26]]) ch.add(cyl(.035, .035, .42, '#b45309', a, .21, b));
-    S1.add(ch); return ch;
+    ch.add(box(.62 * s, .08 * s, .62 * s, c, 0, .42 * s, 0), box(.62 * s, .62 * s, .08 * s, c, 0, .75 * s, -.29 * s));
+    for (const [a, b] of [[-.26, -.26], [.26, -.26], [-.26, .26], [.26, .26]]) ch.add(cyl(.035 * s, .035 * s, .42 * s, '#b45309', a * s, .21 * s, b * s));
+    parent.add(ch); return ch;
   };
   const CX = [-1.2, 0, 1.2]; CX.forEach(x => chair(x));
   const extra = chair(2.4, '#22c55e');
-  const bori = animal('bear', '#c68642', .85), duri = animal('rabbit', '#f5f5f4', .85), ggul = animal('pig', '#f9a8d4', .85), nabi = animal('cat', '#fbbf24', .85);
+  const bori = animal('bear', HAND, .85), duri = animal('rabbit', '#f5f5f4', .85), ggul = animal('pig', '#f9a8d4', .85), nabi = animal('cat', '#fbbf24', .85);
   const P = [bori, duri, ggul, nabi]; P.forEach(a => S1.add(a));
   const bump = Q2B.flash('#fde047', .14); S1.add(bump);
   const lBump = label('콩!', .5, '#fde047'), lRule = label('의자 하나에 한 친구만!', .4, '#fde047');
   lBump.position.set(-1.2, 1.9, .3); lRule.position.set(0, 2.3, 0); S1.add(lBump, lRule);
-
   const chairGame = t => {
-    const nm = Q2B.naming();
     P.forEach((a, i) => {
       const a0 = i * Math.PI / 2 + Math.min(t, 4) * .9;
       const ex = 2.6 * Math.cos(a0), ez = 1.35 * Math.sin(a0), head = Math.atan2(-2.6 * Math.sin(a0), 1.35 * Math.cos(a0));
       a.userData.head.rotation.y = 0;
       if (t < 4) { a.position.set(ex, 0, ez); a.rotation.y = head; waddle(a, t + i, 1); return; }
-      if (i < 3) { // 보리·두리·꿀이 → 의자
+      if (i < 3) {
         const k = seg(t, 4, 5.2); a.position.set(lerp(ex, CX[i], k), lerp(0, .3, seg(t, 4.9, 5.2)), lerp(ez, .02, k));
         a.rotation.y = lerp(head, 0, k); waddle(a, t + i, k < 1 ? 1 : .1); return;
       }
-      // 나비: 보리 의자 앞 → 앉으려다 콩 → 새 의자로
       const sx = -1.2, sz = 1.0;
       if (t < 5.6) { const k = seg(t, 4, 5.4); a.position.set(lerp(ex, sx, k), 0, lerp(ez, sz, k)); a.rotation.y = lerp(head, 0, k); waddle(a, t, k < 1 ? 1 : .1); return; }
       if (t < 6.8) { const k = seg(t, 5.8, 6.75); a.position.set(sx, .38 * Math.sin(k * Math.PI * .5), lerp(sz, .32, k)); a.rotation.y = Math.PI; waddle(a, t, .3); return; }
@@ -1093,20 +1210,20 @@ SCENES.q2_pauli = (g, ctx) => {
     });
     extra.visible = t > 8.8; extra.scale.setScalar(ease((t - 8.8) / .5) || .001);
     Q2B.pop(bump, t, 6.75, V(-1.2, 1.0, .5), .5, 1.6);
-    lBump.visible = !nm && t > 6.75 && t < 7.8;
-    lRule.visible = !nm && t > 7.6;
+    lBump.visible = !nm() && t > 6.75 && t < 7.8;
+    lRule.visible = !nm() && t > 7.6;
   };
 
-  // ── 장면 2: 책상 꾹 누르기 ──
+  // ── 장면 2: 갈색 손으로 나무색 책상 꾹 ──
   S2.add(floor(8, 4, '#fde7c4'));
-  S2.add(box(1.5, .1, 1, '#a16207', .55, .72, 0));
-  for (const [a, b] of [[-.1, -.4], [1.2, -.4], [-.1, .4], [1.2, .4]]) S2.add(cyl(.05, .05, .72, '#78350f', a, .36, b));
-  const b2 = animal('bear', '#c68642', 1.1); b2.position.set(-.85, 0, 0); b2.userData.armR.visible = false; S2.add(b2);
-  const paw = ball(.13, '#c68642'), armRod = rod(.075, '#c68642'); S2.add(paw, armRod);
+  S2.add(box(1.5, .1, 1, DESK, .55, .72, 0));
+  for (const [a, b] of [[-.1, -.4], [1.2, -.4], [-.1, .4], [1.2, .4]]) S2.add(cyl(.05, .05, .72, DESK_LEG, a, .36, b));
+  const b2 = animal('bear', HAND, 1.1); b2.position.set(-.85, 0, 0); b2.userData.armR.visible = false; S2.add(b2);
+  const paw = ball(.13, HAND), armRod = rod(.075, HAND); S2.add(paw, armRod);
   const pawPad = ball(.06, '#f5deb3'); paw.add(pawPad); pawPad.position.set(0, -.08, .05);
   const lPress = label('꾹! 안 들어가요', .42, '#fde047'); lPress.position.set(.4, 1.9, 0); S2.add(lPress);
   const shoulder = V(-.85 + .28 * 1.1, .6, .02);
-  const table = t => {
+  const table = (t, showLabel = true) => {
     let px = .05, py = 1.25;
     if (t > .8 && t < 3) { const k = seg(t, .8, 2.6); px = lerp(.05, .45, k); py = lerp(1.25, .89, k); }
     else if (t >= 3 && t < 6.2) { px = .45; py = .89 - .012 * Math.abs(Math.sin(t * 22)); }
@@ -1114,192 +1231,307 @@ SCENES.q2_pauli = (g, ctx) => {
     paw.position.set(px, py, .02); paw.scale.set(1, t >= 3 && t < 6.2 ? .8 : 1, 1);
     stick(armRod, shoulder, paw.position);
     b2.userData.body.rotation.z = t >= 3 && t < 6.2 ? -.1 - .02 * Math.sin(t * 22) : 0;
-    b2.userData.head.rotation.z = 0;
-    lPress.visible = !Q2B.naming() && t > 3.3 && t < 7.4;
+    lPress.visible = showLabel && !nm() && t > 3.3 && t < 7.4;
   };
 
-  // ── 장면 3: 원자 세상 ──
-  const cloudMat = tmat('#93c5fd', .3);
-  const mk = (x, c) => { const o = new THREE.Group(), cr = critter(.26, c, { squash: 1 }), cl = mesh(new THREE.SphereGeometry(.52, 24, 16), cloudMat); o.add(cr, cl); o.position.x = x; A.add(o); o.userData.cloud = cl; return o; };
-  const bot = [-2, -1, 0, 1, 2].map(x => mk(x, '#a16207')), top = [-1.5, -.5, .5, 1.5].map(x => mk(x, '#fdba74'));
-  const fl = top.map(() => { const f = Q2B.flash('#fde047', .14); A.add(f); return f; });
-  const lHand = label('손 원자', .4, '#fdba74'), lDesk = label('책상 원자', .4, '#fde68a'), lPush = label('꾹! 밀어내요', .44, '#fde047'), lFull = label('자리가 꽉 찼어요!', .42, '#fde047');
-  lDesk.position.set(0, -.85, 0); lPush.position.set(0, 2.2, 0); lFull.position.set(0, 2.2, 0); A.add(lHand, lDesk, lPush, lFull);
-  const atoms = t => {
-    const nm = Q2B.naming();
-    let y = 1.3;
-    if (t < 3.5) y = lerp(2.8, 1.04, ease(t / 3.5));
-    else if (t < 6.2) y = 1.04 + .025 * Math.sin(t * 18);
-    else if (t < 7) y = lerp(1.04, 1.3, ease((t - 6.2) / .8));
-    const squash = t >= 3.4 && t < 6.3 ? .86 : 1;
-    top.forEach((o, i) => {
-      let yy = y;
-      if (i === 1 && t >= 8) {
-        if (t < 9.5) yy = lerp(1.3, .9, ease((t - 8) / 1.5));
-        else if (t < 10.5) yy = .9 + .02 * Math.sin(t * 24);
-        else yy = lerp(.9, 1.3, ease((t - 10.5) / .9));
-      }
-      o.position.y = yy; o.userData.cloud.scale.set(1, (i === 1 && t >= 9.4 && t < 10.6) ? .86 : squash, 1); wobble(o.children[0], t + i, .5);
-    });
-    bot.forEach((o, i) => { o.position.y = 0; o.userData.cloud.scale.set(1, squash, 1); wobble(o.children[0], t + i + 3, .3); });
-    fl.forEach((f, i) => Q2B.pop(f, t, 3.5, V(top[i].position.x, .52, .3), .5, 2.5));
-    lHand.position.set(0, y + .8, 0);
-    lHand.visible = lDesk.visible = !nm && t < 3.4;
-    lPush.visible = !nm && t > 3.7 && t < 7.6;
-    lFull.visible = !nm && t > 9.5 && t < 13.6;
+  // ── 장면 3: 손 닿은 곳을 크게 → 같은 색 알갱이로 바뀜 ──
+  const CP = V(.45, .78, .02), END = V(0, .75, 0), ZMAX = 10;
+  const GR = .15, grainGeo = new THREE.SphereGeometry(GR, 18, 12);
+  const handG = new THREE.Group(), deskG = new THREE.Group(); M.add(handG, deskG);
+  const HROWS = [[1.0, 5], [1.5, 4], [2.0, 3]], DROWS = [[.5, 9], [0, 9]];
+  const grains = (rows, c, parent) => rows.flatMap(([y, n]) => Array.from({ length: n }, (_, i) => { const m = new THREE.Mesh(grainGeo, mat(c)); m.position.set((i - (n - 1) / 2) * .5, y, 0); parent.add(m); return m; }));
+  const hGr = grains(HROWS, HAND, handG), dGr = grains(DROWS, DESK, deskG);
+  const lHandG = label('● 갈색 손 알갱이', .36, HAND), lDeskG = label('● 나무색 책상 알갱이', .36, DESK);
+  lHandG.position.set(0, 2.65, .3); lDeskG.position.set(0, -.55, .3); M.add(lHandG, lDeskG);
+  // 풍선 옷 (알갱이와 같은 색, 말랑한 파스텔)
+  const balGeo = new THREE.SphereGeometry(.25, 24, 16);
+  const coat = (c) => new THREE.MeshStandardMaterial({ color: c, roughness: .25, metalness: 0, transparent: true, opacity: .85, depthWrite: false });
+  const hBal = hGr.map(gm => { const b = new THREE.Mesh(balGeo, coat(HAND_B)); gm.add(b); const hl = ball(.05, '#ffffff'); hl.position.set(-.09, .1, .2); b.add(hl); return b; });
+  const dBal = dGr.map(gm => { const b = new THREE.Mesh(balGeo, coat(DESK_B)); gm.add(b); const hl = ball(.05, '#ffffff'); hl.position.set(-.09, .1, .2); b.add(hl); return b; });
+  const lHandB = label('● 갈색 손 풍선', .38, HAND), lDeskB = label('● 나무색 책상 풍선', .38, DESK), lTong = label('꾹… 통!', .5, '#fde047');
+  lHandB.position.set(0, 2.75, .3); lDeskB.position.set(0, -.6, .3); lTong.position.set(1.25, 1.6, .4); M.add(lHandB, lDeskB, lTong);
+  const pushFl = [-1, 0, 1].map(() => { const f = Q2B.flash('#fde047', .1); M.add(f); return f; });
+
+  const morph = t => {
+    // 0~.6 꾹 누른 채로 보여 주기, .6~4.2 세상이 커지며 닿은 곳으로 다가가기, 4.2~6.6 알갱이로 바뀌기
+    const k = seg(t, .6, 4.2), s = Math.pow(ZMAX, k);
+    S2.scale.setScalar(s); S2.position.copy(CP.clone().lerp(END, k)).sub(CP.clone().multiplyScalar(s));
+    table(4, false);
+    const x = seg(t, 4.2, 6.6);
+    Q2B.fade(S2, 1 - x); Q2B.fade(handG, x); Q2B.fade(deskG, x);
+    handG.position.y = 0; hBal.forEach(b => b.visible = false); dBal.forEach(b => b.visible = false);
+    hGr.forEach((m, i) => m.scale.setScalar(1 + .04 * Math.sin(t * 6 + i)));
+    dGr.forEach((m, i) => m.scale.setScalar(1 + .04 * Math.sin(t * 6 + i * 1.7)));
+    lHandG.visible = lDeskG.visible = !nm() && t > 6.2;
+    lHandB.visible = lDeskB.visible = lTong.visible = false;
+  };
+  const balloons = t => {
+    Q2B.fade(handG, 1); Q2B.fade(deskG, 1);
+    // 0~1.6 풍선 옷이 부풀어요, 2~3.6 손 쪽이 살짝 올라갔다가 내려와 닿아요, 3.6~5.4 꾹, 5.4~6.4 통! 밀려 올라가요
+    const inflate = ease(t / 1.6);
+    [...hBal, ...dBal].forEach((b, i) => { b.visible = inflate > .02; b.scale.setScalar(Math.max(.01, inflate) * (1 + .03 * Math.sin(t * 5 + i))); });
+    let y = 0;
+    if (t > 1.8 && t < 2.6) y = .5 * seg(t, 1.8, 2.6);
+    else if (t >= 2.6 && t < 3.6) y = lerp(.5, -.06, seg(t, 2.6, 3.6));
+    else if (t >= 3.6 && t < 5.4) y = -.06 - .012 * Math.sin(t * 20);
+    else if (t >= 5.4) y = lerp(-.06, .35, seg(t, 5.4, 6.2)) - .1 * seg(t, 6.6, 8);
+    handG.position.y = y;
+    const sq = t >= 3.3 && t < 5.6 ? .78 : 1;
+    hBal.forEach((b, i) => { if (i < HROWS[0][1]) b.scale.y *= sq; });
+    dBal.forEach((b, i) => { if (i < DROWS[0][1]) b.scale.y *= sq; });
+    pushFl.forEach((f, i) => Q2B.pop(f, t, 5.4, V(i - .0, .75, .35), .5, 2.2));
+    lHandG.visible = lDeskG.visible = false;
+    lHandB.visible = lDeskB.visible = !nm() && t > 1.2 && t < 3.4;
+    lTong.visible = !nm() && t > 3.6 && t < 7.5;
   };
 
+  // ── 장면 5: 풍선 속 의자 ──
+  const bigBal = (c, cn) => {
+    const o = new THREE.Group(), shell = mesh(new THREE.SphereGeometry(.95, 32, 22), coat(c));
+    shell.material.opacity = .45; o.add(shell);
+    const nuc = critter(.2, cn, { squash: 1 }); o.add(nuc);
+    o.userData = { shell, nuc }; C5.add(o); return o;
+  };
+  const HB = bigBal(HAND_B, HAND), DB = bigBal(DESK_B, DESK);
+  C5.scale.setScalar(1.3); C5.position.y = -.5;
+  const miniChair = (parent, x, y) => { const c = chair(0, CHAIR, .42, parent); c.position.set(x, y - .18, .25); return c; };
+  const DCH = [[-.42, .28], [.42, .28]], HCH = [[-.42, -.45], [.42, -.45]];
+  DCH.forEach(([x, y]) => miniChair(DB, x, y)); HCH.forEach(([x, y]) => miniChair(HB, x, y));
+  const efr = () => { const e = critter(.13, ELEC, { squash: 1 }); C5.add(e); return e; };
+  const dE = DCH.map(efr), hE = efr(), hE2 = efr();
+  const bump5 = Q2B.flash('#fde047', .12); C5.add(bump5);
+  const lE = label('● 전자 친구', .34, ELEC), lFull = label('자리가 꽉 찼어요!', .4, '#fde047');
+  C5.add(lE, lFull);
+  const chairsScene = t => {
+    const hy = t < 2 ? lerp(2.6, 1.95, seg(t, 0, 2)) : (t < 5.2 ? 1.95 : lerp(1.95, 2.25, seg(t, 5.2, 6.2)));
+    HB.position.set(0, hy, 0); DB.position.set(0, 0, 0);
+    const touch = hy < 1.99; HB.userData.shell.scale.set(1, touch ? .92 : 1, 1); DB.userData.shell.scale.set(1, touch ? .92 : 1, 1);
+    wobble(HB.userData.nuc, t, .3); wobble(DB.userData.nuc, t + 1, .3);
+    DCH.forEach(([x, y], i) => { dE[i].position.set(x, y + .02, .32); wobble(dE[i], t + i, .4); });
+    // 손 풍선의 의자 한 자리 친구(hE2)는 앉아 있고, 다른 친구(hE)가 책상 풍선 빈자리를 찾아 내려가요
+    hE2.position.set(HCH[1][0], hy + HCH[1][1] + .02, .32); wobble(hE2, t + 3, .4);
+    const home = V(HCH[0][0], hy + HCH[0][1] + .02, .32), tgt = V(DCH[0][0], DCH[0][1] + .3, .42);
+    let p = home;
+    if (t >= 2 && t < 3.4) { const k = seg(t, 2, 3.4); p = home.clone().lerp(tgt, k); p.y += .25 * Math.sin(Math.PI * k); }
+    else if (t >= 3.4 && t < 3.9) p = tgt;
+    else if (t >= 3.9 && t < 5) { const k = seg(t, 3.9, 5); p = tgt.clone().lerp(home, k); p.y += .3 * Math.sin(Math.PI * k); }
+    hE.position.copy(p); hE.userData.body.rotation.z = t > 3.6 && t < 4.6 ? .4 * Math.sin(t * 14) : 0; wobble(hE, t + 2, .6);
+    Q2B.pop(bump5, t, 3.45, V(DCH[0][0] + .2, DCH[0][1] + .45, .5), .4, 1.2);
+    lE.position.set(-1.45, hy - .1, .5); lE.visible = !nm() && t < 2.2;
+    lFull.position.set(0, -1.12, .6); lFull.visible = !nm() && t > 3.5 && t < 8;
+  };
+
+  const only = (...on) => [S1, S2, M, C5].forEach(x => x.visible = on.includes(x));
+  const resetS2 = () => { S2.scale.setScalar(1); S2.position.set(0, 0, 0); Q2B.fade(S2, 1); };
   const draw = (t, ph) => {
     const sky = BOOK.sceneBg;
-    if (ph === 1) { ctx.bg(sky); S1.visible = true; S2.visible = A.visible = false; chairGame(t); return; }
-    if (ph === 2) { ctx.bg(sky); S2.visible = true; S1.visible = A.visible = false; table(t); return; }
-    if (ph === 3) { ctx.bg('#ede9fe'); A.visible = true; S1.visible = S2.visible = false; atoms(t); return; }
-    S1.visible = false;
-    if (t < 7) { ctx.bg(sky); S2.visible = true; A.visible = false; table(t); }
-    else { ctx.bg('#ede9fe'); A.visible = true; S2.visible = false; atoms(t - 7 + .5); }
+    if (ph === 1) { ctx.bg(sky); resetS2(); only(S1); chairGame(t); return; }
+    if (ph === 2) { ctx.bg(sky); resetS2(); only(S2); table(t); return; }
+    if (ph === 3) { ctx.bg(sky); only(S2, M); morph(t); S2.visible = S2.visible && seg(t, 4.2, 6.6) < .99; return; }
+    if (ph === 4) { ctx.bg('#ede9fe'); resetS2(); only(M); balloons(t); return; }
+    if (ph === 5) { ctx.bg('#ede9fe'); resetS2(); only(C5); chairsScene(t); return; }
+    // 요약(문제·이름표 화면): 손 닿은 곳이 알갱이로 바뀌고 → 풍선끼리 꾹… 통!
+    if (t < 7.5) { ctx.bg(sky); only(S2, M); morph(t); S2.visible = S2.visible && seg(t, 4.2, 6.6) < .99; }
+    else { ctx.bg('#ede9fe'); resetS2(); only(M); balloons(t - 7.5); }
   };
-  draw.cam = { 2: [[2.2, 0], [7.5, -1]], 3: [[3.6, 0], [7.4, -1], [8.6, 1], [12.4, -1]], 0: [[2.2, 0], [6.4, -1], [10, 1], [13.4, -1]] };
-  const pawSpot = ['🔍 꾹 누르는 손', paw, 2.4, '꾹 눌러도 손이 책상 속으로 안 들어가요', [.5, 1.35], { loop: [2.4, 5.8], slow: .5 }];
+  draw.cam = { 2: [[2.2, 0], [7.5, -1]], 4: [[3, 0], [7.6, -1]], 5: [[.01, 1], [2.2, 0], [6.4, 1]], 0: [[10.2, 1], [15, -1]] };
+  const pawSpot = ['🔍 꾹 누르는 손', paw, 2.4, '갈색 손으로 꾹 눌러도 나무색 책상 속으로 안 들어가요', [.5, 1.35], { loop: [2.4, 5.8], slow: .5 }];
+  const morphSpot = (a, b) => ['🔍 바뀌는 곳', [0, .9, 0], 4.2, '갈색 손은 갈색 알갱이, 나무색 책상은 나무색 알갱이로 바뀌어요', null, { loop: [a, b], slow: .5 }];
+  const touchSpot = (a, b) => ['🔍 풍선이 닿는 곳', [.3, .8, 0], 3.6, '갈색 손 풍선과 나무색 책상 풍선이 꾹… 통! 밀어내요', null, { loop: [a, b], slow: .5 }];
   draw.spots = {
     1: [['🔍 콩! 부딪힌 곳', [-1.2, .6, .4], 2.8, '의자 하나에 둘이 앉으려니 콩!', null, { loop: [5.6, 7.8], slow: .5 }], ['🔍 새 의자', [2.4, .5, 0], 3.2, '의자가 하나 더 있으면 나비도 앉아요']],
     2: [pawSpot],
-    3: [['🔍 구름이 닿는 곳', [0, .55, 0], 2.8, '전자 구름끼리 꾹 밀어내요', null, { loop: [3.2, 6.6], slow: .5 }], ['🔍 꽉 찬 자리', [-.5, .45, 0], 2.5, '틈으로 들어가려 해도 자리가 꽉 찼어요', null, { loop: [8.2, 11.4], slow: .5 }]],
-    0: [pawSpot, ['🔍 구름이 닿는 곳', [0, .55, 0], 2.8, '전자 구름끼리 꾹 밀어내요', null, { loop: [9.8, 13.2], slow: .5 }]],
+    3: [morphSpot(3.2, 7.2)],
+    4: [touchSpot(2.6, 6.6)],
+    5: [['🔍 꽉 찬 의자', [DCH[0][0] * 1.3 + .2, -.45, .4], 3.8, '책상 풍선 의자에는 벌써 친구가 앉아 있어요. 콩!', null, { loop: [1.8, 5.2], slow: .5 }], ['🔍 풍선 둘', [0, .85, 0], 5.2, '갈색 손 풍선과 나무색 책상 풍선 속을 봐요']],
+    0: [morphSpot(3.2, 7.2), touchSpot(10.1, 14.1)],
   };
   return draw;
 };
 
 // ── L05.js ──
-// 양자물리 2권 5. 양자 도약 — 계단 콩콩 → 불꽃놀이 색 → 원자 속 전자 계단과 빛
+// 양자물리 2권 5. 양자 도약 (이어지는 장면판) — 계단 하나로 끝까지
+// 보리 계단 콩콩(허공엔 못 서요) → 불빛 계단: 공이 한 칸 내려오면 빨간 불 → 두 칸이면 초록 불
+// → 장난감 계단이 원자 속 계단으로 쏙(같은 모양·같은 색) → 원자 속 전자도 한 칸 빨간 빛, 두 칸 초록 빛
 LESSONS[4] = {
-  scene: 'q2_jump', law: '계단 칸에만 서요', title: '보리의 계단 콩콩',
-  cam: [0, 1.7, 7.4], tgt: [0, .9, 0], fit: 1.2, T: 14,
-  story: '지난번엔 한 자리에 하나씩만 들어갔지요? 오늘은 보리가 계단을 콩콩 올라가요.',
+  scene: 'q2_jump', law: '계단 칸에만 서요', title: '보리의 불빛 계단',
+  cam: [0, 1.6, 6.5], tgt: [0, .95, 0], fit: 1.2, T: 12,
+  story: '지난번엔 의자 하나에 한 친구만 앉았지요? 오늘은 보리가 계단을 콩콩 올라가요.',
   watch: [
-    ['보리는 계단을 한 칸씩 콩콩 올라가요. 계단 사이 허공에는 못 서요. 높은 칸에서 콩! 내려와요.', 12, '🔍 「콩콩 계단」을 누르면 한 칸씩 뛰는 모습이 천천히 되풀이돼요'],
-    ['밤하늘 불꽃놀이! 빨강, 초록, 노랑. 불꽃마다 색이 달라요.', 11, '🔍 「초록 불꽃」을 누르면 터지는 순간이 천천히 되풀이돼요'],
-    ['원자 속에서도 똑같아요! 전자도 계단 칸에만 있다가, 높은 칸에서 낮은 칸으로 콩 내려오면 빛을 뿅 내놓아요.', 14, '🔍 「전자」를 누르면 빛이 뿅 나오는 순간이 천천히 되풀이돼요'],
+    ['보리는 계단 칸 위에만 설 수 있어요. 계단 사이 허공에는 못 서요!', 10, '🔍 「허공」을 누르면 허공에 서려다 사라지는 모습이 천천히 되풀이돼요'],
+    ['밟으면 불이 켜지는 불빛 계단이에요. 파란 공이 한 칸 콩 내려오면 빨간 불이 반짝!', 8, '🔍 「한 칸 콩」을 누르면 빨간 불이 켜지는 순간이 천천히 되풀이돼요'],
+    ['이번엔 파란 공이 두 칸을 한 번에 콩! 많이 내려오면 초록 불이 반짝해요.', 8, '🔍 「두 칸 콩」을 누르면 초록 불이 켜지는 순간이 천천히 되풀이돼요'],
+    ['원자 속에도 똑같은 계단이 있어요! 파란 공처럼 파란 전자가 계단 칸에만 있어요.', 12, '🔍 「원자 속 계단」을 누르면 둘이 똑같이 콩 내려오는 모습이 천천히 되풀이돼요'],
+    ['전자가 한 칸 콩 내려오면 빨간 빛이 뿅! 두 칸 내려오면 초록 빛이 뿅!', 12, '🔍 「전자」를 누르면 빛이 뿅 나오는 순간이 천천히 되풀이돼요'],
   ],
-  q: '보리는 계단을 어떻게 올라갔나요?',
-  choices: [['🐾', '한 칸씩 콩콩!'], ['🪽', '허공에 둥둥 떠서!'], ['🛝', '미끄러져 올라가서!']], answer: 0,
-  hint: '보리는 계단 사이 허공에는 서지 못했어요.',
-  q2: '전자가 아래 칸으로 콩 내려오면?',
-  choices2: [['✨', '빛을 뿅 내놓아요!'], ['💤', '그냥 잠들어요!'], ['🧊', '꽁꽁 얼어붙어 버려요!']], answer2: 0,
-  hint2: '전자가 내려올 때 반짝이는 알갱이가 날아갔지요?',
-  kid: '빛을 뿅 내놓아요!',
-  name: { term: '양자 도약', kid: '계단 오르기', what: '전자는 정해진 계단 칸에만 있다가 콩 하고 다른 칸으로 뛰어요. 내려올 때 빛을 뿅 내놓고, 칸 높이에 따라 빛 색이 달라요!' },
-  habit: '불꽃놀이는 어른과 함께 멀리서 봐요!',
-  adult: '어른용 · 양자 도약(quantum jump): 원자 속 전자의 에너지는 띄엄띄엄한 준위(에너지 준위)만 가질 수 있다. 높은 준위에서 낮은 준위로 떨어질 때 그 차이 ΔE = hf 만큼의 광자를 낸다. 원소마다 준위 간격이 달라 고유한 색(선 스펙트럼)이 나오며, 불꽃놀이·불꽃 반응의 색이 그 예다(나트륨 노랑, 바륨·구리 초록, 스트론튬 빨강). 비유: 계단 칸 = 에너지 준위.',
+  q: '보리는 계단 사이 허공에 섰나요?',
+  choices: [['🙅', '못 서요, 칸에만!'], ['🪽', '네, 허공에 섰어요!'], ['🛝', '반쯤 떠서 섰어요!']], answer: 0,
+  hint: '허공에 나타난 흐릿한 보리는 어떻게 됐지요?',
+  q2: '파란 전자가 아래 칸으로 콩 내려오면?',
+  choices2: [['✨', '빛이 뿅 나와요!'], ['💧', '물이 졸졸 나와요!'], ['🔔', '종소리가 딩동 나요!']], answer2: 0,
+  hint2: '불빛 계단에서 파란 공이 내려올 때처럼, 전자가 내려올 때도 반짝였지요?',
+  kid: '빛이 뿅 나와요!',
+  name: { term: '양자 도약', kid: '계단 콩 내려오기', what: '전자는 원자 속 계단 칸에만 있어요. 아래 칸으로 콩 내려올 때 빛이 뿅 나와요. 한 칸이면 빨강, 두 칸이면 초록처럼 내려온 만큼 빛 색이 달라요!' },
+  habit: '계단에서는 뛰지 말고 손잡이를 잡고 한 칸씩 다녀요.',
+  adult: '어른용 · 양자 도약(quantum jump): 원자 속 전자의 에너지는 띄엄띄엄한 값(에너지 준위)만 가질 수 있다. 높은 준위에서 낮은 준위로 떨어질 때 그 차이 ΔE = hf 만큼의 광자를 낸다. 많이 떨어질수록 에너지가 커서 빛의 진동수가 높다(빨강보다 초록). 원소마다 준위 간격이 달라 고유한 색(선 스펙트럼)이 나오며, 불꽃놀이·불꽃 반응의 색이 그 예다(나트륨 노랑, 바륨 초록, 스트론튬 빨강). 빛을 흡수하면 위 준위로 올라간다. 비유: 계단 칸 = 에너지 준위, 파란 공 = 전자, 불빛 = 광자.',
 };
 
 SCENES.q2_jump = (g, ctx) => {
-  const SS = new THREE.Group(), SF = new THREE.Group(), SA = new THREE.Group(); g.add(SS, SF, SA); SA.position.y = 1;
+  const TOP = [.3, .6, .9, 1.2], COLS = ['#fef3c7', '#fde68a', '#fcd34d', '#fbbf24'], BALL = '#38bdf8', RED = '#ef4444', GREEN = '#22c55e', OFF = '#64748b';
+  const nm = Q2B.naming;
+  const SS = new THREE.Group(), SB = new THREE.Group(), SA = new THREE.Group(); g.add(SS, SB, SA);
 
-  // ── 장면 1: 계단 ──
+  // 계단 만들기: 같은 모양·같은 색을 크기만 바꿔 씁니다. pos(i) = i번째 칸 위 가운데
+  const makeStairs = (parent, s, x0, y0) => {
+    const grp = new THREE.Group(); grp.position.set(x0, y0, 0); grp.scale.setScalar(s); parent.add(grp);
+    const strips = TOP.map((h, i) => {
+      const x = (i - 1.5) * .9; grp.add(box(.9, h, 1.3, COLS[i], x, h / 2, 0));
+      const m = new THREE.MeshStandardMaterial({ color: OFF, emissive: '#000000', roughness: .4 });
+      const st = new THREE.Mesh(new THREE.BoxGeometry(.8, .08, .06), m); st.position.set(x, h - .07, .66); grp.add(st); return m;
+    });
+    return {
+      grp, s, x0, y0,
+      pos: (i, r = 0) => V(x0 + (i - 1.5) * .9 * s, y0 + TOP[i] * s + r, 0),
+      light(i, c, k) { const m = strips[i]; if (k <= 0) { m.color.set(OFF); m.emissive.set('#000000'); m.emissiveIntensity = 0; } else { m.color.set(c); m.emissive.set(c); m.emissiveIntensity = 1.2 * k; } },
+      off() { strips.forEach((_, i) => this.light(i, OFF, 0)); },
+    };
+  };
+  // 공(전자)이 칸 사이를 콩 움직이는 길. ev: [시작초, 도착 칸, 걸리는 초, 높이]
+  const path = (t, st, r, evs) => {
+    let idx = 3, p = st.pos(3, r), landed = null;
+    for (const [t0, to, dur, h] of evs) {
+      if (t < t0) break;
+      const a = st.pos(idx, r), b = st.pos(to, r);
+      if (t < t0 + dur) { const u = (t - t0) / dur, k = ease(u); p = a.clone().lerp(b, k); p.y += h * st.s * Math.sin(Math.PI * u); return { p, landed }; }
+      if (to < idx) landed = { i: to, at: t0 + dur, c: idx - to === 1 ? RED : GREEN, n: idx - to };
+      idx = to; p = b;
+    }
+    return { p, landed };
+  };
+  const glow = (st, landed, t) => { st.off(); if (landed) st.light(landed.i, landed.c, clamp(1 - (t - landed.at) / 2.6, 0, 1)); };
+
+  // ── 장면 1~3: 보리네 불빛 계단 ──
   SS.add(floor(8.4, 3.6, '#fde7c4'));
-  const SX = [-1.8, -.9, 0, .9], TOP = [.3, .6, .9, 1.2], COLS = ['#fca5a5', '#fde68a', '#86efac', '#93c5fd'];
-  SX.forEach((x, i) => SS.add(box(.9, TOP[i], 1.3, COLS[i], x, TOP[i] / 2, 0)));
+  const T1 = makeStairs(SS, 1, -.45, 0);
   const bori = animal('bear', '#c68642', .8); SS.add(bori);
-  const land = Q2B.flash('#fde047', .25); SS.add(land);
-  const lStep = label('한 칸씩 콩콩!', .42, '#fde047'), lDown = label('콩! 내려왔어요', .42, '#fde047');
-  lStep.position.set(-.4, 2.6, 0); lDown.position.set(-1.6, 2.2, 0); SS.add(lStep, lDown);
-  const stairs = t => {
-    const nm = Q2B.naming();
-    let x = -2.9, y = 0, face = Math.PI / 2, moving = false;
-    const PX = [-2.9, ...SX], PY = [0, ...TOP];
+  const ghost = animal('bear', '#c68642', .8); SS.add(ghost); Q2B.fade(ghost, .4);
+  const lStep = label('한 칸씩 콩콩!', .42, '#fde047'), lX = label('✕ 허공엔 못 서요', .4, '#f87171');
+  lStep.position.set(-.4, 2.6, 0); lX.position.set(-1.6, 2.35, .3); SS.add(lStep, lX);
+  const ball1 = critter(.15, BALL, { squash: 1 }); SS.add(ball1);
+  const ray1 = Q2B.flash(RED, .16), ray1b = Q2B.flash(GREEN, .16); SS.add(ray1, ray1b);
+  const lRed = label('한 칸 → 빨간 불!', .42, RED), lGreen = label('두 칸 → 초록 불!', .42, GREEN);
+  lRed.position.set(-.2, 2.4, .3); lGreen.position.set(-.7, 2.3, .3); SS.add(lRed, lGreen);
+  const lLamp = label('불빛 계단', .4, '#fde047'); lLamp.position.set(-.45, 2.6, 0); SS.add(lLamp);
+
+  const climb = t => {
+    T1.off(); ball1.visible = false; Q2B.vis(false, lRed, lGreen, lLamp, ray1, ray1b);
+    let x = -2.9, y = 0, face = Math.PI / 2;
+    const PX = [-2.9, ...[0, 1, 2, 3].map(i => T1.pos(i).x)], PY = [0, ...TOP];
     for (let k = 0; k < 4; k++) {
       const h = Q2B.hop(t, .6 + k, .7, PX[k], PY[k], PX[k + 1], PY[k + 1], .45);
-      if (h) { x = h.x; y = h.y; moving = true; break; }
+      if (h) { x = h.x; y = h.y; break; }
       if (t >= 1.3 + k) { x = PX[k + 1]; y = PY[k + 1]; }
     }
-    if (t >= 4.3) { x = SX[3]; y = TOP[3]; face = 0; }
-    const hd = Q2B.hop(t, 7, 1, SX[3], TOP[3], SX[0], TOP[0], .6);
-    if (hd) { x = hd.x; y = hd.y; face = -Math.PI / 2; moving = true; }
-    else if (t >= 8) { x = SX[0]; y = TOP[0]; face = 0; }
+    if (t >= 4.3) face = 0;
     bori.position.set(x, y, 0); bori.rotation.y = face;
-    bori.userData.armR.rotation.z = t > 4.4 && t < 6.8 ? 2.4 + .4 * Math.sin(t * 8) : 0;
-    bori.userData.armL.rotation.z = 0;
-    bori.userData.body.scale.set(1, moving ? 1.05 : 1, 1); waddle(bori, t, .15);
-    Q2B.pop(land, t, 8, V(SX[0], TOP[0] + .02, .45), .5, 2.2);
-    lStep.visible = !nm && t > .6 && t < 4.4;
-    lDown.visible = !nm && t > 8 && t < 11.5;
+    bori.userData.armR.rotation.z = t > 4.4 && t < 9 ? 2.4 + .4 * Math.sin(t * 8) : 0; waddle(bori, t, .15);
+    // 허공의 흐릿한 보리: 나타났다가 흔들리며 사라져요
+    const gk = seg(t, 5, 5.6) * (1 - seg(t, 7.6, 8.4));
+    ghost.visible = gk > .02; Q2B.fade(ghost, .45 * gk);
+    ghost.position.set(-2.3, .85 + .08 * Math.sin(t * 3), .2); ghost.rotation.y = 0;
+    ghost.userData.body.rotation.z = t > 6.4 ? .25 * Math.sin(t * 16) : 0;
+    lStep.visible = !nm() && t > .6 && t < 4.6;
+    lX.visible = !nm() && t > 5.8 && t < 8.6;
+  };
+  const standTop = () => { const p = T1.pos(3); bori.position.set(p.x + .3, p.y, -.15); bori.rotation.y = -Math.PI / 2; bori.userData.armR.rotation.z = 0; bori.userData.body.rotation.z = 0; ghost.visible = false; Q2B.vis(false, lStep, lX); };
+  const lampScene = (t, two) => {
+    standTop(); Q2B.vis(false, ray1, ray1b, lRed, lGreen);
+    const evs = two ? [[2, 1, 1, .8]] : [[2, 2, .8, .35]];
+    const { p, landed } = path(t, T1, .15, evs);
+    p.x -= .25; ball1.position.copy(p); ball1.visible = true; wobble(ball1, t, landed ? .3 : 1);
+    bori.userData.armL.rotation.z = t < 2 ? -1.2 : lerp(-1.2, 0, seg(t, 2, 2.6));
+    glow(T1, landed, t);
+    const ray = two ? ray1b : ray1;
+    if (landed) { const a = t - landed.at; ray.visible = a < 1.6; if (ray.visible) { ray.position.copy(T1.pos(landed.i)).add(V(0, .2 + 1.1 * a, .7)); ray.scale.setScalar(.8 + .6 * a); ray.material.opacity = 1 - a / 1.6; } } else ray.visible = false;
+    lLamp.visible = !nm() && t < 1.9;
+    (two ? lGreen : lRed).visible = !nm() && !!landed && t - landed.at < 4.5;
   };
 
-  // ── 장면 2: 불꽃놀이 ──
-  SF.add(floor(8.4, 3.6, '#365314'));
-  const w1 = animal('bear', '#c68642', .7), w2 = animal('rabbit', '#f5f5f4', .7);
-  w1.position.set(-.7, 0, 1.4); w2.position.set(.7, 0, 1.4); w1.rotation.y = Math.PI - .4; w2.rotation.y = Math.PI + .4; SF.add(w1, w2);
-  const FW = [[-1.9, 1, '#ef4444', '빨강!'], [0, 4.5, '#22c55e', '초록!'], [1.9, 8, '#facc15', '노랑!']].map(([x, t0, c, txt], f) => {
-    const m = emat(c, 1); m.transparent = true;
-    const rocket = ball(.07, emat('#fde68a', 1)); SF.add(rocket);
-    const parts = Array.from({ length: 36 }, (_, j) => {
-      const p = new THREE.Mesh(new THREE.SphereGeometry(.06, 8, 6), m); SF.add(p);
-      const th = j * 2.399 + f, z = 1 - 2 * (j + .5) / 36, r = Math.sqrt(1 - z * z);
-      return { p, d: V(r * Math.cos(th), z, r * Math.sin(th) * .6) };
-    });
-    const l = label(txt, .5, c); l.position.set(x, 4.3, 0); SF.add(l);
-    return { x, t0, m, rocket, parts, l };
-  });
-  const fireworks = t => {
-    const nm = Q2B.naming();
-    w1.userData.armR.rotation.z = 0; w2.userData.armR.rotation.z = 0;
-    FW.forEach(F => {
-      const a = t - F.t0, tb = .9, cy = 2.9;
-      F.rocket.visible = a >= 0 && a < tb; if (F.rocket.visible) F.rocket.position.set(F.x, lerp(0, cy, ease(a / tb)), 0);
-      const b = a - tb, on = b >= 0 && b < 2.4;
-      F.m.opacity = on ? Math.max(0, 1 - b / 2.4) : 0;
-      F.parts.forEach(q => { q.p.visible = on; if (on) q.p.position.set(F.x + q.d.x * 1.1 * ease(b / .8), cy + q.d.y * 1.1 * ease(b / .8) - .25 * b * b, q.d.z * 1.1 * ease(b / .8)); });
-      F.l.visible = !nm && b > .2 && b < 2.2;
-    });
-    waddle(w1, t, .2); waddle(w2, t + 1, .2);
+  // ── 장면 4: 장난감 계단 = 원자 속 계단 (같은 모양으로 쏙 들어가요) ──
+  SB.add(box(2.9, .1, 1.4, '#fde7c4', -1.65, -.05, 0));
+  const T2 = makeStairs(SB, .6, -1.65, 0);
+  const ball2 = critter(.12, BALL, { squash: 1 }); SB.add(ball2);
+  const AC = V(1.45, 1.2, 0), bubble = mesh(new THREE.SphereGeometry(1.35, 36, 24), tmat('#a5b4fc', .35)); bubble.position.copy(AC); SB.add(bubble);
+  const nucB = critter(.2, RED, { squash: 1 }); nucB.position.set(AC.x, AC.y - .95, .2); SB.add(nucB);
+  const A2 = makeStairs(SB, .42, AC.x, AC.y - .62);
+  const ghostSt = makeStairs(SB, .6, -1.65, 0);
+  const el2 = critter(.1, BALL, { squash: 1 }); SB.add(el2);
+  const ph2 = [RED, GREEN].map(c => { const f = Q2B.flash(c, .1); SB.add(f); return f; });
+  const lToy = label('장난감 계단', .36, '#fde047'), lAtom = label('원자 속 계단', .36, '#c7d2fe'), lSame = label('똑같아요!', .46, '#fde047');
+  lToy.position.set(-1.65, 1.5, .3); lAtom.position.set(AC.x, AC.y + 1.45, .3); lSame.position.set(0, 3.0, .3); SB.add(lToy, lAtom, lSame);
+  const SYNC = [[3.5, 2, .8, .35], [6.3, 3, .8, .35], [8.2, 1, 1, .8]];
+  const bridge = t => {
+    // 0~2.8 장난감 계단 그림자가 원자 속으로 날아가 작아져요
+    const k = seg(t, .4, 2.6);
+    ghostSt.grp.position.set(lerp(-1.65, A2.x0, k), lerp(0, A2.y0, k), lerp(0, .1, k)); ghostSt.grp.scale.setScalar(lerp(.6, .42, k));
+    Q2B.fade(ghostSt.grp, (k > 0 ? .55 : 0) * (1 - seg(t, 2.4, 3)));
+    Q2B.fade(A2.grp, seg(t, 2.2, 3));
+    bubble.visible = true; bubble.material.opacity = .35 * seg(t, 0, 1.2); nucB.visible = t > .6; wobble(nucB, t, .3);
+    const a = path(t, T2, .12, SYNC), b = path(t, A2, .1, SYNC);
+    ball2.position.copy(a.p); el2.position.copy(b.p).add(V(0, 0, .15)); el2.visible = t > 2.6;
+    wobble(ball2, t, 1); wobble(el2, t + 1, 1);
+    glow(T2, a.landed, t); glow(A2, b.landed, t);
+    ph2.forEach(f => f.visible = false);
+    if (b.landed && t > 2.6) { const f = ph2[b.landed.n === 1 ? 0 : 1], u = t - b.landed.at; f.visible = u < 1.6; if (f.visible) { f.position.set(b.p.x + 1.2 * u, b.p.y + .15 * Math.sin(u * 12), .3); f.material.opacity = 1; f.scale.setScalar(1); } }
+    lToy.visible = lAtom.visible = !nm() && t > 2.4 && t < 5;
+    lSame.visible = !nm() && t >= 5;
   };
 
-  // ── 장면 3: 원자 속 전자 계단 ──
-  const ringMat = new THREE.MeshBasicMaterial({ color: '#818cf8', transparent: true, opacity: .7 });
-  const RA = [.95, 1.55, 2.15], RB = [.95, 1.4, 2.45];
-  const ringsA = RA.map(r => { const m = new THREE.Mesh(new THREE.TorusGeometry(r, .03, 8, 72), ringMat); SA.add(m); return m; });
-  const ringsB = RB.map(r => { const m = new THREE.Mesh(new THREE.TorusGeometry(r, .03, 8, 72), ringMat); SA.add(m); return m; });
-  const nucA = critter(.36, '#ef4444', { squash: 1 }), nucB = critter(.36, '#f59e0b', { squash: 1 }); SA.add(nucA, nucB);
-  const el = critter(.16, '#38bdf8', { squash: 1 }); SA.add(el);
-  const inLight = ball(.11, emat('#fde68a', 1)); SA.add(inLight);
-  const outA = Array.from({ length: 5 }, () => ball(.12, emat('#facc15', 1))), outB = Array.from({ length: 5 }, () => ball(.12, emat('#22c55e', 1)));
-  [...outA, ...outB].forEach(b => SA.add(b));
-  const lStair = label('전자 계단', .4, '#c7d2fe'), lA = label('노란 빛 뿅!', .44, '#facc15'), lB = label('초록 빛 뿅!', .44, '#4ade80');
-  lStair.position.set(0, 2.9, 0); lA.position.set(2.2, 1.4, 0); lB.position.set(2.2, 1.4, 0); SA.add(lStair, lA, lB);
-  const SP = 1.6, elPos = (tt, r) => V(r * Math.cos(tt * SP), r * Math.sin(tt * SP), 0);
-  const half = (t, R, outs, lab, nuc) => {
-    const nm = Q2B.naming();
-    let r = R[0];
-    if (t >= 1.5 && t < 2.1) r = lerp(R[0], R[2], ease((t - 1.5) / .6)) ; else if (t >= 2.1 && t < 5) r = R[2]; else if (t >= 5 && t < 5.5) r = lerp(R[2], R[0], ease((t - 5) / .5));
-    el.position.copy(elPos(t, r)); el.position.z = .25 * Math.sin(Math.PI * clamp(((t - 1.5) / .6), 0, 1)) + .25 * Math.sin(Math.PI * clamp((t - 5) / .5, 0, 1));
-    wobble(el, t, 1); wobble(nuc, t, .3);
-    inLight.visible = t > .5 && t < 1.5; if (inLight.visible) inLight.position.copy(V(-4.2, 1.6, 0).lerp(elPos(1.5, R[0]), ease((t - .5) / 1)));
-    const s0 = elPos(5.5, R[0]);
-    outs.forEach((b, j) => { const a = t - 5.5 - j * .07; b.visible = a > 0 && a < 1.6; if (b.visible) b.position.set(s0.x + 2.6 * a, s0.y + .18 * Math.sin(a * 14), .3); b.scale.setScalar(1 - j * .15); });
-    lab.visible = !nm && t > 5.6 && t < 7;
-    lStair.visible = !nm && t < 1.5;
-  };
-  const atom = t => {
-    const B = t >= 7, tt = B ? t - 7 : t;
-    Q2B.vis(!B, ...ringsA, nucA); Q2B.vis(B, ...ringsB, nucB);
-    outA.forEach(b => b.visible = false); outB.forEach(b => b.visible = false); lA.visible = lB.visible = false;
-    if (!B) half(tt, RA, outA, lA, nucA); else half(tt, RB, outB, lB, nucB);
+  // ── 장면 5: 원자 속 계단과 전자 ──
+  const BC = V(0, 1.05, 0), bubble5 = mesh(new THREE.SphereGeometry(2.05, 40, 28), tmat('#a5b4fc', .3)); bubble5.position.copy(BC); SA.add(bubble5);
+  const nuc5 = critter(.3, RED, { squash: 1 }); nuc5.position.set(0, BC.y - 1.45, .3); SA.add(nuc5);
+  const A5 = makeStairs(SA, .8, 0, BC.y - .95);
+  const el5 = critter(.16, BALL, { squash: 1 }); SA.add(el5);
+  const inL = ball(.12, emat('#fde68a', 1)); SA.add(inL);
+  const trail = c => Array.from({ length: 4 }, (_, j) => { const b = ball(.13 - j * .02, emat(c, 1)); b.material.transparent = true; SA.add(b); return b; });
+  const tR = trail(RED), tG = trail(GREEN);
+  const l5a = label('한 칸 → 빨간 빛 뿅!', .4, RED), l5b = label('두 칸 → 초록 빛 뿅!', .4, GREEN), l5e = label('● 파란 전자', .36, BALL);
+  l5a.position.set(.2, 3.45, .3); l5b.position.set(.2, 3.45, .3); SA.add(l5a, l5b, l5e);
+  const EV5 = [[1.5, 2, .8, .35], [5.2, 3, .8, .35], [7.4, 1, 1, .8]];
+  const atomScene = t => {
+    wobble(nuc5, t, .3);
+    const { p, landed } = path(t, A5, .16, EV5);
+    el5.position.copy(p).add(V(0, 0, .2)); wobble(el5, t, 1);
+    glow(A5, landed, t);
+    // 빛을 먹으면 다시 위 칸으로 (노란 빛이 날아와요)
+    inL.visible = t > 4.2 && t < 5.2; if (inL.visible) inL.position.copy(V(-3.4, 2.2, .3).lerp(A5.pos(2, .16), ease((t - 4.2) / 1)));
+    [tR, tG].forEach(tr => tr.forEach(b => b.visible = false));
+    if (landed) {
+      const tr = landed.n === 1 ? tR : tG, u = t - landed.at;
+      tr.forEach((b, j) => { const v = u - j * .08; b.visible = v > 0 && v < 1.8; if (b.visible) { b.position.set(p.x + 2 * v, p.y + .18 * Math.sin(v * 12), .4); b.material.opacity = 1 - v / 1.8; } });
+    }
+    l5e.position.copy(p).add(V(-.9, .45, .4)); l5e.visible = !nm() && t < 1.4;
+    l5a.visible = !nm() && t > 2.3 && t < 4.8; l5b.visible = !nm() && t > 8.4 && t < 11.5;
   };
 
+  const only = (...on) => [SS, SB, SA].forEach(x => x.visible = on.includes(x));
   const draw = (t, ph) => {
-    if (ph === 1) { ctx.bg(BOOK.sceneBg); SS.visible = true; SF.visible = SA.visible = false; stairs(t); return; }
-    if (ph === 2) { ctx.bg('#1e1b4b'); SF.visible = true; SS.visible = SA.visible = false; fireworks(t); return; }
-    if (ph === 3) { ctx.bg('#ede9fe'); SA.visible = true; SS.visible = SF.visible = false; atom(t); return; }
-    SF.visible = false;
-    if (t < 6) { ctx.bg(BOOK.sceneBg); SS.visible = true; SA.visible = false; stairs(t + 3); }
-    else { ctx.bg('#ede9fe'); SA.visible = true; SS.visible = false; atom(t - 6); }
+    if (ph === 1) { ctx.bg(BOOK.sceneBg); only(SS); climb(t); return; }
+    if (ph === 2) { ctx.bg(BOOK.sceneBg); only(SS); lampScene(t, false); return; }
+    if (ph === 3) { ctx.bg(BOOK.sceneBg); only(SS); lampScene(t, true); return; }
+    if (ph === 5) { ctx.bg('#ede9fe'); only(SA); atomScene(t); return; }
+    // 장면 4와 요약(문제·이름표 화면): 장난감 계단과 원자 속 계단이 똑같이 콩
+    ctx.bg('#ede9fe'); only(SB); bridge(t);
   };
-  draw.cam = { 2: [[5.2, 0], [7.8, -1]], 3: [[4.6, 0], [7.3, -1], [11.6, 1]], 0: [[3.8, 0], [6.1, -1], [10.6, 1], [13.6, -1]] };
+  draw.cam = { 2: [[1.6, 0], [5.6, -1]], 3: [[1.6, 0], [6, -1]], 4: [[3.0, 0], [5.9, -1]], 5: [[1.2, 0], [4.6, -1], [7, 0], [10.6, -1]], 0: [[3.0, 0], [5.9, -1]] };
+  const atomSpot = ['🔍 원자 속 계단', [1.45, 1.2, 0], 3.7, '장난감 계단과 원자 속 계단이 똑같이 콩! 같은 색 불이 켜져요', null, { loop: [3.2, 5.6], slow: .5 }];
   draw.spots = {
-    1: [['🔍 콩콩 계단', bori, 2.8, '보리는 계단 칸에만 서요. 사이 허공에는 못 서요', [.6, 1.3], { loop: [.5, 3.5], slow: .5 }], ['🔍 콩! 내려온 곳', [-1.4, .8, 0], 2.8, '높은 칸에서 낮은 칸으로 콩!', null, { loop: [6.8, 8.8], slow: .5 }]],
-    2: [['🔍 초록 불꽃', [0, 2.9, 0], 3.4, '불꽃마다 색이 달라요. 속에 든 원자가 달라서예요', null, { loop: [5.2, 7.4], slow: .5 }]],
-    3: [['🔍 전자', el, 2.4, '높은 칸에서 낮은 칸으로 콩! 빛이 뿅!', null, { loop: [4.6, 6.9], slow: .5 }], ['🔍 초록 빛', el, 2.4, '칸 높이가 다르면 빛 색도 달라요', null, { loop: [11.6, 13.9], slow: .5 }]],
-    0: [['🔍 콩! 내려온 곳', [-1.4, .8, 0], 2.8, '높은 칸에서 낮은 칸으로 콩!', null, { loop: [3.8, 5.8], slow: .5 }], ['🔍 전자', el, 2.4, '전자도 콩 내려오며 빛을 뿅!', null, { loop: [10.6, 12.9], slow: .5 }]],
+    1: [['🔍 허공', [-2.3, 1.1, .2], 2.6, '계단 칸이 아닌 허공에는 설 수 없어요', null, { loop: [4.8, 8.6], slow: .5 }], ['🔍 콩콩 계단', bori, 2.8, '보리는 계단 칸에만 서요', [.6, 1.3], { loop: [.5, 3.6], slow: .5 }]],
+    2: [['🔍 한 칸 콩', () => g.localToWorld(T1.pos(2).add(V(.2, .5, .3))), 3.5, '파란 공이 한 칸 내려오면 빨간 불!', null, { loop: [1.6, 4.4], slow: .5 }]],
+    3: [['🔍 두 칸 콩', () => g.localToWorld(T1.pos(1).add(V(.5, .6, .3))), 3.8, '두 칸을 한 번에 내려오면 초록 불!', null, { loop: [1.6, 4.8], slow: .5 }]],
+    4: [atomSpot, ['🔍 두 칸 함께', [0, 1.1, 0], 6.2, '두 칸 내려오면 둘 다 초록!', null, { loop: [8, 10.6], slow: .5 }]],
+    5: [['🔍 전자', el5, 3.6, '한 칸 콩 내려오면 빨간 빛이 뿅!', null, { loop: [1.2, 3.6], slow: .5 }], ['🔍 초록 빛', el5, 3.8, '두 칸 내려오면 초록 빛이 뿅!', null, { loop: [7.2, 9.8], slow: .5 }]],
+    0: [atomSpot],
   };
   return draw;
 };
@@ -1455,57 +1687,127 @@ SCENES.q2_rust = (g, ctx) => {
 };
 
 // ── L07.js ──
-// 7. 대기 (지구와 화성의 차이) — 생활: 두꺼운 이불 vs 얇은 이불 → 확대: 따뜻함이 빠져나가요 → 우주: 지구와 화성의 공기 이불
+// 7. 대기 (지구와 화성의 차이) — 이불 하나로 끝까지:
+//  ① 두꺼운 하늘색 이불 vs 얇은 분홍 이불 → ② 따뜻함이 빠져나가요 → ③ 밤바람: 닫힌 보라 창문은 그대로, 열린 창문 쪽 얇은 이불은 휘익
+//  → ④ 다리: 이불·창문이 그 자리에서 지구·화성·자석 방패로 바뀌어요 → ⑤ 우주: 해 바람, 지구 방패, 화성 공기가 날아가요
+//  색 짝: 하늘색 두꺼운 이불 = 지구 공기 껍질, 분홍 얇은 이불 = 화성 공기 껍질, 보라 창문 = 자석 방패, 노란 밤바람 = 노란 해 바람
+//  (Q2C 는 L06.js 에 있어요)
 LESSONS[6] = {
   scene: 'q2_air', law: '지구와 화성은 뭐가 다를까', title: '두꺼운 이불, 얇은 이불',
-  cam: [0, 1.5, 8.2], tgt: [0, .8, 0], fit: 1.2, T: 14,
+  cam: [0, 1.5, 8.2], tgt: [0, .8, 0], fit: 1.2, T: 15,
   story: '지난번엔 화성 땅이 녹슬어서 빨갰지요? 오늘은 추운 밤, 보리와 두리가 이불을 덮고 누웠어요.',
   watch: [
-    ['추운 밤이에요. 보리는 두꺼운 이불, 두리는 얇은 이불을 덮었어요. 두리는 덜덜!', 12],
+    ['추운 밤이에요. 보리는 두꺼운 하늘색 이불, 두리는 얇은 분홍 이불을 덮었어요. 두리는 덜덜!', 12],
     ['크게 보면, 두꺼운 이불은 따뜻함을 꼭 잡아 줘요. 얇은 이불은 따뜻함이 술술 빠져나가요.', 11, '🔍 「얇은 이불」을 누르면 따뜻함이 빠져나가는 순간이 천천히 되풀이돼요.'],
-    ['우주에서도 똑같아요! 지구는 자석 방패가 공기 이불을 지켜요. 지구 반만 한 화성은 방패가 없어서 공기가 날아갔어요.', 16],
+    ['노란 밤바람이 불어요! 보라 창문을 닫은 보리 이불은 그대로. 창문이 열린 두리의 얇은 이불은 휘익 날아가요.', 13, '🔍 「날아가는 이불」을 누르면 이불이 휘익 날아가는 순간이 천천히 되풀이돼요.'],
+    ['이불을 우주로 옮겨 봐요. 하늘색 두꺼운 이불은 지구, 분홍 얇은 이불은 화성, 보라 창문은 지구의 자석 방패가 돼요.', 11, '🔍 「이불이 지구로」를 누르면 이불이 지구로 바뀌는 순간이 천천히 되풀이돼요.'],
+    ['우주에서도 똑같아요! 노란 해 바람이 불어도 보라 방패가 지구의 공기 이불을 지켜요. 방패가 없는 화성은 공기가 날아갔어요.', 16],
   ],
-  q: '얇은 이불을 덮은 두리는 어땠나요?',
-  choices: [['🥶', '추워서 덜덜해요!'], ['🥵', '더워서 땀이 나요!'], ['😴', '바로 쿨쿨 잤어요!']], answer: 0,
-  hint: '두꺼운 이불을 덮은 보리와 얇은 이불을 덮은 두리를 비교해 봐요.',
-  q2: '화성은 왜 지구보다 추울까요?',
-  choices2: [['🛏️', '공기 이불이 얇아서!'], ['🧊', '화성이 얼음으로 돼서!'], ['🌙', '해가 화성을 싫어해서!']], answer2: 0,
-  hint2: '지구는 두꺼운 공기 이불을, 화성은 아주 얇은 공기 이불을 덮고 있어요.',
-  kid: '공기 이불이 얇아서!',
-  name: { term: '대기', kid: '공기 이불', what: '행성을 이불처럼 감싼 공기예요. 지구는 두껍고, 화성은 아주 얇아요!' },
-  habit: '추운 날에는 겉옷을 입고 나가요.',
-  adult: '어른용 · 대기(atmosphere): 행성을 둘러싼 기체층. 화성은 지름이 지구의 약 53%, 질량 약 11%라 내부가 빨리 식었고, 약 40억 년 전 전 지구적 자기장이 사라진 뒤 태양풍에 대기가 깎여 나갔다(NASA MAVEN 관측). 지금 표면 기압은 지구의 약 0.6%(평균 약 610 Pa), 대기의 약 95%가 이산화탄소, 평균 기온 약 −60°C라 액체 물이 표면에 오래 머물지 못한다. 지구는 자기장과 두꺼운 대기(질소 78%, 산소 21%)가 열을 붙잡고 바다를 지킨다.',
+  q: '보라 창문을 닫은 보리 이불은 어떻게 됐나요?',
+  choices: [['🛏️', '그대로 있어요!'], ['🌬️', '휘익 날아갔어요!'], ['🔥', '이불이 타 버렸어요!']], answer: 0,
+  hint: '보라 창문이 노란 밤바람을 어떻게 했는지 떠올려 봐요.',
+  q2: '보라 방패가 없는 화성의 분홍 공기 이불은?',
+  choices2: [['💨', '바람에 날아갔어요!'], ['🌳', '나무가 쑥쑥 자랐어요!'], ['🧊', '두꺼운 얼음이 됐어요!']], answer2: 0,
+  hint2: '창문이 열린 두리의 얇은 이불처럼, 방패 없는 화성의 공기도 노란 해 바람에 날아갔어요.',
+  kid: '방패가 없어서 공기가 날아갔어요!',
+  name: { term: '대기', kid: '공기 이불', what: '행성을 이불처럼 감싼 공기예요. 지구는 두껍고 자석 방패가 지켜 주지만, 화성은 아주 얇아요!' },
+  habit: '추운 밤에는 창문을 꼭 닫고 이불을 덮고 자요.',
+  adult: '어른용 · 대기(atmosphere): 행성을 둘러싼 기체층. 화성은 지름이 지구의 약 53%, 질량 약 11%라 내부가 빨리 식었고, 약 40억 년 전 전 지구적 자기장이 사라진 뒤 태양풍에 대기가 깎여 나갔다(NASA MAVEN 관측). 지금 표면 기압은 지구의 약 0.6%(평균 약 610 Pa), 대기의 약 95%가 이산화탄소, 평균 기온 약 −60°C라 액체 물이 표면에 오래 머물지 못한다. 지구는 자기장(자기권)과 두꺼운 대기(질소 78%, 산소 21%)가 열을 붙잡고 바다를 지킨다. 비유: 두꺼운/얇은 이불 = 지구/화성 대기, 보라 창문 = 지구 자기장, 노란 바람 = 태양풍.',
 };
 
 SCENES.q2_air = (g, ctx) => {
-  // ── ①② 방: 두꺼운 이불(보리) vs 얇은 이불(두리) ──
+  const C_THICK = '#7dd3fc', C_THIN = '#fca5a5', C_SHIELD = '#c084fc', C_WIND = '#fde047';
+  const BG_ROOM = new THREE.Color('#3b4a7a'), BG_SPACE = new THREE.Color('#0b1026'), BG_TMP = new THREE.Color();
+  // 같은 색 동그라미가 붙은 라벨 (생활 장면과 우주 장면에서 똑같이 보여요)
+  const tag = (txt, sz, col) => {
+    const gg = new THREE.Group(), l = label(txt, sz, col), r = l.userData.base[1] * .3, d = ball(r, emat(col, .5));
+    d.position.x = -l.userData.base[0] / 2 - r * .6; gg.add(l, d); return gg;
+  };
+
+  // ── 방 (①②③) ──
   const room = new THREE.Group(); g.add(room); room.scale.setScalar(1.3); const RK = 1.3, RW = (x, y, z) => [x * RK, y * RK, z * RK];
-  room.add(floor(8, 3.4, '#a5b4fc'), box(8, 3.6, .1, '#4f5d95', 0, 1.8, -1.7));
-  room.add(box(1.4, 1.1, .05, '#1e3a8a', 0, 2.4, -1.63), ball(.2, emat('#fde68a', .8), .3, 2.55, -1.56));
-  const BX = [-1.35, 1.35];
+  room.add(floor(8, 3.4, '#a5b4fc'));
+  // 뒷벽: 창문 두 개 구멍
+  const WALL = '#4f5d95', WZ = -1.7, WY = 2.15, BX = [-1.35, 1.35];
+  room.add(box(8, 1.55, .1, WALL, 0, .775, WZ), box(8, .85, .1, WALL, 0, 3.175, WZ),
+    box(2.05, 1.2, .1, WALL, -2.975, WY, WZ), box(1.5, 1.2, .1, WALL, 0, WY, WZ), box(2.05, 1.2, .1, WALL, 2.975, WY, WZ));
+  // 창밖 밤하늘
+  room.add(box(9, 4.2, .05, '#1e2a5a', 0, 2, -3.6), ball(.22, emat('#fde68a', .8), 1.65, 2.45, -3.5));
+  for (let i = 0; i < 10; i++) room.add(ball(.03, emat('#ffffff', 1), -3 + i * .66, 2.6 + .4 * Math.sin(i * 2.3), -3.55));
+  // 창틀 (보라 = 방패 색)
+  const frameM = mat(C_SHIELD);
+  const frame = x => { for (const [w, h, fx, fy] of [[1.3, .08, 0, .64], [1.3, .08, 0, -.64], [.08, 1.3, -.64, 0], [.08, 1.3, .64, 0]]) room.add(mesh(new THREE.BoxGeometry(w, h, .1), frameM, x + fx, WY + fy, WZ + .06)); };
+  frame(BX[0]); frame(BX[1]);
+  const glassL = mesh(new THREE.BoxGeometry(1.2, 1.2, .03), tmat('#c7d2fe', .35), BX[0], WY, WZ + .04); room.add(glassL);
+  room.add(mesh(new THREE.BoxGeometry(.05, 1.2, .05), frameM, BX[0], WY, WZ + .06), mesh(new THREE.BoxGeometry(1.2, .05, .05), frameM, BX[0], WY, WZ + .06));
+  // 오른쪽 창문: 양쪽으로 열리는 창짝
+  const pane = (pivotX, dir) => {
+    const p = new THREE.Group(); p.position.set(pivotX, WY, WZ + .08);
+    p.add(mesh(new THREE.BoxGeometry(.58, 1.18, .03), tmat('#c7d2fe', .35), dir * .29, 0, 0), mesh(new THREE.BoxGeometry(.05, 1.18, .05), frameM, dir * .56, 0, 0));
+    room.add(p); return p;
+  };
+  const paneA = pane(BX[1] - .6, 1), paneB = pane(BX[1] + .6, -1);
+  const setOpen = k => { paneA.rotation.y = -1.35 * k; paneB.rotation.y = 1.35 * k; };
+  // 침대 두 개
   for (const x of BX) room.add(box(1.7, .35, 1.0, '#a16207', x, .18, 0), box(1.6, .12, .92, '#f8fafc', x, .41, 0), box(.12, .85, 1.0, '#92400e', x - .85, .42, 0), box(.4, .14, .7, '#e0e7ff', x - .55, .54, 0));
   const lie = (a, x) => { a.rotation.z = Math.PI / 2; a.position.set(x + .45, .71, 0); room.add(a); return a; };
   const bori = lie(animal('bear', '#c68642', .75), BX[0]), durri = lie(animal('rabbit', '#f5f5f4', .75), BX[1]);
-  const thickM = new THREE.MeshStandardMaterial({ color: '#f472b6', transparent: true, opacity: 1, roughness: .6 });
-  const thinM = new THREE.MeshStandardMaterial({ color: '#bae6fd', transparent: true, opacity: .5, roughness: .4, depthWrite: false });
+  const thickM = new THREE.MeshStandardMaterial({ color: C_THICK, transparent: true, opacity: 1, roughness: .6 });
+  const thinM = new THREE.MeshStandardMaterial({ color: C_THIN, transparent: true, opacity: .55, roughness: .4, depthWrite: false });
   const thick = new THREE.Group(); thick.add(mesh(new THREE.BoxGeometry(.95, .72, .98), thickM, 0, 0, 0));
   for (let i = 0; i < 3; i++) thick.add(mesh(new THREE.SphereGeometry(.22, 16, 10), thickM, -.3 + .3 * i, .32, 0));
-  thick.position.set(BX[0] + .33, .82, 0); room.add(thick);
-  const thin = mesh(new THREE.BoxGeometry(.95, .5, .98), thinM, BX[1] + .33, .72, 0); room.add(thin);
-  const winds = Array.from({ length: 14 }, () => { const w = ball(.06, '#e0f2fe'); room.add(w); return w; });
+  const THICK0 = V(BX[0] + .33, .82, 0); thick.position.copy(THICK0); room.add(thick);
+  const THIN0 = V(BX[1] + .33, .72, 0), THIN1 = V(BX[1] + .7, .07, 1.1);
+  const thin = mesh(new THREE.BoxGeometry(.95, .5, .98), thinM, 0, 0, 0); thin.position.copy(THIN0); room.add(thin);
   // 따뜻함 알갱이
   const heatGeo = new THREE.SphereGeometry(.07, 10, 8), WARM = new THREE.Color('#f97316'), COLD = new THREE.Color('#93c5fd');
   const heat = BX.map(() => Array.from({ length: 8 }, () => { const m = new THREE.MeshStandardMaterial({ color: WARM.clone(), emissive: '#7c2d12', emissiveIntensity: .4, transparent: true }); const h = new THREE.Mesh(heatGeo, m); room.add(h); return h; }));
-  const lThick = label('두꺼운 이불', .4, '#fbcfe8'), lThin = label('얇은 이불', .4, '#bae6fd'), lCozy = label('포근!', .46, '#fde047'), lBrr = label('덜덜!', .46, '#bfdbfe'), lKeep = label('따뜻함 꼭!', .42, '#fdba74'), lLeak = label('술술 빠져요', .42, '#bae6fd');
+  // 노란 밤바람 (= 노란 해 바람)
+  const windM = new THREE.MeshBasicMaterial({ color: C_WIND, transparent: true }), windGeo = new THREE.SphereGeometry(.06, 8, 6);
+  const nightWind = Array.from({ length: 24 }, (_, k) => { const w = new THREE.Mesh(windGeo, windM); w.userData.j = V(((k * 7) % 5 - 2) * .14, ((k * 3) % 5 - 2) * .14, 0); room.add(w); return w; });
+  // 라벨
+  const lThick = tag('두꺼운 이불', .4, C_THICK), lThin = tag('얇은 이불', .4, C_THIN), lCozy = label('포근!', .46, '#fde047'), lBrr = label('덜덜!', .46, '#bfdbfe'), lKeep = label('따뜻함 꼭!', .42, '#fdba74'), lLeak = label('술술 빠져요', .42, '#bae6fd');
   for (const [l, x] of [[lThick, BX[0]], [lCozy, BX[0]], [lKeep, BX[0]], [lThin, BX[1]], [lBrr, BX[1]], [lLeak, BX[1]]]) { l.position.set(x, 1.85, .3); room.add(l); }
   lLeak.position.y = 1.95; lKeep.position.y = 1.6;
+  const lClosed = tag('닫힌 창문', .36, C_SHIELD), lOpen = tag('열린 창문', .36, C_SHIELD), lStay = label('그대로!', .46, '#fde047'), lWhoosh = label('휘익!', .5, '#fde047');
+  lClosed.position.set(BX[0], 3.05, -1.3); lOpen.position.set(BX[1], 3.05, -1.3); lStay.position.set(BX[0], 1.75, .4); lWhoosh.position.set(BX[1] + .95, 1.35, .9);
+  room.add(lClosed, lOpen, lStay, lWhoosh);
+  const roomLabels = [lThick, lThin, lCozy, lBrr, lKeep, lLeak, lClosed, lOpen, lStay, lWhoosh];
+  const P = V(), A = V(), B = V();
+
   function roomAt(t, ph, labels) {
-    const zoom = ph === 2;
-    thickM.opacity = zoom ? .32 : 1; thickM.depthWrite = !zoom; thinM.opacity = zoom ? .28 : .5;
-    const brr = !zoom && t > 5;
-    durri.position.x = BX[1] + .45 + (brr ? .025 * Math.sin(t * 45) : 0); thin.position.x = BX[1] + .33 + (brr ? .02 * Math.sin(t * 45) : 0);
+    hideAll(...roomLabels);
+    const zoom = ph === 2, gust = ph === 3;
+    thickM.opacity = zoom ? .32 : 1; thickM.depthWrite = !zoom; thinM.opacity = zoom ? .28 : .55;
+    setOpen(gust ? seg(t, .3, 1.3) : 0);
+    // 얇은 이불: ③에서 휘익 날아가 바닥에 떨어져요
+    const fly = gust ? seg(t, 3.6, 6.4) : 0;
+    thin.position.lerpVectors(THIN0, THIN1, fly); thin.position.y += 1.1 * Math.sin(Math.PI * fly);
+    thin.rotation.set(.45 * Math.sin(fly * Math.PI * 3), 0, .7 * Math.sin(fly * Math.PI * 2)); thin.scale.set(1, lerp(1, .3, fly), 1);
+    thick.position.copy(THICK0); thick.position.y += gust && t > 2 ? .01 * Math.sin(t * 9) : 0;
+    const brr = (!zoom && !gust && t > 5) || (gust && t > 6.4);
+    durri.position.x = BX[1] + .45 + (brr ? .025 * Math.sin(t * 45) : 0);
+    if (!gust) thin.position.x += brr ? .02 * Math.sin(t * 45) : 0;
     bori.userData.head.rotation.x = .08 * Math.sin(t * 1.5);
-    winds.forEach((w, k) => { const s = ((t - 2) * 1.5 + k * .45) % 3.2; w.visible = !zoom && t > 2 && s >= 0; w.position.set(2.9 - s, 1.5 + .35 * Math.sin(s * 3 + k) - .25 * s, .3 + .15 * Math.cos(k)); });
+    // 바람 알갱이 (③만)
+    nightWind.forEach((w, k) => {
+      const s = ((t - 1.5) * 1.5 + k * .29) % 3.4, side = k % 2;
+      w.visible = gust && t > 1.5 && (t - 1.5) * 1.5 + k * .29 > 0;
+      if (!w.visible) return;
+      const x = BX[side];
+      if (side === 0) {           // 닫힌 창문: 유리에 콩 → 튕겨 나가요
+        const hit = 1.1;
+        const z = s < hit ? -3.4 + s * 1.55 : -3.4 + hit * 1.55 - (s - hit) * 1.4;
+        w.position.set(x + w.userData.j.x + (s > hit ? (s - hit) * w.userData.j.x * 2 : 0), WY + w.userData.j.y, z);
+        w.visible = s < 2.3;
+      } else {                    // 열린 창문: 들어와서 이불 쪽으로
+        A.set(x + w.userData.j.x, WY + w.userData.j.y, -3.4); B.set(x + .5 * w.userData.j.x, WY, WZ);
+        if (s < 1.1) P.lerpVectors(A, B, s / 1.1);
+        else { A.copy(B); B.set(x + .5 + w.userData.j.x * 2, .95 + w.userData.j.y, 1.4); P.lerpVectors(A, B, Math.min(1, (s - 1.1) / 1.6)); }
+        w.position.copy(P); w.visible = s < 2.7;
+      }
+    });
+    // 따뜻함 알갱이 (②만)
     heat.forEach((list, side) => list.forEach((h, k) => {
       h.visible = zoom;
       if (!zoom) return;
@@ -1517,142 +1819,241 @@ SCENES.q2_air = (g, ctx) => {
         h.material.color.copy(WARM).lerp(COLD, seg(p, .25, .5)); h.material.opacity = 1 - seg(p, .6, 1);
       }
     }));
-    lThick.visible = lThin.visible = labels && !zoom && t < 4.5;
-    lCozy.visible = lBrr.visible = labels && !zoom && t > 5.5;
-    lKeep.visible = lLeak.visible = labels && zoom && t > 1.5;
+    if (!labels) return;
+    if (ph === 1) { lThick.visible = lThin.visible = t < 4.5; lCozy.visible = lBrr.visible = t > 5.5; }
+    if (zoom) lKeep.visible = lLeak.visible = t > 1.5;
+    if (gust) { lClosed.visible = lOpen.visible = t < 3.4; lStay.visible = t > 3.8; lWhoosh.visible = t > 3.8 && t < 9.5; }
   }
 
-  // ── ③ 우주: 해 · 지구 · 화성 ──
+  // ── 우주 (④⑤): 해 · 지구 · 화성 ──
   const space = new THREE.Group(); g.add(space);
-  space.add(starField(300, 25));
-  const sun = ball(.42, emat('#facc15', 1), -3.3, .7, 0); space.add(sun, mesh(new THREE.SphereGeometry(.62, 20, 12), tmat('#fde047', .25), -3.3, .7, 0));
+  const stars = starField(300, 25); stars.material.transparent = true; space.add(stars);
+  const sun = ball(.42, emat('#facc15', 1), -3.3, .7, 0), sunGlow = mesh(new THREE.SphereGeometry(.62, 20, 12), tmat('#fde047', .25), -3.3, .7, 0); space.add(sun, sunGlow);
   const EC = V(-.9, .7, 0), MC = V(2.3, .7, 0), RS = 1.55;
   const earth = new THREE.Group(); earth.position.copy(EC); space.add(earth);
   const eSpin = new THREE.Group(); earth.add(eSpin); eSpin.add(ball(.95, '#2563eb'));
   const R = Q2C.rnd(5);
   for (let i = 0; i < 12; i++) { const d = V(R() - .5, R() - .5, R() - .5).normalize(); const p = ball(.2 + .15 * R(), i < 8 ? '#22c55e' : '#ffffff'); p.position.copy(d.multiplyScalar(i < 8 ? .88 : .97)); p.scale.set(1, 1, .3); p.lookAt(0, 0, 0); eSpin.add(p); }
-  const eAir = mesh(new THREE.SphereGeometry(1.12, 28, 18), tmat('#7dd3fc', .3)); earth.add(eAir);
-  const shieldM = tmat('#c084fc', .45);
-  const shield = [0, 1, 2].map(i => { const r = mesh(new THREE.TorusGeometry(RS, .018, 6, 64), shieldM); r.rotation.y = i * Math.PI / 3; r.scale.set(1.08, 1, 1); earth.add(r); return r; });
+  const eAirM = tmat(C_THICK, .35), eAir = mesh(new THREE.SphereGeometry(1.12, 28, 18), eAirM); earth.add(eAir);
+  const shieldM = tmat(C_SHIELD, .45);
+  const shield = [0, 1, 2].map(i => { const r = mesh(new THREE.TorusGeometry(RS, .022, 6, 64), shieldM); r.rotation.y = i * Math.PI / 3; r.scale.set(1.08, 1, 1); earth.add(r); return r; });
+  void shield;
   const mars = new THREE.Group(); mars.position.copy(MC); space.add(mars);
   const mSpin = new THREE.Group(); mars.add(mSpin); mSpin.add(ball(.5, '#c2410c'));
   const mcap = ball(.18, '#f8fafc', 0, .45, 0); mcap.scale.set(1, .35, 1); mSpin.add(mcap);
   for (let i = 0; i < 5; i++) { const d = V(R() - .5, R() - .5, R() - .5).normalize(); const p = ball(.1, '#9a3412'); p.position.copy(d.multiplyScalar(.47)); p.scale.set(1, 1, .3); p.lookAt(0, 0, 0); mSpin.add(p); }
-  const mAirM = tmat('#fca5a5', .35), mAir = mesh(new THREE.SphereGeometry(.58, 24, 14), mAirM); mars.add(mAir);
-  const airDots = Array.from({ length: 10 }, (_, k) => { const m = new THREE.MeshBasicMaterial({ color: '#bae6fd', transparent: true }); const d = new THREE.Mesh(new THREE.SphereGeometry(.05, 8, 6), m); const a = k / 10 * Math.PI * 2; d.userData.home = V(.64 * Math.cos(a), .64 * Math.sin(a), .2); mars.add(d); return d; });
-  const windM = new THREE.MeshBasicMaterial({ color: '#fde047' }), windGeo = new THREE.SphereGeometry(.045, 8, 6);
-  const winds2 = Array.from({ length: 34 }, (_, k) => { const w = new THREE.Mesh(windGeo, windM); w.userData.y = .7 - 1.5 + 3.0 * ((k * 7) % 34) / 33; w.userData.z = ((k * 5) % 7 - 3) * .08; space.add(w); return w; });
-  const lE = label('지구', .48, '#bfdbfe'), lM = label('화성', .44, '#fdba74'), lS = label('자석 방패!', .42, '#e9d5ff'), lF = label('공기가 날아가요', .38, '#bae6fd'), lT = label('두꺼운 이불', .4, '#bfdbfe'), lN = label('얇은 이불', .38, '#fecaca');
-  lE.position.set(-.9, 2.55, .3); lS.position.set(-.9, 2.6, .3); lT.position.set(-.9, 2.6, .3); lM.position.set(2.3, 1.65, .3); lF.position.set(2.3, 1.6, .3); lN.position.set(2.3, 1.65, .3);
+  const mAirM = tmat(C_THIN, .4), mAir = mesh(new THREE.SphereGeometry(.6, 24, 14), mAirM); mars.add(mAir);
+  const airDots = Array.from({ length: 10 }, (_, k) => { const m = new THREE.MeshBasicMaterial({ color: C_THIN, transparent: true }); const d = new THREE.Mesh(new THREE.SphereGeometry(.055, 8, 6), m); const a = k / 10 * Math.PI * 2; d.userData.home = V(.66 * Math.cos(a), .66 * Math.sin(a), .2); mars.add(d); return d; });
+  const solarGeo = new THREE.SphereGeometry(.05, 8, 6), solarM = new THREE.MeshBasicMaterial({ color: C_WIND, transparent: true });
+  const winds2 = Array.from({ length: 34 }, (_, k) => { const w = new THREE.Mesh(solarGeo, solarM); w.userData.y = .7 - 1.5 + 3.0 * ((k * 7) % 34) / 33; w.userData.z = ((k * 5) % 7 - 3) * .08; space.add(w); return w; });
+  const lE = label('지구', .48, '#bfdbfe'), lM = label('화성', .44, '#fdba74'), lS = tag('자석 방패!', .42, C_SHIELD), lF = tag('공기가 날아가요', .36, C_THIN), lT = tag('두꺼운 공기 이불', .36, C_THICK), lN = tag('얇은 공기 이불', .34, C_THIN);
+  lE.position.set(-.9, 2.55, .3); lS.position.set(-.9, 2.6, .3); lT.position.set(-.9, 2.6, .3); lM.position.set(2.3, 1.65, .3); lF.position.set(2.3, 1.65, .3); lN.position.set(2.3, 1.65, .3);
   space.add(lE, lM, lS, lF, lT, lN);
+  const spaceLabels = [lE, lM, lS, lF, lT, lN];
   const p = V(), d = V();
   function spaceAt(t, labels) {
     eSpin.rotation.y = t * .4; mSpin.rotation.y = t * .5;
     const on = t > 3;
-    let hit = 0;
     winds2.forEach((w, k) => {
       const x = -2.8 + ((((t - 3) * 2.0 + k * .53) % 6.6) + 6.6) % 6.6;
       w.visible = on && x < 3.9 && (t - 3) * 2.0 + k * .53 > 0;
       p.set(x, w.userData.y, w.userData.z);
-      d.subVectors(p, EC); if (d.length() < RS) { p.copy(EC).add(d.setLength(RS)); hit++; }
-      d.subVectors(p, MC); if (d.length() < .62) p.copy(MC).add(d.setLength(.62));
+      d.subVectors(p, EC); if (d.length() < RS) p.copy(EC).add(d.setLength(RS));
+      d.subVectors(p, MC); if (d.length() < .64) p.copy(MC).add(d.setLength(.64));
       w.position.copy(p);
     });
-    shieldM.opacity = .3 + (on ? .25 + .15 * Math.sin(t * 6) : 0);
-    mAirM.opacity = lerp(.35, .06, seg(t, 6, 11));
+    shieldM.opacity = .35 + (on ? .25 + .15 * Math.sin(t * 6) : 0);
+    mAirM.opacity = lerp(.4, .06, seg(t, 6, 11));
     airDots.forEach((dot, k) => {
-      const tk = 6 + k * .5, s = t - tk;
+      const s = t - (6 + k * .5);
       dot.visible = s < 2.5; dot.material.opacity = 1 - seg(s, 1.2, 2.5);
       dot.position.copy(dot.userData.home).add(V(Math.max(0, s) * 1.1, Math.max(0, s) * .15 * (k % 3 - 1), 0));
     });
-    lE.visible = lM.visible = labels && t < 4.5;
-    lS.visible = labels && t > 5 && t < 10.5; lF.visible = labels && t > 6 && t < 10.5;
-    lT.visible = lN.visible = labels && t > 11;
-    void hit;
+    hideAll(...spaceLabels);
+    if (!labels) return;
+    lE.visible = lM.visible = t < 4.5;
+    lS.visible = t > 5 && t < 10.5; lF.visible = t > 6 && t < 10.5;
+    lT.visible = lN.visible = t > 11;
   }
+
+  // ── 다리 (④): 이불·창문이 그 자리에서 지구·화성·방패로 바뀌어요 ──
+  const bridge = new THREE.Group(); g.add(bridge);
+  const miniBed = (quiltM, thickQ, kind, col) => {
+    const b = new THREE.Group();
+    b.add(box(1.7, .35, 1.0, '#a16207', 0, .18, 0), box(1.6, .12, .92, '#f8fafc', 0, .41, 0), box(.12, .85, 1.0, '#92400e', -.85, .42, 0), box(.4, .14, .7, '#e0e7ff', -.55, .54, 0));
+    const a = animal(kind, col, .75); a.rotation.z = Math.PI / 2; a.position.set(.45, .71, 0); b.add(a);
+    b.add(thickQ ? mesh(new THREE.BoxGeometry(.95, .72, .98), quiltM, .33, .82, 0) : mesh(new THREE.BoxGeometry(.95, .5, .98), quiltM, .33, .72, 0));
+    return b;
+  };
+  const mbL = miniBed(new THREE.MeshStandardMaterial({ color: C_THICK, roughness: .6 }), true, 'bear', '#c68642');
+  const mbR = miniBed(new THREE.MeshStandardMaterial({ color: C_THIN, transparent: true, opacity: .6, roughness: .4 }), false, 'rabbit', '#f5f5f4');
+  const QL = V(.33, .82, 0), QR = V(.33, .72, 0);
+  const placeBed = (b, c, q, s) => { b.scale.setScalar(s); b.position.copy(c).sub(q.clone().multiplyScalar(s)); };
+  placeBed(mbL, EC, QL, 1); placeBed(mbR, MC, QR, 1);
+  const miniWin = new THREE.Group(); miniWin.position.copy(EC).add(V(-.3, .25, -.7));
+  const mwM = mat(C_SHIELD);
+  for (const [w, h, fx, fy] of [[2.1, .09, 0, .8], [2.1, .09, 0, -.8], [.09, 1.68, -1.05, 0], [.09, 1.68, 1.05, 0], [.05, 1.6, 0, 0], [2.1, .05, 0, 0]]) miniWin.add(mesh(new THREE.BoxGeometry(w, h, .06), mwM, fx, fy, 0));
+  miniWin.add(mesh(new THREE.BoxGeometry(2.05, 1.58, .02), tmat('#c7d2fe', .3), 0, 0, -.02));
+  bridge.add(mbL, mbR, miniWin);
+  const bL = tag('두꺼운 이불', .36, C_THICK), bR = tag('얇은 이불', .36, C_THIN), bW = tag('보라 창문 → 자석 방패', .34, C_SHIELD), bE = tag('지구의 공기 이불', .34, C_THICK), bM = tag('화성의 공기 이불', .32, C_THIN);
+  bL.position.set(EC.x - .3, 1.75, .4); bR.position.set(MC.x - .3, 1.55, .4); bW.position.set(.4, 2.75, .4); bE.position.set(EC.x, 2.55, .4); bM.position.set(MC.x, 1.65, .4);
+  bridge.add(bL, bR, bW, bE, bM);
+  function bridgeAt(t, labels) {
+    const k = seg(t, 2.5, 6.5);
+    spaceAt(Math.max(0, t - 4.5), false);
+    const s = lerp(.15, 1, k);
+    earth.scale.setScalar(s); mars.scale.setScalar(s);
+    shieldM.opacity *= seg(t, 4, 6.5); eAirM.opacity = .35 * k; mAirM.opacity = Math.min(mAirM.opacity, .4 * k + .02);
+    stars.material.opacity = k; sun.scale.setScalar(Math.max(.01, k)); sunGlow.scale.setScalar(Math.max(.01, k));
+    setOpacity(mbL, 1 - k); setOpacity(mbR, 1 - k);
+    placeBed(mbL, EC, QL, lerp(1, .35, k)); placeBed(mbR, MC, QR, lerp(1, .35, k));
+    mbL.visible = mbR.visible = k < .99;
+    // 창문이 커지며 지구 둘레 방패로
+    const kw = seg(t, 3.5, 6.5); miniWin.scale.setScalar(lerp(1, 1.6, kw)); miniWin.position.copy(EC).add(V(-.3 * (1 - kw), .25 * (1 - kw), -.7)); setOpacity(miniWin, 1 - kw); miniWin.visible = kw < .99;
+    ctx.bg(BG_TMP.copy(BG_ROOM).lerp(BG_SPACE, k));
+    hideAll(bL, bR, bW, bE, bM);
+    if (!labels) return;
+    bL.visible = bR.visible = t < 2.6;
+    bW.visible = t > 3.6 && t < 6.6;
+    bE.visible = bM.visible = t > 6.8;
+  }
+  const resetSpace = () => { earth.scale.setScalar(1); mars.scale.setScalar(1); stars.material.opacity = 1; sun.scale.setScalar(1); sunGlow.scale.setScalar(1); eAirM.opacity = .35; };
 
   const draw = (t, ph) => {
     const lab = !Q2C.naming();
-    let S = false;
-    if (ph === 1 || ph === 2) roomAt(t, ph, lab);
-    else if (ph === 3) { S = true; spaceAt(t, lab); }
-    else if (t < 5) roomAt(t + 1, 2, lab);                 // 요약: 따뜻함 빠져나가기 → 우주
-    else { S = true; spaceAt(3 + (t - 5) * 1.2, lab); }
-    room.visible = !S; space.visible = S;
-    ctx.bg(S ? '#0b1026' : '#3b4a7a');
+    let mode_ = 'room';
+    if (ph === 1 || ph === 2 || ph === 3) roomAt(t, ph, lab);
+    else if (ph === 4) { mode_ = 'bridge'; bridgeAt(t, lab); }
+    else if (ph === 5) { mode_ = 'space'; resetSpace(); spaceAt(t, lab); }
+    else if (t < 7) { mode_ = 'bridge'; bridgeAt(t + 1.5, lab); }          // 요약: 이불 → 지구·화성 → 해 바람
+    else { mode_ = 'space'; resetSpace(); spaceAt(4 + (t - 7), lab); }
+    room.visible = mode_ === 'room'; space.visible = mode_ !== 'room'; bridge.visible = mode_ === 'bridge';
+    if (mode_ === 'room') ctx.bg(BG_ROOM); else if (mode_ === 'space') ctx.bg(BG_SPACE);
   };
+  const thinW = () => room.localToWorld(thin.position.clone());
   draw.spots = {
-    1: [['🔍 덜덜 두리', RW(BX[1] + .1, .85, 0), 3, '얇은 이불을 덮은 두리는 추워서 덜덜 떨어요', null, { loop: [5, 8], slow: .5 }], ['🔍 포근 보리', RW(BX[0] + .1, .85, 0), 3, '두꺼운 이불을 덮은 보리는 포근해요']],
+    1: [['🔍 덜덜 두리', RW(BX[1] + .1, .85, 0), 3, '얇은 분홍 이불을 덮은 두리는 추워서 덜덜 떨어요', null, { loop: [5, 8], slow: .5 }], ['🔍 포근 보리', RW(BX[0] + .1, .85, 0), 3, '두꺼운 하늘색 이불을 덮은 보리는 포근해요']],
     2: [['🔍 얇은 이불', RW(BX[1] + .33, 1.2, 0), 3.4, '따뜻한 알갱이가 얇은 이불을 뚫고 빠져나가 차가워져요', null, { loop: [2.4, 5.4], slow: .5 }], ['🔍 두꺼운 이불', RW(BX[0] + .33, .85, 0), 3, '두꺼운 이불은 따뜻한 알갱이를 꼭 잡아 줘요', null, { loop: [6, 9], slow: .5 }]],
-    3: [['🔍 자석 방패', earth, 5.4, '해에서 오는 알갱이 바람을 지구 자석 방패가 옆으로 비켜 내요', null, { loop: [4.5, 8], slow: .5 }], ['🔍 화성 공기', mars, 4.2, '방패가 없는 화성은 바람에 공기가 조금씩 날아가요', null, { loop: [6, 9.5], slow: .5 }]],
-    0: [['🔍 얇은 이불', RW(BX[1] + .33, 1.2, 0), 3.4, '따뜻함이 술술 빠져나가요', null, { loop: [.5, 4.5], slow: .5 }], ['🔍 화성 공기', mars, 4.2, '화성은 공기가 날아가요', null, { loop: [7.5, 10.5], slow: .5 }]],
+    3: [['🔍 보라 창문', RW(BX[0], WY - .1, -1.2), 3.4, '닫힌 보라 창문이 노란 바람을 콩 튕겨 내요', null, { loop: [1.6, 4.6], slow: .5 }], ['🔍 날아가는 이불', thinW, 3.8, '열린 창문으로 노란 바람이 들어와 얇은 이불이 휘익', null, { loop: [3, 7], slow: .5 }]],
+    4: [['🔍 이불이 지구로', earth, 4.6, '하늘색 두꺼운 이불이 지구의 공기 이불이 되고, 보라 창문이 방패가 돼요', null, { loop: [2, 7], slow: .5 }], ['🔍 이불이 화성으로', mars, 3.4, '분홍 얇은 이불이 화성의 얇은 공기 이불이 돼요', null, { loop: [2, 7], slow: .5 }]],
+    5: [['🔍 자석 방패', earth, 5.4, '노란 해 바람을 지구의 보라 방패가 옆으로 비켜 내요', null, { loop: [4.5, 8], slow: .5 }], ['🔍 화성 공기', mars, 4.2, '방패가 없는 화성은 바람에 분홍 공기가 조금씩 날아가요', null, { loop: [6, 9.5], slow: .5 }]],
+    0: [['🔍 이불이 지구로', earth, 4.6, '하늘색 이불이 지구의 공기 이불로 바뀌어요', null, { loop: [.5, 5.5], slow: .5 }], ['🔍 화성 공기', mars, 4.2, '방패가 없는 화성은 공기가 날아가요', null, { loop: [9, 13.5], slow: .5 }]],
   };
   draw.cam = {
     2: [[2.2, 0], [5.8, 1], [9.2, -1]],
-    3: [[5, 0], [8.6, 1], [12.4, -1]],
-    0: [[1, 0], [4.6, -1], [8, 1], [12.2, -1]],
+    3: [[1.6, 0], [4.6, 1], [8.8, -1]],
+    4: [[7.2, 0], [9.8, -1]],
+    5: [[5, 0], [8.6, 1], [12.4, -1]],
+    0: [[9.4, 1], [13.8, -1]],
   };
   return draw;
 };
 
 // ── L08.js ──
-// 양자물리 2권 8. 터널 효과 — 언덕에 공 굴리기 → 양자 공이 쏙 → 해 속 수소가 쏙 합쳐져요
-// 공용 도우미 Q2B 는 L04.js 에 있어요 (L04 가 먼저 읽혀요)
+// 양자물리 2권 8. 터널 효과 — 초록 언덕 하나로 끝까지:
+//  ① 빨간 공이 초록 언덕을 못 넘고 데굴 → ② 눈 달린 빨간 공은 아주 가끔 쏙 → ③ 같은 색 끝 자석이 밀어내는 힘 = 보이지 않는 초록 언덕
+//  → ④ 다리: 빨간 자석이 그 자리에서 빨간 수소 알갱이로 바뀌고, 초록 언덕은 그대로 → ⑤ 해 속: 수소 알갱이가 언덕을 쏙 통과해 합쳐져요
+//  색 짝: 빨간 공 = 빨간 자석 끝 = 빨간 수소 알갱이, 초록 언덕 = 밀어내는 힘(벽)
+//  (다른 파일의 도우미를 쓰지 않아요: 혼자서 동작)
 LESSONS[7] = {
-  scene: 'q2_tunnel', law: '벽을 쏙 통과해요', title: '언덕을 넘는 마법',
-  cam: [0, 1.6, 6.9], tgt: [0, .8, 0], fit: 1.25, T: 14,
-  story: '지난번엔 지구의 두꺼운 공기 이불을 봤지요? 오늘은 보리가 언덕으로 공을 굴려요.',
+  scene: 'q2_tunnel', law: '벽을 쏙 통과해요', title: '초록 언덕을 넘는 마법',
+  cam: [0, 1.6, 6.9], tgt: [0, .8, 0], fit: 1.25, T: 15,
+  story: '지난번엔 지구의 두꺼운 공기 이불을 봤지요? 오늘은 보리가 초록 언덕으로 빨간 공을 굴려요.',
   watch: [
-    ['보리가 공을 언덕으로 굴려요. 힘이 모자라면 공은 언덕을 못 넘고 데굴데굴 다시 내려와요.', 12, '🔍 「공이 멈추는 곳」을 누르면 다시 내려오는 순간이 천천히 되풀이돼요'],
-    ['양자 세상의 마법! 아주 작은 알갱이는 힘이 모자라도, 아주 가끔 언덕을 쏙 통과해서 저편에 나타나요.', 12, '🔍 「쏙 통과하는 곳」을 누르면 통과하는 순간이 천천히 되풀이돼요'],
-    ['해 속에서도 똑같아요! 수소 알갱이들은 서로 밀어내는 벽을 넘을 힘이 모자라지만, 가끔 쏙 통과해 합쳐져요. 그래서 해가 빛나요.', 14, '🔍 「쏙 합쳐지는 곳」을 누르면 합쳐지는 순간이 천천히 되풀이돼요'],
+    ['보리가 빨간 공을 초록 언덕으로 굴려요. 힘이 모자라면 공은 언덕을 못 넘고 데굴데굴 다시 내려와요.', 12, '🔍 「공이 멈추는 곳」을 누르면 다시 내려오는 순간이 천천히 되풀이돼요'],
+    ['양자 세상의 마법! 눈 달린 빨간 공처럼 아주 작은 알갱이는, 힘이 모자라도 아주 가끔 언덕을 쏙 통과해요.', 12, '🔍 「쏙 통과하는 곳」을 누르면 통과하는 순간이 천천히 되풀이돼요'],
+    ['자석 기억나요? 같은 빨간 끝끼리는 서로 밀어내요. 밀어내는 힘을 그려 보면 보이지 않는 초록 언덕이에요!', 12, '🔍 「보이지 않는 언덕」을 누르면 자석 수레가 밀려 내려오는 순간이 천천히 되풀이돼요'],
+    ['이제 해 속으로! 빨간 자석은 빨간 수소 알갱이가 되고, 초록 언덕은 그대로 남아요.', 10, '🔍 「자석이 알갱이로」를 누르면 바뀌는 순간이 천천히 되풀이돼요'],
+    ['해 속에서도 똑같아요! 수소 알갱이는 초록 언덕을 못 넘고 내려오다가, 아주 가끔 쏙 통과해 합쳐져요. 그래서 해가 빛나요.', 14, '🔍 「쏙 합쳐지는 곳」을 누르면 합쳐지는 순간이 천천히 되풀이돼요'],
   ],
-  q: '보리의 공은 언덕을 넘었나요?',
+  q: '빨간 공은 초록 언덕을 넘었나요?',
   choices: [['↩️', '데굴 다시 내려왔어요!'], ['⛰️', '훌쩍 넘어갔어요!'], ['🕳️', '언덕에 구멍을 뚫었어요!']], answer: 0,
-  hint: '공이 언덕 중간까지 올라갔다가 어떻게 됐지요?',
-  q2: '해 속 수소 알갱이는 어떻게 합쳐지나요?',
-  choices2: [['✨', '벽을 쏙 통과해서!'], ['🔨', '망치로 쾅 붙여서!'], ['🧴', '풀로 꼭꼭 단단히 붙여서!']], answer2: 0,
-  hint2: '힘이 모자라도 아주 가끔 벽 저편에 쏙 나타났지요?',
-  kid: '벽을 쏙 통과해서!',
+  hint: '빨간 공이 초록 언덕 중간까지 올라갔다가 어떻게 됐지요?',
+  q2: '빨간 수소 알갱이는 초록 언덕을 어떻게 지났나요?',
+  choices2: [['✨', '쏙 통과했어요!'], ['🔨', '망치로 부쉈어요!'], ['🧴', '풀로 꼭 붙였어요!']], answer2: 0,
+  hint2: '눈 달린 빨간 공처럼, 아주 가끔 언덕 저편에 쏙 나타났지요?',
+  kid: '초록 언덕을 쏙 통과했어요!',
   name: { term: '터널 효과', kid: '벽 통과하기', what: '아주 작은 알갱이는 힘이 모자라도 아주 가끔 벽을 쏙 통과해요. 해가 빛나는 비밀 가운데 하나예요!' },
   habit: '공놀이는 넓고 차가 다니지 않는 곳에서 해요!',
-  adult: '어른용 · 양자 터널 효과(quantum tunneling): 입자의 파동함수는 장벽 안과 너머에도 0이 아닌 값을 가져, 에너지가 장벽보다 낮아도 일정 확률로 장벽을 통과한다. 태양 중심(약 1500만 K)의 양성자는 서로의 전기적 반발(쿨롱 장벽)을 넘을 에너지가 부족하지만 터널링 덕분에 융합해 p-p 연쇄 반응이 일어난다(가모프, 1928). 비유: 언덕 = 장벽, 굴러 내려오는 공 = 고전 입자.',
+  adult: '어른용 · 양자 터널 효과(quantum tunneling): 입자의 파동함수는 장벽 안과 너머에도 0이 아닌 값을 가져, 에너지가 장벽보다 낮아도 일정 확률로 장벽을 통과한다. 태양 중심(약 1500만 K)의 양성자는 서로의 전기적 반발(쿨롱 장벽)을 넘을 에너지가 부족하지만 터널링 덕분에 융합해 p-p 연쇄 반응이 일어난다(가모프, 1928). 비유: 초록 언덕 = 퍼텐셜 장벽(같은 극 자석·같은 전하가 밀어내는 힘을 높이로 그린 것), 굴러 내려오는 공 = 고전 입자.',
 };
 
 SCENES.q2_tunnel = (g, ctx) => {
-  const H = new THREE.Group(), SP = new THREE.Group(); g.add(H, SP);
+  const naming = () => { try { return mode === 'name'; } catch (e) { return false; } };
+  const flash = (c, r) => { const f = ball(r, emat(c, 1)); f.material.transparent = true; f.visible = false; return f; };
+  const pop = (f, t, t0, pos, dur = .5, grow = 3) => { const a = t - t0; f.visible = a >= 0 && a < dur; if (f.visible) { f.position.copy(pos); f.scale.setScalar(1 + grow * a / dur); f.material.opacity = 1 - a / dur; } };
+  const C_RED = '#ef4444', C_HILL = '#86efac';
+  const BG_DAY = new THREE.Color(BOOK.sceneBg), BG_Q = new THREE.Color('#ede9fe'), BG_SUN = new THREE.Color('#1c0f2e'), BG_TMP = new THREE.Color();
+  const tag = (txt, sz, col) => { const gg = new THREE.Group(), l = label(txt, sz, col), r = l.userData.base[1] * .3, d = ball(r, emat(col, .5)); d.position.x = -l.userData.base[0] / 2 - r * .6; gg.add(l, d); return gg; };
 
-  // ── 언덕 무대 (장면 1·2) ──
-  H.add(floor(8.8, 3.4, '#fde7c4'));
-  const hillMat = mat('#86efac'), hill = mesh(new THREE.SphereGeometry(1, 40, 20, 0, Math.PI * 2, 0, Math.PI / 2), hillMat); hill.scale.set(1.5, 1.15, 1.1); H.add(hill);
+  // ── 모든 장면에 같은 초록 언덕 ──
+  const hillMat = new THREE.MeshStandardMaterial({ color: C_HILL, roughness: .55, transparent: true, opacity: 1 });
+  const hill = mesh(new THREE.SphereGeometry(1, 40, 20, 0, Math.PI * 2, 0, Math.PI / 2), hillMat); hill.scale.set(1.5, 1.15, 1.1); g.add(hill);
+  const setHill = op => { hillMat.opacity = op; hillMat.depthWrite = op > .95; };
   const hy = x => 1.15 * Math.sqrt(Math.max(0, 1 - (x / 1.5) ** 2));
-  const R = .22, onHill = x => (Math.abs(x) < 1.5 ? hy(x) : 0) + R;
-  const bori = animal('bear', '#c68642', .85); bori.position.set(-3.25, 0, 0); bori.rotation.y = Math.PI / 2; H.add(bori);
-  const pball = ball(R, '#ef4444'); pball.add(ball(R * 1.01, '#ffffff', 0, 0, 0)); pball.children[0].scale.set(1, .25, 1); H.add(pball);
-  const qball = critter(R, '#38bdf8', { squash: 1 }); H.add(qball);
-  const ghost = line([[-1, onHill(-1), 0], [-.5, onHill(-1) + .05, .2], [.5, onHill(1) + .05, .2], [1, onHill(1), 0]], '#7c3aed', true); H.add(ghost);
-  const spark = Q2B.flash('#c4b5fd', .2); H.add(spark);
-  const lWeak = label('힘이 모자라요', .4, '#fde047'), lBack = label('데굴 다시 내려와요', .4, '#fde047'), lPop = label('아주 가끔 쏙!', .46, '#c4b5fd');
-  lWeak.position.set(-1.2, 2.1, 0); lBack.position.set(-2.2, 1.3, 0); lPop.position.set(.3, 2.05, 0); H.add(lWeak, lBack, lPop);
+  const surf = x => (Math.abs(x) < 1.5 ? hy(x) : 0);
+  const slope = x => Math.atan2(surf(x + .02) - surf(x - .02), .04);
   const X0 = -2.75, XM = -1.0;
   const tryRoll = u => X0 + (XM - X0) * Math.sin(Math.PI * clamp(u, 0, 1));
-  const classic = t => {
-    const nm = Q2B.naming();
-    hillMat.transparent = false; hillMat.opacity = 1; qball.visible = ghost.visible = spark.visible = lPop.visible = false; pball.visible = bori.visible = true;
+
+  // 바닥 · 보리 (①②③④)
+  const ground = floor(8.8, 3.4, '#fde7c4'); g.add(ground);
+  const bori = animal('bear', '#c68642', .85); bori.position.set(-3.3, 0, 0); bori.rotation.y = Math.PI / 2; g.add(bori);
+  const R = .22;
+  const pball = ball(R, C_RED); const stripe = ball(R * 1.01, '#ffffff'); stripe.scale.set(1, .25, 1); pball.add(stripe); g.add(pball);
+  const qball = critter(R, C_RED, { squash: 1 }); g.add(qball);
+  const ghost = line([[-1, surf(-1) + R, 0], [-.5, surf(-1) + R + .05, .2], [.5, surf(1) + R + .05, .2], [1, surf(1) + R, 0]], '#7c3aed', true); g.add(ghost);
+  const spark = flash('#c4b5fd', .2); g.add(spark);
+
+  // 자석 (③④): 빨강 = 같은 끝(밀어내요), 파랑 = 다른 끝
+  const magnet = flip => { const m = new THREE.Group(); m.add(box(.4, .26, .26, C_RED, flip ? -.2 : .2, 0, 0), box(.4, .26, .26, '#3b82f6', flip ? .2 : -.2, 0, 0)); return m; };
+  const cart = new THREE.Group();
+  cart.add(box(.7, .12, .4, '#a16207', 0, .14, 0));
+  for (const [x, z] of [[-.24, .22], [.24, .22], [-.24, -.22], [.24, -.22]]) { const w = cyl(.08, .08, .06, '#1f2937', x, .08, z); w.rotation.x = Math.PI / 2; cart.add(w); }
+  const cMag = magnet(false); cMag.position.set(.05, .34, 0); cart.add(cMag); g.add(cart);
+  const FIXX = 1.95, fixMag = new THREE.Group(); fixMag.add(box(.3, .3, .5, '#9ca3af', .1, .15, 0)); const fMag = magnet(true); fMag.position.set(0, .43, 0); fixMag.add(fMag); fixMag.position.set(FIXX, 0, 0); g.add(fixMag);
+  const pushL = arrow(.5, C_RED, .05), pushR = arrow(.5, C_RED, .05); pushL.rotation.z = -Math.PI / 2; pushR.rotation.z = Math.PI / 2; g.add(pushL, pushR);
+
+  // 해 속 (④⑤)
+  const stars = starField(260, 24); stars.material.transparent = true; g.add(stars);
+  const glowM = new THREE.MeshBasicMaterial({ color: '#fb923c', transparent: true, opacity: .45, depthWrite: false });
+  const glow = mesh(new THREE.SphereGeometry(4.2, 40, 24), glowM, 0, .8, -4.5); g.add(glow);
+  const base = box(8.8, .04, .5, emat('#fdba74', .6), 0, -.02, 0); g.add(base);
+  const HR = .3, hL = critter(HR, C_RED, { squash: 1 }), hR = critter(HR, C_RED, { squash: 1 }); g.add(hL, hR);
+  const fused = critter(.4, '#f59e0b', { squash: 1 }); g.add(fused);
+  const boom = flash('#fde047', .3); g.add(boom);
+  const rays = Array.from({ length: 8 }, (_, i) => { const r = rod(.035, '#fde047'); r.material = emat('#fde047', 1); g.add(r); return { r, a: i * Math.PI / 4 }; });
+
+  // 라벨 (한 화면 2개까지)
+  const lWeak = label('힘이 모자라요', .4, '#fde047'), lBack = label('데굴 다시 내려와요', .4, '#fde047'), lPop = label('아주 가끔 쏙!', .46, '#c4b5fd');
+  const lPushTxt = tag('빨간 끝끼리 밀어내요', .36, C_RED), lHillTxt = tag('보이지 않는 언덕!', .38, C_HILL);
+  const lMag = tag('빨간 자석', .38, C_RED), lH = tag('빨간 수소 알갱이', .38, C_RED), lStay = tag('초록 언덕은 그대로', .34, C_HILL);
+  const lFuse = label('쏙! 합쳐져요', .46, '#fde047'), lShine = label('해가 빛나요!', .46, '#fde047');
+  lWeak.position.set(-1.3, 2.1, 0); lBack.position.set(-2.2, 1.3, 0); lPop.position.set(.3, 2.05, 0);
+  lPushTxt.position.set(.1, 1.75, .3); lHillTxt.position.set(-.5, 1.85, .3);
+  lMag.position.set(-1.6, 1.55, .3); lH.position.set(-1.6, 1.55, .3); lStay.position.set(.4, 2.05, .3);
+  lFuse.position.set(1.0, 1.95, .3); lShine.position.set(0, 2.5, .3);
+  const labels = [lWeak, lBack, lPop, lPushTxt, lHillTxt, lMag, lH, lStay, lFuse, lShine];
+  g.add(...labels);
+
+  const showStage = sun => { ground.visible = bori.visible = !sun; stars.visible = glow.visible = base.visible = sun; };
+  const hideMovers = () => hideAll(pball, qball, ghost, spark, cart, fixMag, pushL, pushR, hL, hR, fused, boom, ...rays.map(o => o.r), ...labels);
+  const resetFade = () => { setOpacity(cart, 1); setOpacity(fixMag, 1); setOpacity(bori, 1); setOpacity(hL, 1); setOpacity(hR, 1); stars.material.opacity = 1; glowM.opacity = .45; setOpacity(base, 1); cMag.scale.setScalar(1); fMag.scale.setScalar(1); };
+
+  // ① 보통 공
+  const classic = (t, lab) => {
+    setHill(1); pball.visible = true;
     let u = -1;
     if (t >= .5 && t < 5.5) u = (t - .5) / 5; else if (t >= 6.5 && t < 11.5) u = (t - 6.5) / 5;
     const x = u >= 0 ? tryRoll(u) : X0;
-    pball.position.set(x, onHill(x), 0); pball.rotation.z = -(x - X0) / R;
+    pball.position.set(x, surf(x) + R, 0); pball.rotation.z = -(x - X0) / R;
     const push = u >= 0 && u < .12;
-    bori.userData.body.rotation.z = push ? -.15 : 0; bori.position.x = push ? -3.15 : -3.25;
-    bori.userData.armR.rotation.z = 0; waddle(bori, t, .1);
-    lWeak.visible = !nm && u > .38 && u < .7;
-    lBack.visible = !nm && u >= .7;
+    bori.userData.body.rotation.z = push ? -.15 : 0; bori.position.x = push ? -3.2 : -3.3; waddle(bori, t, .1);
+    lWeak.visible = lab && u > .38 && u < .7; lBack.visible = lab && u >= .7;
   };
-  const quantum = t => {
-    const nm = Q2B.naming();
-    pball.visible = bori.visible = lWeak.visible = false; qball.visible = true;
-    hillMat.transparent = true; hillMat.opacity = .72;
+  // ② 눈 달린 양자 공
+  const quantum = (t, lab) => {
+    setHill(.72); qball.visible = true; bori.userData.body.rotation.z = 0; bori.position.x = -3.3;
     let x = X0, op = 1, back = false;
     if (t < 3) { x = tryRoll(t / 3); back = t / 3 > .6; }
     else if (t < 6) { x = tryRoll((t - 3) / 3); back = (t - 3) / 3 > .6; }
@@ -1660,364 +2061,541 @@ SCENES.q2_tunnel = (g, ctx) => {
     else if (t < 7.9) { x = XM; op = 1 - (t - 7.5) / .4; }
     else if (t < 8.3) { x = -XM; op = (t - 7.9) / .4; }
     else x = lerp(-XM, 2.75, Math.sin(Math.PI / 2 * clamp((t - 8.3) / 1.5, 0, 1)));
-    qball.position.set(x, onHill(x), 0); setOpacity(qball, clamp(op, 0, 1)); wobble(qball, t, 1);
+    qball.position.set(x, surf(x) + R, 0); setOpacity(qball, clamp(op, 0, 1)); wobble(qball, t, 1);
     ghost.visible = t > 7.5 && t < 10;
-    Q2B.pop(spark, t, 8.05, V(-XM, onHill(-XM), .2), .6, 3);
-    lBack.visible = !nm && back;
-    lPop.visible = !nm && t > 8 && t < 11.6;
+    pop(spark, t, 8.05, V(-XM, surf(-XM) + R, .2), .6, 3);
+    lBack.visible = lab && back; lPop.visible = lab && t > 8 && t < 11.6;
   };
-
-  // ── 해 속 (장면 3) ──
-  SP.position.y = .8;
-  SP.add(starField(300, 26));
-  const sun = mesh(new THREE.SphereGeometry(3.4, 40, 24), new THREE.MeshBasicMaterial({ color: '#fb923c', transparent: true, opacity: .5, depthWrite: false }), 0, 0, -3.2); SP.add(sun);
-  const p1 = critter(.34, '#ef4444', { squash: 1 }), p2 = critter(.34, '#ef4444', { squash: 1 }); SP.add(p1, p2);
-  const wall = box(.1, 1.5, 1.1, tmat('#fbcfe8', .7)); SP.add(wall);
-  const fused = critter(.42, '#f59e0b', { squash: 1 }); SP.add(fused);
-  const boom = Q2B.flash('#fde047', .3); SP.add(boom);
-  const rays = Array.from({ length: 8 }, (_, i) => { const r = rod(.035, '#fde047'); r.material = emat('#fde047', 1); SP.add(r); return { r, a: i * Math.PI / 4 }; });
-  const lPush = label('서로 밀어내요', .42, '#fde047'), lFuse = label('쏙! 합쳐져요', .46, '#fde047');
-  lPush.position.set(0, 1.3, 0); lFuse.position.set(0, 1.5, 0); SP.add(lPush, lFuse);
-  const sunCore = t => {
-    const nm = Q2B.naming();
-    let d = 2.6, op = 1;
-    const att = u => lerp(2.6, .66, Math.sin(Math.PI * clamp(u, 0, 1)));
-    if (t < 3) d = att(t / 3); else if (t < 6) d = att((t - 3) / 3);
-    else if (t < 7.2) d = lerp(2.6, .66, Math.sin(Math.PI / 2 * (t - 6) / 1.2));
-    else if (t < 7.6) { d = lerp(.66, .05, (t - 7.2) / .4); op = .45; }
-    const merged = t >= 7.6;
-    p1.visible = p2.visible = !merged; fused.visible = merged;
-    p1.position.set(-d, 0, 0); p2.position.set(d, 0, 0); setOpacity(p1, op); setOpacity(p2, op);
-    wobble(p1, t, 1); wobble(p2, t + 1, 1); wobble(fused, t, .6);
-    p1.rotation.y = .6; p2.rotation.y = -.6;
-    wall.visible = t < 7.6; setOpacity(wall, t >= 7.2 ? .25 : .7);
-    Q2B.pop(boom, t, 7.6, V(0, 0, .2), .7, 4);
-    const k = ease((t - 7.6) / 1.4);
-    rays.forEach(o => { o.r.visible = merged; if (merged) { const L = (.7 + 1.1 * k) * (1 + .08 * Math.sin(t * 6 + o.a)); stick(o.r, V(.55 * Math.cos(o.a), .55 * Math.sin(o.a), 0), V(L * Math.cos(o.a), L * Math.sin(o.a), 0)); } });
-    sun.material.opacity = merged ? .5 + .2 * k : .5;
-    const u = t < 6 ? (t % 3) / 3 : 0;
-    lPush.visible = !nm && t < 6 && u > .35 && u < .7;
-    lFuse.visible = !nm && t > 7.8 && t < 13.6;
+  // ③ 자석 수레: 처음엔 평평한 바닥, 다음엔 같은 움직임을 초록 언덕 위에 그려요
+  const placeCart = (x, onHill) => {
+    const y = onHill ? surf(x + .1) : 0; cart.position.set(x, y, 0); cart.rotation.z = onHill ? slope(x + .1) : 0;
+  };
+  const magnets = (t, lab) => {
+    cart.visible = fixMag.visible = true;
+    const hillK = seg(t, 5.6, 6.6); setHill(.55 * hillK); hill.visible = hillK > .01;
+    let u = -1;
+    if (t >= .5 && t < 5.5) u = (t - .5) / 5; else if (t >= 6.5 && t < 11.5) u = (t - 6.5) / 5;
+    const x = u >= 0 ? tryRoll(u) : X0;
+    placeCart(x, t >= 6);
+    const push = u >= 0 && u < .12;
+    bori.userData.body.rotation.z = push ? -.15 : 0; bori.position.x = push ? -3.2 : -3.3; waddle(bori, t, .1);
+    const near = u > .35 && u < .7;
+    pushL.visible = pushR.visible = near && t < 6;
+    if (pushL.visible) { const k = pulse(t); pushL.position.set(x + .1, .95, .35); pushR.position.set(FIXX - .5, .95, .35); pushL.scale.setScalar(k); pushR.scale.setScalar(k); }
+    lPushTxt.visible = lab && t > 1.5 && t < 5.6;
+    lHillTxt.visible = lab && t > 6.2;
+  };
+  // ④ 다리: 자석 → 수소 알갱이, 바닥 → 해 속, 초록 언덕은 그대로
+  const LPOS = V(X0, surf(X0) + HR, 0), RPOS = V(FIXX, HR, 0);
+  const bridgeAt = (t, lab) => {
+    const k = seg(t, 2, 6);
+    setHill(.55);
+    ctx.bg(BG_TMP.copy(BG_DAY).lerp(BG_SUN, k));
+    // 바닥·보리·자석은 흐려지고, 같은 자리에 빨간 알갱이가 자라요
+    const day = k < .99;
+    ground.visible = bori.visible = day; stars.visible = glow.visible = base.visible = k > .01;
+    setOpacity(ground, 1 - k); setOpacity(bori, 1 - k);
+    stars.material.opacity = k; glowM.opacity = .45 * k; setOpacity(base, k);
+    cart.visible = fixMag.visible = day; placeCart(X0, true); setOpacity(cart, 1 - k); setOpacity(fixMag, 1 - k);
+    cMag.scale.setScalar(lerp(1, .5, k)); fMag.scale.setScalar(lerp(1, .5, k));
+    hL.visible = hR.visible = k > .01;
+    const s = Math.max(.01, k);
+    hL.scale.setScalar(s); hR.scale.setScalar(s); hL.position.copy(LPOS); hR.position.copy(RPOS);
+    setOpacity(hL, k); setOpacity(hR, k); wobble(hL, t, .6); wobble(hR, t + 1, .6);
+    hL.rotation.y = .5; hR.rotation.y = -.5;
+    lMag.visible = lab && t < 2.4; lH.visible = lab && t > 6; lStay.visible = lab && t > 6.4;
+  };
+  // ⑤ 해 속: 왼쪽 알갱이가 언덕을 오르다 내려오기 두 번, 세 번째에 쏙 → 오른쪽 알갱이와 합쳐져요
+  const sunCore = (t, lab) => {
+    setHill(.55); hL.scale.setScalar(1); hR.scale.setScalar(1); hL.rotation.y = .5; hR.rotation.y = -.5;
+    let x = X0, op = 1, back = false;
+    if (t < 3) { x = tryRoll(t / 3); back = t / 3 > .6; }
+    else if (t < 6) { x = tryRoll((t - 3) / 3); back = (t - 3) / 3 > .6; }
+    else if (t < 7.5) x = lerp(X0, XM, Math.sin(Math.PI / 2 * (t - 6) / 1.5));
+    else if (t < 7.9) { x = XM; op = 1 - (t - 7.5) / .4; }
+    else if (t < 8.3) { x = -XM; op = (t - 7.9) / .4; }
+    else x = lerp(-XM, FIXX - 2 * HR, ease((t - 8.3) / .9));
+    const merged = t >= 9.2;
+    hL.visible = hR.visible = !merged; fused.visible = merged;
+    hL.position.set(x, surf(x) + HR, 0); setOpacity(hL, clamp(op, 0, 1)); hR.position.copy(RPOS); setOpacity(hR, 1);
+    wobble(hL, t, 1); wobble(hR, t + 1, .6); wobble(fused, t, .6);
+    ghost.visible = t > 7.5 && t < 9.4;
+    pop(spark, t, 8.05, V(-XM, surf(-XM) + HR, .2), .6, 3);
+    const FP = V(FIXX - HR, .45, 0); fused.position.copy(FP);
+    pop(boom, t, 9.2, V(FP.x, FP.y, .2), .7, 4);
+    const k = ease((t - 9.2) / 1.4);
+    rays.forEach(o => { o.r.visible = merged; if (merged) { const L = (.62 + 1.0 * k) * (1 + .08 * Math.sin(t * 6 + o.a)); stick(o.r, V(FP.x + .5 * Math.cos(o.a), FP.y + .5 * Math.sin(o.a), 0), V(FP.x + L * Math.cos(o.a), FP.y + L * Math.sin(o.a), 0)); } });
+    glowM.opacity = merged ? .45 + .25 * k : .45;
+    lBack.visible = lab && back && t < 6; lBack.position.set(-2.2, 1.4, .3);
+    lFuse.visible = lab && t > 9.3 && t < 11.6; lShine.visible = lab && t > 11.6;
   };
 
   const draw = (t, ph) => {
-    if (ph === 1) { ctx.bg(BOOK.sceneBg); H.visible = true; SP.visible = false; classic(t); return; }
-    if (ph === 2) { ctx.bg('#ede9fe'); H.visible = true; SP.visible = false; quantum(t); return; }
-    if (ph === 3) { ctx.bg('#0b1026'); SP.visible = true; H.visible = false; sunCore(t); return; }
-    if (t < 7) { ctx.bg('#ede9fe'); H.visible = true; SP.visible = false; quantum(t + 4.5); }
-    else { ctx.bg('#0b1026'); SP.visible = true; H.visible = false; sunCore(t - 7 + 4); }
+    const lab = !naming();
+    hideMovers(); hill.visible = true; lBack.position.set(-2.2, 1.3, 0);
+    if (ph !== 4 && !(ph === 0 && t < 6)) { resetFade(); setOpacity(ground, 1); }
+    if (ph === 1) { ctx.bg(BG_DAY); showStage(false); classic(t, lab); return; }
+    if (ph === 2) { ctx.bg(BG_Q); showStage(false); quantum(t, lab); return; }
+    if (ph === 3) { ctx.bg(BG_DAY); showStage(false); magnets(t, lab); return; }
+    if (ph === 4) { bridgeAt(t, lab); return; }
+    if (ph === 5) { ctx.bg(BG_SUN); showStage(true); sunCore(t, lab); return; }
+    if (t < 6) bridgeAt(t + 1, lab);                                          // 요약: 자석 → 알갱이
+    else { ctx.bg(BG_SUN); showStage(true); sunCore(t - 6 + 5.5, lab); }   //       → 해 속에서 쏙 합쳐져요
   };
-  draw.cam = { 2: [[6.6, 0], [9.9, -1]], 3: [[6.4, 0], [10.2, -1]], 0: [[2.2, 0], [5.6, -1], [9.6, 1], [13.4, -1]] };
-  const tunSpot = loop => ['🔍 쏙 통과하는 곳', [0, 1.1, 0], 3.2, '힘이 모자라도 아주 가끔 언덕을 쏙 지나가요', null, { loop, slow: .5 }];
-  const fuseSpot = loop => ['🔍 쏙 합쳐지는 곳', [0, .8, 0], 2.6, '수소 알갱이가 벽을 쏙 지나 합쳐져요', null, { loop, slow: .5 }];
+  const tunSpot = loop => ['🔍 쏙 통과하는 곳', [0, 1.1, 0], 3.2, '힘이 모자라도 아주 가끔 초록 언덕을 쏙 지나가요', null, { loop, slow: .5 }];
+  const fuseSpot = loop => ['🔍 쏙 합쳐지는 곳', [.6, .8, 0], 3.4, '빨간 수소 알갱이가 초록 언덕을 쏙 지나 합쳐져요', null, { loop, slow: .5 }];
+  const morphSpot = loop => ['🔍 자석이 알갱이로', [X0 + .2, .5, 0], 2.8, '빨간 자석이 그 자리에서 빨간 수소 알갱이로 바뀌어요', null, { loop, slow: .5 }];
   draw.spots = {
     1: [['🔍 공이 멈추는 곳', [-1.1, 1, 0], 2.6, '힘이 모자라 멈췄다가 데굴 내려와요', null, { loop: [2, 5], slow: .5 }]],
     2: [tunSpot([6.8, 9.4]), ['🔍 다시 내려오는 공', qball, 2.4, '보통은 이렇게 다시 내려와요', null, { loop: [0, 3], slow: .5 }]],
-    3: [fuseSpot([6.4, 8.9]), ['🔍 해 전체', [0, .8, -2], 8, '해 속에서는 이런 일이 아주아주 많이 일어나요']],
-    0: [tunSpot([2.3, 4.9]), fuseSpot([9.4, 11.9])],
+    3: [['🔍 밀어내는 곳', [.2, .7, 0], 3.4, '같은 빨간 끝끼리 가까워지면 서로 밀어내요', null, { loop: [2, 5.5], slow: .5 }], ['🔍 보이지 않는 언덕', [-.6, .8, 0], 3.8, '밀어내는 힘을 그리면 초록 언덕이 돼요. 수레가 언덕을 못 넘고 내려와요', null, { loop: [6.5, 11.5], slow: .5 }]],
+    4: [morphSpot([1.5, 6.5]), ['🔍 오른쪽 알갱이', [FIXX, .5, 0], 2.8, '오른쪽 자석도 빨간 알갱이로 바뀌어요', null, { loop: [1.5, 6.5], slow: .5 }]],
+    5: [fuseSpot([7.6, 10.6]), ['🔍 다시 내려오는 알갱이', hL, 2.6, '보통은 초록 언덕을 못 넘고 내려와요', null, { loop: [0, 3], slow: .5 }]],
+    0: [morphSpot([1, 5]), fuseSpot([8.1, 11.1])],
+  };
+  draw.cam = {
+    2: [[6.6, 0], [9.9, -1]],
+    3: [[2.4, 0], [5.6, -1], [7.5, 1], [11.6, -1]],
+    5: [[6.4, 0], [11, -1]],
+    0: [[7.6, 1], [11.6, -1]],
   };
   return draw;
 };
 
 // ── L09.js ──
-// 양자물리 2권 9. 질량 — 눈덩이 쌓기 · 자전거 펌프 → 수소가 많이 모이면 별이 켜져요
+// 양자물리 2권 9. 질량 — 하늘색 눈덩이 더미(꾹) · 펌프(뜨끈) → 눈덩이가 수소 알갱이로 바뀌어 꾹 모이고 뜨끈해지면 별이 켜져요
+// 색 짝: 하늘색 눈덩이 = 하늘색 수소 알갱이 / 파란 "꾹" 화살표 = 파란 "꾹" 화살표 / 주황 뜨끈한 공기 = 주황 뜨끈한 가운데
 const Q2D = {
   naming: () => typeof mode !== 'undefined' && mode === 'name',
   rnd(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; },
+  SKY: '#a5d8ff', BLUE: '#2563eb', HOT: '#f97316', SPACE: '#0b1026',
 };
 
 LESSONS[8] = {
-  scene: 'q2_mass', law: '얼마나 모여야 별이 될까', title: '눈덩이와 별',
-  cam: [0, 1.5, 6.9], tgt: [0, 1.0, 0], fit: 1.15, T: 14,
-  story: '지난번엔 원자 알갱이가 벽을 쏙 통과했지요? 오늘은 얼마나 많이 모여야 별이 켜지는지 봐요.',
+  scene: 'q2_mass', law: '얼마나 모여야 별이 될까', title: '눈덩이 더미와 별',
+  cam: [0, 1.5, 7.2], tgt: [0, 1.0, 0], fit: 1.15, T: 13.5,
+  story: '지난번엔 원자 알갱이가 벽을 쏙 통과했지요? 오늘은 보리와 친구들이 하늘색 눈덩이를 쌓아요. 얼마나 모여야 별이 켜질까요?',
   watch: [
-    ['보리와 두리가 눈덩이를 쌓아요. 많이 쌓을수록 맨 아래 눈덩이가 꾹 눌려 납작해져요.', 12, '🔍 「꾹 눌린 아래」를 누르면 눌리는 모습이 천천히 되풀이돼요'],
-    ['꿀이가 자전거 펌프를 꾹꾹 눌러요. 꾹 눌린 공기는 따뜻해져요!', 11, '🔍 「꾹꾹 펌프」를 누르면 공기 알갱이가 눌리는 순간이 천천히 되풀이돼요'],
-    ['우주에서도 똑같아요! 수소가 아주아주 많이 모이면 가운데가 꾹 눌려 뜨거워지고 별이 켜져요. 조금 모자란 목성은 못 켜졌어요.', 16, '🔍 「별 가운데」를 누르면 별이 켜지는 순간이 천천히 되풀이돼요'],
+    ['보리와 두리가 하늘색 눈덩이를 쌓아요. 많이 쌓을수록 맨 아래 눈덩이가 꾹 눌려 납작해져요.', 12, '🔍 「꾹 눌린 아래」를 누르면 눌리는 모습이 천천히 되풀이돼요'],
+    ['눈 더미 옆에서 꿀이가 펌프를 꾹꾹 눌러요. 꾹 눌린 공기 알갱이는 주황색으로 뜨끈해져요!', 11, '🔍 「꾹꾹 펌프」를 누르면 알갱이가 주황색으로 바뀌는 순간이 천천히 되풀이돼요'],
+    ['하늘색 눈덩이가 하늘색 수소 알갱이로 바뀌어요! 우주에서 수소가 아주아주 많이 모이면, 눈 더미처럼 가운데가 꾹 눌려요.', 13, '🔍 「바뀌는 눈덩이」를 누르면 눈덩이가 수소 알갱이로 바뀌는 순간이 천천히 되풀이돼요'],
+    ['꾹 눌린 가운데는 펌프처럼 주황색으로 뜨끈뜨끈! 아주 뜨거워지면 별이 반짝 켜져요.', 12, '🔍 「뜨끈한 가운데」를 누르면 별이 켜지는 순간이 천천히 되풀이돼요'],
+    ['수소가 조금 모자라게 모인 목성은 덜 눌려서, 덜 뜨거워요. 그래서 별이 못 켜졌어요.', 11, '🔍 「목성」을 누르면 덜 뜨거운 가운데가 천천히 되풀이돼요'],
   ],
-  q: '눈덩이를 많이 쌓으면 아래는 어떻게 되나요?',
+  q: '눈덩이를 많이 쌓으면 맨 아래 눈덩이는?',
   choices: [['🫓', '아래가 꾹 눌려요!'], ['🎈', '위로 둥둥 떠올라요!'], ['😐', '그대로 똑같아요!']], answer: 0,
-  hint: '보리가 눈덩이를 쌓을 때 맨 아래 눈덩이 모양을 잘 봐요.',
-  q2: '수소가 아주 많이 모이면 어떻게 되나요?',
-  choices2: [['⭐', '눌려서 별이 돼요!'], ['💨', '흩어져 사라져요!'], ['🧊', '차갑게 꽁꽁 얼어요!']], answer2: 0,
-  hint2: '눈덩이처럼 많이 모일수록 가운데가 꾹 눌려요. 펌프처럼 눌리면 뜨거워져요.',
-  kid: '눌려서 별이 돼요!',
-  name: { term: '질량', kid: '얼마나 모였나', what: '물건에 든 것이 얼마나 많은지예요. 수소가 아주 많이 모여야 꾹 눌려서 별이 켜져요!' },
+  hint: '보리가 눈덩이를 쌓을 때 맨 아래 눈덩이 모양을 잘 봐요. 파란 화살표가 꾹 눌렀지요?',
+  q2: '하늘색 수소 알갱이가 아주 많이 모이면?',
+  choices2: [['⭐', '뜨끈해져 별이 켜져요!'], ['💨', '흩어져서 모두 사라져요!'], ['🧊', '차갑게 꽁꽁 얼어붙어요!']], answer2: 0,
+  hint2: '눈 더미처럼 가운데가 꾹 눌리고, 펌프처럼 주황색으로 뜨끈해졌지요?',
+  kid: '꾹 눌려서 뜨끈해지면 별이 켜져요!',
+  name: { term: '질량', kid: '얼마나 모였나', what: '물건에 든 것이 얼마나 많은지예요. 수소가 아주 많이 모여야 꾹 눌리고 뜨끈해져서 별이 켜져요!' },
   habit: '자전거 펌프는 어른과 함께 써요. 뜨거워지면 손으로 만지지 않아요.',
-  adult: '어른용 · 질량(mass): 물체에 든 물질의 양. 기체 구름은 자기 중력으로 수축하며 중심이 뜨거워지고(공기를 압축하면 뜨거워지는 것과 같은 원리), 중심이 약 1000만 K를 넘으면 수소 핵융합이 켜져 별이 된다. 점화에 필요한 최소 질량은 약 0.075~0.08 태양질량(목성의 약 75~80배)이고, 이보다 작으면 갈색 왜성이 된다. 목성은 그 약 1/80이라 별이 되지 못했다. 태양 질량은 지구의 약 33만 배, 중심 온도 약 1500만 K.',
+  adult: '어른용 · 질량(mass): 물체에 든 물질의 양. 기체 구름은 자기 중력으로 수축하며(눈 더미의 아래가 눌리는 것) 중심이 뜨거워지고(공기를 압축하면 뜨거워지는 단열 압축과 같은 원리), 중심이 약 1000만 K를 넘으면 수소 핵융합이 켜져 별이 된다. 점화에 필요한 최소 질량은 약 0.075~0.08 태양질량(목성의 약 75~80배)이고, 이보다 작으면 갈색 왜성이 된다. 목성은 그 약 1/80이라 별이 되지 못했다. 태양 질량은 지구의 약 33만 배, 중심 온도 약 1500만 K.',
 };
 
 SCENES.q2_mass = (g, ctx) => {
   const S = new THREE.Group(), P = new THREE.Group(), U = new THREE.Group(); g.add(S, P, U);
-  const C = (a, b) => [new THREE.Color(a), new THREE.Color(b)], tmpC = new THREE.Color();
+  const tmpC = new THREE.Color(), cSky = new THREE.Color(Q2D.SKY), cHot = new THREE.Color(Q2D.HOT), cYel = new THREE.Color('#fde047');
+  const cBg = new THREE.Color(BOOK.sceneBg), cSpace = new THREE.Color(Q2D.SPACE);
+  const heatCol = (k, out) => (k < .6 ? out.copy(cSky).lerp(cHot, k / .6) : out.copy(cHot).lerp(cYel, (k - .6) / .4));
 
-  // ── ① 눈덩이 쌓기 ──
-  S.add(floor(8.4, 4, '#e0f2fe'));
-  const bori = animal('bear', '#c68642', .9), duri = animal('rabbit', '#f5f5f4', .9);
-  bori.position.set(-2.1, 0, .7); duri.position.set(2.1, 0, .7); S.add(bori, duri);
-  const R = .34, GAP = .7, sg = new THREE.SphereGeometry(R, 22, 14), smat = mat('#ffffff');
+  // ── 눈 더미 모양 (시간만으로 정해져요) ──
+  const R = .34, GAP = .7, sg = new THREE.SphereGeometry(R, 22, 14);
   const slots = []; for (const [cnt, L] of [[4, 0], [3, 1], [2, 2], [1, 3]]) for (let i = 0; i < cnt; i++) slots.push({ x: (i - (cnt - 1) / 2) * GAP, L });
-  const snow = slots.map(() => { const m = new THREE.Mesh(sg, smat); S.add(m); return m; });
-  const arrive = k => .6 + k * .75;      // k번째 눈덩이 도착 시각
-  const down = arrow(.8, '#3b82f6'); S.add(down);
-  const kk = label('꾹!', .55, '#fde047'); kk.position.set(0, .2, .9); S.add(kk);
-  const many = label('많이 쌓아요', .42, '#fde047'); many.position.set(0, 3.5, 0); S.add(many);
-  const snowAt = (t) => {
-    const nm = Q2D.naming();
+  const arrive = k => .6 + k * .75;
+  const pilePose = t => {   // [{pos, scale}] + 꼭대기 높이
     const got = slots.map((_, k) => t >= arrive(k) + .55);
     const sq = [0, 1, 2, 3].map(L => 1 - .075 * slots.filter((s, k) => s.L > L && got[k]).length);
     const ys = []; let y = 0; for (let L = 0; L < 4; L++) { ys.push(y + R * sq[L] * .95); y += 2 * R * sq[L] * .86; }
-    slots.forEach((s, k) => {
-      const m = snow[k], ta = arrive(k), from = k % 2 ? V(1.8, 1.0, .7) : V(-1.8, 1.0, .7), to = V(s.x, ys[s.L], 0);
-      m.visible = t >= ta;
-      if (t < ta + .55) { const u = ease((t - ta) / .55); m.position.lerpVectors(from, to, u); m.position.y += 1.2 * Math.sin(Math.PI * u); m.scale.set(1, 1, 1); }
-      else { m.position.copy(to); m.scale.set(1 + (1 - sq[s.L]) * .55, sq[s.L], 1 + (1 - sq[s.L]) * .3); }
-    });
-    // 던지는 팔
+    return { top: y, list: slots.map((s, k) => {
+      const ta = arrive(k), from = k % 2 ? V(1.8, 1.0, .7) : V(-1.8, 1.0, .7), to = V(s.x, ys[s.L], 0);
+      if (t < ta) return { v: false };
+      if (t < ta + .55) { const u = ease((t - ta) / .55), p = from.clone().lerp(to, u); p.y += 1.2 * Math.sin(Math.PI * u); return { v: true, pos: p, sc: V(1, 1, 1) }; }
+      return { v: true, pos: to, sc: V(1 + (1 - sq[s.L]) * .55, sq[s.L], 1 + (1 - sq[s.L]) * .3) };
+    }) };
+  };
+  const mkPile = (par) => slots.map(() => { const m = new THREE.Mesh(sg, mat(Q2D.SKY)); par.add(m); return m; });
+  const placePile = (meshes, t, off = V(), s = 1) => { const pp = pilePose(t); meshes.forEach((m, k) => { const o = pp.list[k]; m.visible = o.v; if (o.v) { m.position.copy(o.pos).multiplyScalar(s).add(off); m.scale.copy(o.sc).multiplyScalar(s); } }); return pp; };
+
+  // ── 펌프 (꿀이 펌프, 우주 장면의 생각 풍선 속 작은 펌프 둘 다) ──
+  const mkPump = (par, s, seed) => {
+    const G = new THREE.Group(); G.scale.setScalar(s); par.add(G);
+    G.add(box(1, .08, .55, '#475569', 0, .04, 0));
+    const tubeM = tmat('#cbd5e1', .38); G.add(cyl(.22, .22, 1.35, tubeM, 0, .76, 0));
+    const piston = cyl(.19, .19, .06, '#334155', 0, .8, 0), rodM = rod(.04, '#64748b'), handle = box(.9, .1, .12, '#ef4444', 0, 2, 0);
+    G.add(piston, rodM, handle);
+    const hose = mesh(new THREE.TorusGeometry(.5, .035, 8, 24, Math.PI * 1.2), '#1f2937', .55, .35, 0); hose.rotation.z = Math.PI * 1.1; G.add(hose);
+    const airM = mat(Q2D.SKY), rA = Q2D.rnd(seed);
+    const air = Array.from({ length: 16 }, () => { const m = ball(.055, airM); m.userData.p = [rA() * 2 - 1, rA() * 2 - 1, rA(), rA() * 6]; G.add(m); return m; });
+    const heat = [0, 1, 2].map(() => { const m = ball(.07, tmat(Q2D.HOT, .8)); G.add(m); return m; });
+    return { G, at(t, w) {
+      const py = .8 + .45 * Math.cos(2 * Math.PI * t / 1.1);
+      piston.position.y = py; handle.position.y = py + 1.05; stick(rodM, V(0, py, 0), V(0, py + 1.05, 0));
+      heatCol(w * .6, tmpC); airM.color.copy(tmpC);
+      air.forEach(m => { const [ax, az, fy, ph] = m.userData.p, j = .015 + .045 * w, f = 8 + 26 * w;
+        m.position.set(.12 * ax + j * Math.sin(t * f + ph), .14 + fy * (py - .2) + j * Math.cos(t * f * 1.3 + ph), .12 * az * .7); });
+      heat.forEach((m, k) => { const u = (t * .7 + k / 3) % 1; m.visible = w > .45; m.position.set(.35 + .08 * Math.sin(u * 9 + k), .3 + 1.3 * u, .25); m.material.opacity = .85 * (1 - u); });
+      return py;
+    } };
+  };
+
+  // ── ① 눈덩이 쌓기 ──
+  S.add(floor(8.4, 4, '#f1f5f9'));
+  const bori = animal('bear', '#c68642', .9), duri = animal('rabbit', '#f5f5f4', .9);
+  bori.position.set(-2.1, 0, .7); duri.position.set(2.1, 0, .7); S.add(bori, duri);
+  const snow = mkPile(S);
+  const down = arrow(.8, Q2D.BLUE); S.add(down);
+  const kk = label('꾹!', .55, '#fde047'); kk.position.set(0, .2, .9); S.add(kk);
+  const many = label('많이 쌓아요', .42, '#fde047'); many.position.set(0, 3.5, 0); S.add(many);
+  const snowAt = (t) => {
+    const nm = Q2D.naming(), pp = placePile(snow, t);
     const kNow = slots.findIndex((_, k) => t >= arrive(k) && t < arrive(k) + .4);
     bori.userData.armR.rotation.z = kNow >= 0 && kNow % 2 === 0 ? -2.2 : -.2;
     duri.userData.armL.rotation.z = kNow >= 0 && kNow % 2 === 1 ? 2.2 : .2;
     [bori, duri].forEach((a, i) => { a.rotation.y = i ? -Math.PI / 2.6 : Math.PI / 2.6; waddle(a, t + i, .15); });
     const full = t > arrive(9) + .6;
-    if (full) { bori.position.y = duri.position.y = .15 * Math.abs(Math.sin((t - 8) * 6)); } else bori.position.y = duri.position.y = 0;
-    down.visible = t > 5 && !nm; down.position.set(0, y + .9, 0); down.scale.setScalar(pulse(t));
+    bori.position.y = duri.position.y = full ? .15 * Math.abs(Math.sin((t - 8) * 6)) : 0;
+    down.visible = t > 5 && !nm; down.position.set(0, pp.top + .9, 0); down.scale.setScalar(pulse(t));
     kk.visible = t > 5; kk.scale.set(kk.userData.base[0] * pulse(t), kk.userData.base[1] * pulse(t), 1);
     many.visible = t < 5 && !nm;
   };
 
-  // ── ② 자전거 펌프 ──
-  P.add(floor(8.4, 4, '#fde7c4'));
-  P.scale.setScalar(1.4); const ggul = animal('pig', '#f9a8d4', 1.0); ggul.position.set(-.75, 0, .2); ggul.rotation.y = Math.PI / 2.4; P.add(ggul);
-  const px = .35;
-  P.add(box(1, .08, .55, '#475569', px, .04, 0));
-  const tubeM = tmat('#cbd5e1', .38), tube = cyl(.22, .22, 1.35, tubeM, px, .76, 0); P.add(tube);
-  const [g0, g1] = C('#cbd5e1', '#fb923c');
-  const piston = cyl(.19, .19, .06, '#334155', px, .8, 0), rodM = rod(.04, '#64748b'), handle = box(.9, .1, .12, '#ef4444', px, 2, 0);
-  P.add(piston, rodM, handle);
-  const hose = mesh(new THREE.TorusGeometry(.5, .035, 8, 24, Math.PI * 1.2), '#1f2937', px + .55, .35, 0); hose.rotation.z = Math.PI * 1.1; P.add(hose);
-  const airM = mat('#60a5fa'), [a0, a1] = C('#60a5fa', '#f97316'), rA = Q2D.rnd(7);
-  const air = Array.from({ length: 16 }, () => { const m = ball(.05, airM); m.userData.p = [rA() * 2 - 1, rA() * 2 - 1, rA(), rA() * 6]; P.add(m); return m; });
-  const heat = [0, 1, 2].map(k => { const m = ball(.07, tmat('#fb923c', .8)); P.add(m); return m; });
-  const warmL = label('따뜻해요!', .44, '#fde047'); warmL.position.set(px + 1.3, 1.25, .3); P.add(warmL);
-  const pushL = label('꾹꾹!', .44, '#fde047'); pushL.position.set(px - .2, 2.75, 0); P.add(pushL);
+  // ── ② 눈 더미 옆 펌프 ──
+  P.add(floor(8.4, 4, '#f1f5f9'));
+  const snow2 = mkPile(P), pileOff = V(-1.9, 0, 0);
+  const down2 = arrow(.6, Q2D.BLUE); down2.position.set(-1.9, 2.25, 0); P.add(down2);
+  const ggul = animal('pig', '#f9a8d4', 1.2); ggul.position.set(.15, 0, .3); ggul.rotation.y = Math.PI / 2.4; P.add(ggul);
+  const pump = mkPump(P, 1.35, 7); pump.G.position.set(1.5, 0, 0);
+  const warmL = label('뜨끈해요!', .44, '#fde047'); warmL.position.set(2.8, 1.7, .3);
+  const pushL = label('꾹꾹!', .44, '#fde047'); pushL.position.set(1.3, 3.6, 0); P.add(warmL, pushL);
   const pumpAt = (t) => {
-    const nm = Q2D.naming(), w = seg(t, .6, 8);
-    const py = .8 + .45 * Math.cos(2 * Math.PI * t / 1.1);       // 피스톤 높이 (.35 ~ 1.25)
-    piston.position.y = py; handle.position.y = py + 1.05; stick(rodM, V(px, py, 0), V(px, py + 1.05, 0));
+    const nm = Q2D.naming(), w = seg(t, .8, 7.5);
+    placePile(snow2, 99, pileOff, .72); down2.scale.setScalar(.8 * pulse(t));
+    pump.at(t, w);
     ggul.userData.armR.rotation.z = -2.4; ggul.userData.armL.rotation.z = 2.4;
     ggul.position.y = .06 * (1 - Math.cos(2 * Math.PI * t / 1.1)) - .05; waddle(ggul, t, .1);
-    tmpC.lerpColors(g0, g1, w); tubeM.color.copy(tmpC);
-    tmpC.lerpColors(a0, a1, w); airM.color.copy(tmpC);
-    air.forEach(m => { const [ax, az, fy, ph] = m.userData.p, j = .015 + .045 * w, f = 8 + 26 * w;
-      m.position.set(px + .12 * ax + j * Math.sin(t * f + ph), .14 + fy * (py - .2) + j * Math.cos(t * f * 1.3 + ph), .12 * az * .7); });
-    heat.forEach((m, k) => { const u = (t * .7 + k / 3) % 1; m.visible = w > .45; m.position.set(px + .35 + .08 * Math.sin(u * 9 + k), .3 + 1.3 * u, .25); m.material.opacity = .85 * (1 - u); });
-    warmL.visible = w > .6 && !nm; pushL.visible = t < 5 && !nm;
+    warmL.visible = w > .6 && !nm; pushL.visible = t < 6 && !nm;
   };
 
-  // ── ③ 우주: 수소가 모여 별이 켜져요 ──
-  U.add(starField(350, 26));
-  const rS = Q2D.rnd(3);
-  const mkCloud = (n, cx, R0) => {
-    const dirs = Array.from({ length: n }, () => [new THREE.Vector3().randomDirection(), .35 + .65 * Math.cbrt(rS()), rS() * 6]);
+  // ── ③④⑤ 우주 ──
+  const stars = starField(350, 26); stars.material.transparent = true; U.add(stars);
+  const mkCloud = (n, seed, size = .1) => {
+    const r = Q2D.rnd(seed), dots = Array.from({ length: n }, () => [new THREE.Vector3().randomDirection(), .35 + .65 * Math.cbrt(r()), r() * 6, r()]);
     const pos = new Float32Array(n * 3), geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    const pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: '#bfdbfe', size: .09, transparent: true, depthWrite: false })); U.add(pts);
-    return { dirs, pos, geo, pts, cx, R0 };
+    const pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: Q2D.SKY, size, transparent: true, depthWrite: false })); U.add(pts);
+    const coreM = emat(Q2D.SKY, .9); coreM.transparent = true; const core = ball(.32, coreM); U.add(core);
+    return { pts, pos, geo, dots, core, coreM, render(t, c, gather, Rr, heat, alpha = 1) {
+      dots.forEach(([d, f, ph, dl], i) => {
+        const gi = clamp((gather - dl * .6) / .4, 0, 1), RR = lerp(6.5, Rr, ease(gi)), j = .05 * Math.sin(t * (3 + 4 * heat) + ph) * (1 + 2 * heat);
+        pos[i * 3] = c.x + d.x * RR * f + j; pos[i * 3 + 1] = c.y + d.y * RR * f + j; pos[i * 3 + 2] = c.z + d.z * RR * f;
+      });
+      geo.attributes.position.needsUpdate = true;
+      heatCol(heat * .6, tmpC); pts.material.color.copy(tmpC); pts.material.opacity = .9 * alpha * clamp(gather * 3, 0, 1);
+      heatCol(heat, tmpC); coreM.color.copy(tmpC); coreM.emissive.copy(tmpC);
+      core.position.copy(c); core.visible = heat > .12 && alpha > .02; core.scale.setScalar((.4 + 1.1 * heat) * (1 + .08 * Math.sin(t * 8) * heat)); coreM.opacity = (.9 * seg(heat, .12, .35)) * alpha;
+    } };
   };
-  const big = mkCloud(130, -1.8, 2.0), small = mkCloud(45, 2.4, 1.15);
-  const hFace = [0, 1, 2, 3].map(() => { const c = critter(.13, '#e0f2fe', { squash: 1 }); U.add(c); return c; });
-  const coreM = emat('#7f1d1d', .9); coreM.transparent = true; const core = ball(.3, coreM, -1.8, 1, 0); U.add(core);
-  const core2M = emat('#7f1d1d', .7); core2M.transparent = true; const core2 = ball(.2, core2M, 2.4, 1, 0); U.add(core2);
-  const [c0, c1, c2] = [new THREE.Color('#7f1d1d'), new THREE.Color('#f97316'), new THREE.Color('#fde047')];
-  const sun = new THREE.Group(); sun.position.set(-1.8, 1, 0); U.add(sun);
+  const big = mkCloud(150, 3), small = mkCloud(55, 11, .085);
+  // 바뀌는 눈 더미: 눈덩이(하늘색) → 같은 자리 같은 색 수소 알갱이(눈 달린 친구)
+  const mFloor = floor(4.2, 2.4, '#f1f5f9'); U.add(mFloor);
+  const snow3 = mkPile(U);
+  const hyd = slots.map(() => { const c = critter(R, Q2D.SKY, { squash: 1 }); const bm = c.userData.body.children[0].material; bm.emissive = new THREE.Color(Q2D.SKY); bm.emissiveIntensity = .35; U.add(c); return c; });
+  const sph = slots.map((_, k) => new THREE.Vector3().randomDirection().multiplyScalar(.9 + .1 * (k % 3)));
+  const CEN = V(0, 1.2, 0);
+  const inArr = [0, 1, 2, 3, 4, 5].map(k => { const a = arrow(.7, Q2D.BLUE); a.userData.k = k; U.add(a); return a; });
+  // 별과 목성
+  const sun = new THREE.Group(); U.add(sun);
   sun.add(ball(.8, emat('#fde047', 1)), ball(1.05, tmat('#fbbf24', .28)));
   const rays = new THREE.Group(); sun.add(rays);
-  for (let k = 0; k < 10; k++) { const r = rod(.035, emat('#fde68a', 1)); const a = k / 10 * Math.PI * 2; stick(r, V(Math.cos(a) * 1.0, Math.sin(a) * 1.0, 0), V(Math.cos(a) * 1.45, Math.sin(a) * 1.45, 0)); rays.add(r); }
-  const jup = new THREE.Group(); jup.position.set(2.4, 1, 0); U.add(jup);
+  for (let k = 0; k < 10; k++) { const r = rod(.035, emat('#fde68a', 1)); const a = k / 10 * Math.PI * 2; stick(r, V(Math.cos(a), Math.sin(a), 0), V(Math.cos(a) * 1.45, Math.sin(a) * 1.45, 0)); rays.add(r); }
+  const jup = new THREE.Group(); U.add(jup);
   jup.add(ball(.55, '#d6a76c'));
   for (const y of [-.18, .12]) { const b = mesh(new THREE.TorusGeometry(Math.sqrt(.55 * .55 - y * y) + .005, .045, 8, 40), '#9a5b2a', 0, y, 0); b.rotation.x = Math.PI / 2; jup.add(b); }
-  const spot = ball(.09, '#b45309', .3, -.18, .47); jup.add(spot);
-  const lHydro = label('수소가 모여요', .42, '#bfdbfe'); lHydro.position.set(0, 2.9, 0); U.add(lHydro);
-  const lStar = label('별이 켜졌어요!', .44, '#fde047'); lStar.position.set(-1.8, 2.75, 0); U.add(lStar);
-  const lJup = label('조금 모자라요', .4, '#fdba74'); lJup.position.set(2.4, 2.2, 0); U.add(lJup);
-  const spaceAt = (t) => {
-    const nm = Q2D.naming(), shrink = ease(t / 9.5), on = seg(t, 9.8, 10.8);
-    for (const c of [big, small]) {
-      const R = lerp(c.R0, c === big ? .55 : .45, shrink);
-      c.dirs.forEach(([d, f, ph], i) => { const j = .05 * Math.sin(t * (3 + 4 * shrink) + ph); c.pos[i * 3] = c.cx + d.x * R * f + j; c.pos[i * 3 + 1] = 1 + d.y * R * f + j; c.pos[i * 3 + 2] = d.z * R * f; });
-      c.geo.attributes.position.needsUpdate = true; c.pts.material.opacity = .9 * (1 - on);
-    }
-    hFace.forEach((h, k) => { const a = k * 1.57 + t * .4, R = lerp(1.7, .5, shrink); h.position.set(-1.8 + Math.cos(a) * R, 1 + Math.sin(a) * R * .8, .5); h.visible = on < .5; wobble(h, t + k); });
-    const heatK = seg(t, 2, 9.5);
-    tmpC.copy(heatK < .5 ? c0 : c1).lerp(heatK < .5 ? c1 : c2, (heatK % .5) * 2); coreM.color.copy(tmpC); coreM.emissive.copy(tmpC);
-    core.scale.setScalar(.6 + .9 * heatK + .08 * Math.sin(t * 8) * heatK); coreM.opacity = .25 + .75 * heatK; core.visible = on < 1;
-    const h2 = seg(t, 2, 9) * .5; tmpC.copy(c0).lerp(c1, h2 * .6); core2M.color.copy(tmpC); core2M.emissive.copy(tmpC); core2M.opacity = .3 + .5 * h2 * (1 - on); core2.scale.setScalar(.6 + .7 * h2);
-    sun.visible = on > 0; sun.scale.setScalar(.2 + .8 * ease(on) + .03 * Math.sin(t * 5)); rays.rotation.z = t * .5;
-    jup.visible = on > 0; jup.scale.setScalar(ease(on)); jup.rotation.y = t * .6;
-    lHydro.visible = t < 6 && !nm; lStar.visible = on > .7 && !nm; lJup.visible = on > .7 && !nm;
+  jup.add(ball(.09, '#b45309', .3, -.18, .47));
+  // 생각 풍선 속 작은 펌프 (펌프처럼 뜨끈!)
+  const bub = new THREE.Group(); bub.position.set(-2.75, 2.15, -.3); U.add(bub);
+  bub.add(mesh(new THREE.CircleGeometry(.95, 40), new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: .92 })));
+  for (const [x, y, r] of [[.55, -1.05, .16], [.85, -1.35, .09]]) bub.add(mesh(new THREE.CircleGeometry(r, 20), new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: .92 }), x, y, 0));
+  const mini = mkPump(bub, .5, 21); mini.G.position.set(-.1, -.72, .05);
+  const lMorph = label('눈덩이 → 수소', .4, '#bae6fd'); lMorph.position.set(0, 3.0, 0);
+  const lPress = label('눈 더미처럼 꾹!', .44, '#93c5fd'); lPress.position.set(0, 3.0, 0);
+  const lHot = label('펌프처럼 뜨끈!', .44, '#fdba74'); lHot.position.set(.6, 2.9, 0);
+  const lStar = label('별이 켜졌어요!', .44, '#fde047'), lJup = label('조금 모자라요', .4, '#fdba74');
+  U.add(lMorph, lPress, lHot, lStar, lJup);
+
+  const space = (k) => { tmpC.copy(cBg).lerp(cSpace, k); ctx.bg(tmpC); stars.material.opacity = k; };
+  const hideU = () => { small.pts.visible = small.core.visible = false; jup.visible = sun.visible = bub.visible = false; hideAll(lMorph, lPress, lHot, lStar, lJup, ...inArr); };
+  const showSun = (c, on, t, s = 1) => { sun.visible = on > 0; sun.position.copy(c); sun.scale.setScalar(s * (.2 + .8 * ease(on) + .03 * Math.sin(t * 5))); rays.rotation.z = t * .5; };
+  const arrowsIn = (c, Rr, t, vis) => inArr.forEach(a => { const ang = a.userData.k / 6 * Math.PI * 2 + .3; a.visible = vis; if (!vis) return;
+    const d = V(Math.cos(ang), Math.sin(ang), 0); a.position.copy(c).addScaledVector(d, Rr + .95 + .12 * Math.sin(t * 6)); a.scale.setScalar(.8); });
+  // 화살표 기본 방향은 아래(-y): 바깥 점에서 가운데로 향하려면 -d 방향 → rotation.z = atan2(-d.y,-d.x)+π/2
+  const aim = () => inArr.forEach(a => { const ang = a.userData.k / 6 * Math.PI * 2 + .3; a.rotation.z = Math.atan2(-Math.sin(ang), -Math.cos(ang)) + Math.PI / 2; });
+
+  // ③ 눈덩이가 수소로 바뀌고 꾹 모여요 (0~13)
+  const morphAt = (t) => {
+    const nm = Q2D.naming(), bgK = seg(t, .3, 2.6), fade = seg(t, 2.2, 4.6), toS = seg(t, 4.6, 6.6), gather = seg(t, 5.6, 9.2);
+    hideU(); space(bgK);
+    mFloor.visible = bgK < 1; setOpacity(mFloor, 1 - bgK);
+    const pp = pilePose(99);
+    const Rr = lerp(2.0, 1.3, seg(t, 9.2, 12.6)), shrink = Rr / 2.0;
+    snow3.forEach((m, k) => { const o = pp.list[k]; m.visible = fade < 1; m.position.copy(o.pos); m.scale.copy(o.sc); m.material.transparent = true; m.material.opacity = 1 - fade; });
+    hyd.forEach((h, k) => {
+      const o = pp.list[k]; h.visible = fade > 0; setOpacity(h, fade); h.userData.body.children[0].material.color.copy(cSky); h.userData.body.children[0].material.emissive.copy(cSky);
+      const target = CEN.clone().addScaledVector(sph[k], 1.7 * shrink);
+      h.position.copy(o.pos).lerp(target, ease(toS)); h.scale.setScalar(lerp(1, .55, ease(toS)) * (1 - .25 * (1 - shrink)));
+      wobble(h, t + k, .6);
+    });
+    big.pts.visible = true; big.render(t, CEN, gather, Rr, 0);
+    arrowsIn(CEN, Rr, t, t > 9 && !nm); aim();
+    lMorph.visible = fade > .2 && toS < .9 && !nm; lPress.visible = t > 9 && !nm;
+  };
+  // ④ 가운데가 뜨끈해지다 별이 켜져요 (0~12), R0: 시작 반지름
+  const heatAt = (t, R0 = 1.3) => {
+    const nm = Q2D.naming(), heat = seg(t, .8, 8.6), on = seg(t, 8.6, 9.6), Rr = lerp(R0, .6, seg(t, 0, 8.6));
+    hideU(); space(1); mFloor.visible = false; snow3.forEach(m => m.visible = false);
+    hyd.forEach((h, k) => { h.visible = on < .6; setOpacity(h, 1 - on); h.position.copy(CEN).addScaledVector(sph[k], 1.7 * Rr / 2); h.scale.setScalar(.55 * (1 - .25 * (1 - Rr / 2))); wobble(h, t * (1 + 2 * heat) + k, .6 + heat);
+      const bm = h.userData.body.children[0].material; bm.color.copy(heatCol(heat * .6, tmpC)); bm.emissive.copy(tmpC); });
+    big.pts.visible = true; big.render(t, CEN, 1, Rr, heat, 1 - on);
+    showSun(CEN, on, t);
+    arrowsIn(CEN, Rr, t, on < .3 && !nm); aim();
+    bub.visible = !nm && on < 1; mini.at(t, heat);
+    lHot.visible = heat > .15 && on < .5 && !nm; lStar.visible = on > .7 && !nm; lStar.position.set(0, 2.85, 0);
+  };
+  // ⑤ 많이 모인 별 vs 조금 모인 목성 (0~11)
+  const twoAt = (t) => {
+    const nm = Q2D.naming(), shr = seg(t, 0, 7.5), heat = seg(t, 1, 7.5), on = seg(t, 7.5, 8.5);
+    hideU(); space(1); mFloor.visible = false; snow3.forEach(m => m.visible = false); hyd.forEach(h => h.visible = false);
+    const cA = V(-1.8, 1.2, 0), cB = V(2.0, 1.2, 0);
+    big.pts.visible = true; big.render(t, cA, 1, lerp(1.6, .5, shr), heat, 1 - on);
+    small.pts.visible = true; small.render(t, cB, 1, lerp(1.0, .42, shr), heat * .35, 1 - on);
+    showSun(cA, on, t, .85);
+    jup.visible = on > 0; jup.position.copy(cB); jup.scale.setScalar(ease(on)); jup.rotation.y = t * .6;
+    lStar.visible = on > .7 && !nm; lStar.position.set(-1.8, 2.6, 0);
+    lJup.visible = on > .7 && !nm; lJup.position.set(2.0, 2.2, 0);
   };
 
   const draw = (t, ph) => {
-    const space = ph === 3 || (ph === 0 && t >= 6);
-    S.visible = ph === 1 || (ph === 0 && t < 6); P.visible = ph === 2; U.visible = space;
-    ctx.bg(space ? '#0b1026' : BOOK.sceneBg);
+    const sp = ph >= 3 || (ph === 0 && t >= 3.6);
+    S.visible = ph === 1 || (ph === 0 && t < 3.6); P.visible = ph === 2; U.visible = sp;
+    if (!sp) ctx.bg(cBg);
     if (ph === 1) snowAt(t);
     else if (ph === 2) pumpAt(t);
-    else if (ph === 3) spaceAt(t);
-    else if (t < 6) snowAt(t * 1.62); else spaceAt(Math.min(16, (t - 6) * 1.6 + 1.5));
+    else if (ph === 3) morphAt(t);
+    else if (ph === 4) heatAt(t);
+    else if (ph === 5) twoAt(t);
+    else if (t < 3.6) snowAt(Math.min(11, t * 2.4));
+    else if (t < 7.4) morphAt((t - 3.6) * 2.42);
+    else heatAt(Math.min(12, (t - 7.4) * 1.7), 2.0);
   };
-  const loopSnow = { loop: [5, 9.2], slow: .5 };
   draw.spots = {
-    1: [['🔍 꾹 눌린 아래', [0, .35, 0], 3.0, '맨 아래 눈덩이가 납작하게 꾹 눌려요', null, loopSnow], ['🔍 보리', bori, 2.6]],
-    2: [['🔍 꾹꾹 펌프', [px * 1.4, .65 * 1.4, 0], 2.6, '눌린 공기 알갱이가 빨리 흔들려서 따뜻해져요', null, { loop: [3, 5.5], slow: .5 }], ['🔍 꿀이', ggul, 2.8]],
-    3: [['🔍 별 가운데', [-1.8, 1, 0], 3.4, '가운데가 꾹 눌려 뜨거워지면 별이 켜져요', null, { loop: [7, 12], slow: .5 }], ['🔍 목성', [2.4, 1, 0], 2.6, '조금 모자라서 별이 못 됐어요', null, { loop: [8, 12.5], slow: .5 }]],
-    0: [['🔍 꾹 눌린 아래', [0, .35, 0], 3.0, null, null, { loop: [3.2, 5.8], slow: .5 }], ['🔍 별 가운데', [-1.8, 1, 0], 3.4, null, null, { loop: [9.4, 12.6], slow: .5 }]],
+    1: [['🔍 꾹 눌린 아래', [0, .35, 0], 3.0, '맨 아래 눈덩이가 납작하게 꾹 눌려요', null, { loop: [5, 9.2], slow: .5 }], ['🔍 보리', bori, 2.6]],
+    2: [['🔍 꾹꾹 펌프', [1.5, .9, 0], 2.6, '눌린 공기 알갱이가 주황색으로 뜨끈해져요', null, { loop: [3, 6], slow: .5 }], ['🔍 눈 더미', [-1.9, .8, 0], 2.6, '옆의 눈 더미도 아래가 꾹 눌려 있어요']],
+    3: [['🔍 바뀌는 눈덩이', [0, .8, 0], 3.2, '하늘색 눈덩이에 눈이 생기며 하늘색 수소 알갱이로 바뀌어요', null, { loop: [1.8, 6.2], slow: .5 }], ['🔍 꾹 모이는 곳', [0, 1.2, 0], 4.2, '수소 알갱이가 가운데로 꾹 모여요', null, { loop: [8.6, 12.8], slow: .5 }]],
+    4: [['🔍 뜨끈한 가운데', [0, 1.2, 0], 3.2, '가운데가 하늘색에서 주황색으로 뜨끈해지다 별이 켜져요', null, { loop: [5, 10], slow: .5 }], ['🔍 생각 속 펌프', [-2.75, 2.0, -.3], 2.2, '펌프 공기처럼 주황색으로 뜨끈해져요']],
+    5: [['🔍 목성', [2.0, 1.2, 0], 2.8, '조금 모자라서 덜 눌리고 덜 뜨거워요', null, { loop: [5.5, 10], slow: .5 }], ['🔍 별', [-1.8, 1.2, 0], 3.2, '많이 모여서 별이 켜졌어요', null, { loop: [5.5, 10], slow: .5 }]],
+    0: [['🔍 바뀌는 눈덩이', [0, .8, 0], 3.4, null, null, { loop: [3.8, 7.2], slow: .5 }], ['🔍 별 켜지는 곳', [0, 1.2, 0], 3.4, null, null, { loop: [10, 13.4], slow: .5 }]],
   };
-  draw.cam = { 2: [[2.5, 0], [8.5, -1]], 3: [[8.4, 0], [13, -1]], 0: [[3.2, 0], [5.8, -1], [9.6, 1], [13.2, -1]] };
+  draw.cam = { 2: [[2.6, 0], [8.6, -1]], 3: [[1.8, 0], [6.6, -1], [8.8, 1], [12.6, -1]], 4: [[4.5, 0], [10.6, -1]], 5: [[6, 0], [10.4, -1]], 0: [[4.2, 0], [7.4, -1], [10, 1], [13.3, -1]] };
   return draw;
 };
 
 // ── L10.js ──
-// 양자물리 2권 10. 임계 질량 — 도미노 · 팝콘 → 큰 원자가 쪼개지며 와르르 이어져요 (핵분열 연쇄)
+// 양자물리 2권 10. 임계 질량 — 초록 도미노 줄 → 갈래 도미노 판(작은 판은 밖으로 툭 멈춤, 큰 판은 와르르) → 같은 자리에서 도미노가 원자로 → 원자 세상
+// 색 짝: 초록 도미노 = 초록 큰 원자 / 회색 구슬 = 회색 작은 알갱이 / 나무 판 = 보라 원자 마당
 LESSONS[9] = {
-  scene: 'q2_critical', law: '와르르 이어지려면', title: '도미노와 원자',
-  cam: [0, 2.0, 7.6], tgt: [0, .7, 0], fit: 1.2, T: 14,
-  story: '지난번엔 수소가 아주 많이 모여서 별이 켜졌지요? 오늘은 도미노처럼 와르르 이어지는 걸 봐요.',
+  scene: 'q2_critical', law: '와르르 이어지려면', title: '갈래 도미노와 원자',
+  cam: [.3, 3.1, 4.7], tgt: [.3, .3, 0], fit: 1.3, T: 13,
+  story: '지난번엔 수소가 아주 많이 모여서 별이 켜졌지요? 오늘은 보리와 친구들이 초록 도미노로 놀아요.',
   watch: [
-    ['보리와 두리의 도미노 놀이! 띄엄띄엄 세우면 몇 개만 넘어지고 멈춰요. 촘촘히 많이 세우면 끝까지 와르르!', 12, '🔍 「멈춘 곳」을 누르면 너무 멀어서 안 닿는 순간이 천천히 되풀이돼요'],
-    ['팝콘 냄비를 크게 봐요. 하나가 톡 터지면 옆 알갱이를 건드려서 톡톡톡 이어져요.', 11, '🔍 「톡톡 이어지는 곳」을 누르면 연달아 터지는 순간이 천천히 되풀이돼요'],
-    ['원자 세상에서도 똑같아요! 큰 원자가 작은 알갱이를 맞으면 둘로 쪼개지며 알갱이를 또 내보내요. 원자가 적으면 알갱이가 밖으로 새어 멈추고, 많이 모이면 끝까지 와르르!', 14, '🔍 「많이 모인 원자」를 누르면 옆 원자를 또 치는 순간이 천천히 되풀이돼요'],
+    ['보리가 회색 구슬을 굴려요. 구슬이 첫 초록 도미노를 툭! 도미노가 줄줄이 와르르 넘어져요.', 10, '🔍 「구슬이 툭」을 누르면 구슬이 첫 도미노를 치는 순간이 천천히 되풀이돼요'],
+    ['갈래 도미노 판! 하나가 넘어지면 앞의 둘을 넘어뜨려요. 그런데 판이 작으면 금방 판 밖으로 툭 떨어지고 멈춰요.', 10, '🔍 「판 끝」을 누르면 밖으로 툭 떨어지는 순간이 천천히 되풀이돼요'],
+    ['판이 크면 넘어뜨리기가 끝까지 이어져서 와르르! 훨씬 많이 넘어져요.', 10, '🔍 「하나가 둘을」을 누르면 하나가 둘을 넘어뜨리는 순간이 천천히 되풀이돼요'],
+    ['도미노가 원자로 바뀌어요! 초록 도미노는 큰 원자, 회색 구슬은 작은 알갱이예요. 알갱이에 맞은 원자는 둘로 쪼개지며 알갱이 두 개를 또 내보내요.', 12, '🔍 「바뀌는 도미노」를 누르면 도미노가 원자로 바뀌는 순간이 천천히 되풀이돼요'],
+    ['원자가 적게 모이면 알갱이가 밖으로 새어 멈추고, 많이 모이면 끝까지 와르르 이어져요.', 11, '🔍 「적게 모인 원자」를 누르면 알갱이가 밖으로 새는 순간이 천천히 되풀이돼요'],
   ],
-  q: '도미노를 촘촘히 많이 세우면?',
-  choices: [['🁢', '끝까지 와르르!'], ['✌️', '두 개만 넘어져요!'], ['🙅', '하나도 안 넘어져요!']], answer: 0,
-  hint: '띄엄띄엄 줄과 촘촘한 줄 중에서 끝까지 넘어진 줄은 어느 쪽이었지요?',
-  q2: '원자는 왜 많이 모여야 와르르 이어질까요?',
-  choices2: [['🎯', '옆 원자를 쳐서!'], ['🏋️', '원자가 무거워져서!'], ['🎵', '원자끼리 노래해서!']], answer2: 0,
-  hint2: '쪼개질 때 나온 작은 알갱이가 옆 원자에 닿아야 또 쪼개져요. 원자가 멀면 알갱이가 그냥 밖으로 나가요.',
-  kid: '알갱이가 옆 원자를 또 쳐서 와르르!',
+  q: '작은 판 끝의 초록 도미노는 어떻게 됐나요?',
+  choices: [['⬇️', '판 밖으로 툭!'], ['🧍', '다시 벌떡 일어나요!'], ['🛫', '옆 판으로 날아가요!']], answer: 0,
+  hint: '작은 판은 금방 끝나요. 맨 끝 도미노가 판 밖으로 떨어졌지요?',
+  q2: '초록 원자가 적게 모이면 회색 알갱이는?',
+  choices2: [['🚪', '밖으로 새서 멈춰요!'], ['💥', '원자를 끝까지 쪼개요!'], ['🙈', '원자 속에 숨어 버려요!']], answer2: 0,
+  hint2: '회색 알갱이가 다음 초록 원자를 못 만나면 밖으로 나가 버려요. 작은 도미노 판처럼요.',
+  kid: '적으면 새고, 많으면 와르르!',
   name: { term: '임계 질량', kid: '도미노가 와르르', what: '쪼개지기가 끝까지 와르르 이어지려면 원자가 이만큼은 모여야 해요. 그 "딱 충분한 양"이에요. 그래서 어른들이 아주 조심해서 다뤄요.' },
   habit: '도미노와 블록 놀이가 끝나면 상자에 차곡차곡 정리해요.',
-  adult: '어른용 · 임계 질량(critical mass): 핵분열 연쇄 반응이 스스로 유지되는 최소 질량. 우라늄-235 원자핵이 중성자를 흡수하면 둘로 쪼개지며 중성자 2~3개와 큰 에너지를 낸다. 양이 적으면 중성자가 밖으로 새어 나가 반응이 꺼지고, 충분하면 이어진다. 맨 구 기준 임계 질량은 우라늄-235 약 52 kg(지름 약 17 cm), 플루토늄-239 약 10 kg. 원자력 발전소는 제어봉과 감속재로 임계 상태를 천천히 유지하고, 핵무기는 순간적으로 초임계를 만든다(핵확산금지조약으로 관리). 9편 별의 핵융합은 작은 원자가 합쳐지는 것, 이것은 큰 원자가 쪼개지는 핵분열이다.',
+  adult: '어른용 · 임계 질량(critical mass): 핵분열 연쇄 반응이 스스로 유지되는 최소 질량. 우라늄-235 원자핵이 중성자를 흡수하면 둘로 쪼개지며 중성자 2~3개와 큰 에너지를 낸다(비유: 초록 도미노 = 우라늄 원자핵, 회색 구슬 = 중성자, 작은 판 = 중성자가 밖으로 새는 작은 덩어리). 양이 적으면 중성자가 밖으로 새어 나가 반응이 꺼지고, 충분하면 이어진다. 맨 구 기준 임계 질량은 우라늄-235 약 52 kg(지름 약 17 cm), 플루토늄-239 약 10 kg. 원자력 발전소는 제어봉과 감속재로 임계 상태를 천천히 유지하고, 핵무기는 순간적으로 초임계를 만든다(핵확산금지조약으로 관리). 9편 별의 핵융합은 작은 원자가 합쳐지는 것, 이것은 큰 원자가 쪼개지는 핵분열이다.',
 };
 
 SCENES.q2_critical = (g, ctx) => {
-  const D = new THREE.Group(), C = new THREE.Group(), A = new THREE.Group(); g.add(D, C, A);
-  const nmode = () => typeof mode !== 'undefined' && mode === 'name';
+  const G1 = new THREE.Group(), G2 = new THREE.Group(), G3 = new THREE.Group(), G4 = new THREE.Group(), G5 = new THREE.Group();
+  g.add(G1, G2, G3, G4, G5);
+  const GREEN = '#65a30d', GREEN2 = '#a3e635', GREY = '#94a3b8', WOOD = '#d6a66a', LILAC = '#ede9fe';
+  const nm = () => typeof mode !== 'undefined' && mode === 'name';
+  const flashM = new THREE.MeshBasicMaterial({ color: '#fde047', transparent: true, depthWrite: false }), flashG = new THREE.SphereGeometry(.12, 12, 8);
+  const mkFlash = par => { const m = new THREE.Mesh(flashG, flashM.clone()); m.visible = false; par.add(m); return m; };
   const fl = (o, t, t0, pos, s = 1) => { const a = t - t0; o.visible = a >= 0 && a < .4; if (o.visible) { o.position.copy(pos); o.scale.setScalar(s * (1 + 2.2 * a)); o.material.opacity = 1 - a / .4; } };
 
-  // ── ① 도미노 ──
-  D.add(floor(8.6, 3.6, '#fde7c4'));
-  const bori = animal('bear', '#c68642', .8), duri = animal('rabbit', '#f5f5f4', .8);
-  bori.position.set(-3.75, 0, -1.0); bori.scale.setScalar(1.35); duri.position.set(-3.75, 0, .9); bori.rotation.y = duri.rotation.y = Math.PI / 2; D.add(bori, duri);
-  const H = .72, W = .12, dg = new THREE.BoxGeometry(W, H, .42);
-  const TY = .9; D.add(box(6.9, TY, .8, '#d6a66a', .05, TY / 2, -1.0), box(6.9, .06, .86, '#b45309', .05, TY + .03, -1.0));
-  const mkRow = (xs, z, cols, y0 = 0) => {
-    const items = xs.map((x, i) => { const pv = new THREE.Group(); pv.position.set(x + W / 2, y0, z); const m = new THREE.Mesh(dg, mat(cols[i % cols.length])); m.position.set(-W / 2, H / 2, 0); pv.add(m); D.add(pv); return { pv, x }; });
-    // 넘어지는 시각과 기대는 각도
-    let tt = 1.1; items.forEach((it, i) => {
-      it.t0 = tt; const nx = items[i + 1], d = nx ? nx.x - it.x - W : 9;
-      if (nx && d < H * .92) { it.max = Math.asin(clamp((d) / H, 0, 1)); tt += .24; } else { it.max = Math.PI / 2 - .04; tt = Infinity; }
+  // 갈래 격자: (k, j) k줄의 j번째. 줄은 오른쪽(+x)으로 가요, 하나가 앞의 둘(j, j+1)을 넘어뜨려요
+  const SX = .5, SZ = .46;
+  const nodes = rows => { const a = []; for (let k = 0; k < rows; k++) for (let j = 0; j <= k; j++) a.push([k, j]); return a; };
+  const npos = (k, j, rows, s, c) => V(c.x + (k - (rows - 1) / 2) * SZ * s, c.y, c.z + (j - k / 2) * SX * s);
+
+  // ── 도미노 판 ──
+  const domG = new THREE.BoxGeometry(.1, .5, .3), domM = mat(GREEN);
+  const mkBoard = (par, rows, s, c, { edgeOff = false, t0 = 1, dt = .45, boardRows = rows } = {}) => {
+    const BT = .3 * s, bw = rows * SX * s + .3, xl = c.x - (rows - 1) / 2 * SZ * s - .85 * s, xr = c.x + (rows - 1) / 2 * SZ * s + (edgeOff ? .075 : .45) * s;
+    const board = box(xr - xl, BT, bw, WOOD, (xl + xr) / 2, BT / 2, c.z); par.add(board);
+    const list = nodes(rows).map(([k, j]) => {
+      const p = npos(k, j, rows, s, V(c.x, BT, c.z)), pv = new THREE.Group(); pv.position.set(p.x + .05 * s, BT, p.z); pv.scale.setScalar(s);
+      const m = new THREE.Mesh(domG, domM); m.position.set(-.05, .25, 0); pv.add(m); par.add(pv);
+      const last = k === rows - 1;
+      return { k, j, p, pv, m, x0: p.x + .05 * s, tk: t0 + k * dt, last, off: edgeOff && last, fx: mkFlash(par) };
     });
-    return items;
-  };
-  const sparse = mkRow([-3.0, -2.55, -1.45, -.3, .85, 2.0, 3.1], -1.0, ['#ef4444', '#f59e0b'], TY + .06);
-  const dense = mkRow(Array.from({ length: 17 }, (_, i) => -3.0 + i * .38), .9, ['#3b82f6', '#22c55e', '#a855f7']);
-  const lStop = label('멈췄어요', .42, '#fde047'); lStop.position.set(-2.0, 2.5, -1.0);
-  const lAll = label('와르르!', .5, '#fde047'); lAll.position.set(1.6, 1.3, .9); D.add(lStop, lAll);
-  const fallM = new THREE.MeshBasicMaterial({ color: '#fde047', transparent: true });
-  const puff = new THREE.Mesh(new THREE.SphereGeometry(.12, 12, 8), fallM); D.add(puff);
-  const dominoAt = (t) => {
-    const nm = nmode();
-    for (const row of [sparse, dense]) row.forEach(it => { const u = clamp((t - it.t0) / .3, 0, 1); it.pv.rotation.z = -it.max * u * u; });
-    bori.userData.armR.rotation.z = duri.userData.armL.rotation.z = 0;
-    const push = t > .7 && t < 1.3; bori.userData.armL.rotation.z = push ? 1.4 : .2; duri.userData.armR.rotation.z = push ? -1.4 : -.2;
-    [bori, duri].forEach((a, i) => { a.position.x = -3.75 + (push ? .12 : 0); waddle(a, t + i, .1); });
-    const end = dense[dense.length - 1].t0 + .3;
-    duri.position.y = t > end + .2 ? .14 * Math.abs(Math.sin((t - end) * 7)) : 0;
-    lStop.visible = t > sparse[1].t0 + .6 && !nm; lAll.visible = t > end && !nm;
-    fl(puff, t, sparse[1].t0 + .3, V(-2.0, TY + .25, -1.0), 1.2);
+    const marble = ball(.1 * s, GREY); par.add(marble);
+    const root = list[0].p;
+    return { board, list, marble, BT, s, t0, dt, rows, at(t, fade = 1) {
+      list.forEach(o => {
+        const u = clamp((t - o.tk) / .3, 0, 1);
+        if (o.off) {
+          const d = clamp((t - o.tk - .3) / .35, 0, 1);
+          o.pv.rotation.z = -(Math.PI / 2 + .35) * u * u * (1 - .22 * d);
+          o.pv.position.y = BT - (BT - .03) * ease(d); o.pv.position.x = o.x0 + .3 * s * ease(d);
+        } else { o.pv.rotation.z = -(o.last ? Math.PI / 2 - .03 : Math.PI / 2 - .27) * u * u; o.pv.position.y = BT; o.pv.position.x = o.x0; }
+        fl(o.fx, t, o.off ? o.tk + .6 : o.tk, o.off ? V(o.x0 + .45 * s, .1, o.p.z) : V(o.p.x, BT + .35 * s, o.p.z), s);
+        o.m.visible = fade > .01;
+      });
+      domM.transparent = fade < 1; domM.opacity = fade;
+      const mu = ease(seg(t, t0 - 1, t0)); marble.visible = fade > .01;
+      marble.position.set(lerp(root.x - .75 * s, root.x - .17 * s, mu) - (t > t0 ? .12 * s * ease(seg(t, t0, t0 + .4)) : 0), BT + .1 * s, root.z);
+      marble.rotation.z = -mu * 8;
+    } };
   };
 
-  // ── ② 팝콘 냄비 ──
-  C.add(floor(8.6, 3.6, '#fde7c4'));
-  C.add(box(2.8, .3, 2.2, '#94a3b8', 0, .15, 0));
-  for (const x of [-.4, .4]) { const b = cyl(.32, .32, .02, '#ef4444', x * 2.2, .31, .6); C.add(b); }
-  const pot = new THREE.Mesh(new THREE.CylinderGeometry(1.05, .95, .62, 40, 1, true), new THREE.MeshStandardMaterial({ color: '#cbd5e1', side: THREE.DoubleSide, roughness: .35, metalness: .3 }));
-  pot.position.y = .62; C.add(pot, cyl(.95, .95, .04, '#64748b', 0, .33, 0));
-  const nabi = animal('cat', '#fbbf24', .85); nabi.position.set(-2.4, 0, .5); nabi.rotation.y = Math.PI / 3; C.add(nabi);
-  const kg = new THREE.SphereGeometry(.075, 12, 8), pg = new THREE.SphereGeometry(.13, 12, 8), km = mat('#facc15'), pm = mat('#fffbeb');
-  const kernels = [];
-  const pushK = (x, z, ring, j) => { const k = new THREE.Mesh(kg, km), p = new THREE.Group(); for (let q = 0; q < 3; q++) p.add(new THREE.Mesh(pg, pm)); p.children[1].position.set(.1, .06, 0); p.children[2].position.set(-.05, .1, .08); C.add(k, p); kernels.push({ k, p, x, z, tp: 2 + ring * 1.1 + j * .12, rest: .45 + .12 * ((j * 7 + ring) % 3) }); };
-  pushK(0, 0, 0, 0);
-  for (let i = 0; i < 6; i++) pushK(.33 * Math.cos(i * Math.PI / 3), .33 * Math.sin(i * Math.PI / 3), 1, i);
-  for (let i = 0; i < 12; i++) pushK(.68 * Math.cos(i * Math.PI / 6 + .2), .68 * Math.sin(i * Math.PI / 6 + .2), 2, i);
-  const tapM = new THREE.MeshBasicMaterial({ color: '#fb923c', transparent: true }), taps = kernels.map(() => { const m = new THREE.Mesh(new THREE.RingGeometry(.12, .17, 20), tapM.clone()); m.rotation.x = -Math.PI / 2; C.add(m); return m; });
-  const lTok = label('톡!', .48, '#fde047'); lTok.position.set(0, 1.35, 0);
-  const lTokTok = label('톡톡톡!', .48, '#fde047'); lTokTok.position.set(.4, 1.85, 0); C.add(lTok, lTokTok);
-  const popAt = (t) => {
-    const nm = nmode();
-    kernels.forEach((o, i) => {
-      const a = t - o.tp, popped = a >= 0;
-      o.k.visible = !popped; o.k.position.set(o.x, .4 + .015 * Math.sin(t * 30 + i) * seg(t, 0, 2), o.z);
-      o.p.visible = popped;
-      if (popped) { const u = clamp(a / .55, 0, 1); o.p.position.set(o.x * (1 + .2 * u), .4 + o.rest * u + .55 * Math.sin(Math.PI * u), o.z * (1 + .2 * u)); o.p.scale.setScalar(.4 + .6 * ease(a / .2)); o.p.rotation.y = i; }
-      const r = taps[i], b = t - o.tp; r.visible = b >= 0 && b < .5; if (r.visible) { r.position.set(o.x, .45, o.z); r.scale.setScalar(1 + 3 * b); r.material.opacity = 1 - b / .5; }
+  // ── 원자 마당 ──
+  const hG = new THREE.SphereGeometry(.13, 14, 10), pG = new THREE.SphereGeometry(.065, 12, 8), pM = emat(GREY, .35);
+  const mkAtoms = (par, rows, s, c, { a0 = 1, da = .7, Rd = null } = {}) => {
+    const R = Rd || (rows * SX * s * .5 + .45 * s);
+    const disk = mesh(new THREE.CircleGeometry(R, 48), new THREE.MeshStandardMaterial({ color: LILAC, transparent: true }), c.x, .02, c.z); disk.rotation.x = -Math.PI / 2;
+    const rim = mesh(new THREE.TorusGeometry(R, .04, 8, 64), new THREE.MeshStandardMaterial({ color: '#c4b5fd', transparent: true }), c.x, .03, c.z); rim.rotation.x = Math.PI / 2;
+    par.add(disk, rim);
+    const Y = .2 * s, at = {};
+    const list = nodes(rows).map(([k, j]) => {
+      const p = npos(k, j, rows, s, V(c.x, Y, c.z)), body = critter(.17 * s, GREEN2, { squash: 1 }); body.position.copy(p); par.add(body);
+      const a = new THREE.Mesh(hG, mat(GREEN2)), b = new THREE.Mesh(hG, mat(GREEN)); a.scale.setScalar(s); b.scale.setScalar(s); par.add(a, b);
+      const last = k === rows - 1;
+      const outs = last ? [p.clone().add(V(.95 * s, 0, -.45 * s)), p.clone().add(V(.95 * s, 0, .45 * s))] : [npos(k + 1, j, rows, s, V(c.x, Y, c.z)), npos(k + 1, j + 1, rows, s, V(c.x, Y, c.z))];
+      const ps = outs.map(() => { const m = new THREE.Mesh(pG, pM); m.scale.setScalar(s); par.add(m); return m; });
+      const o = { k, j, p, body, a, b, outs, ps, tS: a0 + k * da, last, fx: mkFlash(par) }; at[k + ',' + j] = o; return o;
     });
-    nabi.userData.head.rotation.x = t > 2 ? -.2 : 0; nabi.position.y = t > 5 ? .12 * Math.abs(Math.sin(t * 6)) : 0; waddle(nabi, t, .1);
-    lTok.visible = t > 2 && t < 3.2 && !nm; lTokTok.visible = t > 3.4 && !nm;
+    const inP = new THREE.Mesh(pG, pM); inP.scale.setScalar(s * 1.3); par.add(inP);
+    return { disk, rim, list, inP, R, a0, da, s, render(t, fade = 1) {
+      const root = list[0].p;
+      inP.visible = fade > .01 && t < a0 + .05; inP.position.copy(root).add(V(-1.0 * s * (1 - ease(seg(t, a0 - 1, a0))), 0, 0));
+      list.forEach((o, i) => {
+        const a = t - o.tS, split = a >= 0;
+        o.body.visible = !split && fade > .01; if (!split) { setOpacity(o.body, fade); o.body.position.set(o.p.x + .02 * Math.sin(t * 5 + i), o.p.y, o.p.z); wobble(o.body, t + i, .5); }
+        const u = ease(a / .45);
+        for (const [h, sg] of [[o.a, 1], [o.b, -1]]) { h.visible = split && fade > .01; if (h.visible) { h.position.copy(o.p).add(V(sg * .17 * s * u, .05 * s * Math.sin(Math.PI * u), 0)); h.material.transparent = true; h.material.opacity = fade * (1 - .45 * seg(a, .8, 2.5)); } }
+        o.ps.forEach((m, q) => { const tr = o.last ? 1.0 : da, w = clamp((a - .05) / tr, 0, 1); m.visible = split && fade > .01 && a < .05 + tr + (o.last ? 0 : .02);
+          if (m.visible) { m.position.copy(o.p).lerp(o.outs[q], w); m.position.y += .15 * s * Math.sin(Math.PI * w); } });
+        fl(o.fx, t, o.tS, V(o.p.x, o.p.y + .1 * s, o.p.z), .8 * s);
+      });
+    } };
+  };
+  const label2 = (txt, sz, col, x, y, z, par) => { const l = label(txt, sz, col); l.position.set(x, y, z); par.add(l); return l; };
+
+  // ── ① 도미노 한 줄 ──
+  G1.add(floor(9, 3.4, '#fde7c4'));
+  const bori = animal('bear', '#c68642', .95); bori.position.set(-2.4, 0, .5); bori.rotation.y = Math.PI / 2.2; G1.add(bori);
+  const lineN = 12, line1 = Array.from({ length: lineN }, (_, i) => {
+    const x = -1.95 + i * .4, pv = new THREE.Group(); pv.position.set(x + .05, 0, 0);
+    const m = box(.1, .75, .4, GREEN, -.05, .375, 0); pv.add(m); G1.add(pv); return { pv, tk: 1.3 + i * .22, x };
+  });
+  const marb1 = ball(.13, GREY); G1.add(marb1);
+  const f1 = mkFlash(G1), lAll1 = label2('와르르!', .5, '#fde047', .4, 1.6, 0, G1);
+  const lineAt = (t) => {
+    line1.forEach((o, i) => { const u = clamp((t - o.tk) / .25, 0, 1); o.pv.rotation.z = -(i === lineN - 1 ? Math.PI / 2 - .02 : .62) * u * u; });
+    const mu = seg(t, .3, 1.3); marb1.position.set(lerp(-2.45, -2.07, mu) - (t > 1.3 ? .1 * ease(seg(t, 1.3, 1.6)) : 0), .13, 0); marb1.rotation.z = -mu * 6;
+    bori.userData.armR.rotation.z = t > .1 && t < .6 ? -1.3 : -.2; waddle(bori, t, .1);
+    bori.position.y = t > 4.4 ? .14 * Math.abs(Math.sin(t * 6)) : 0;
+    fl(f1, t, 1.3, V(-1.95, .6, 0), 1.2);
+    lAll1.visible = t > 3.2 && !nm();
   };
 
-  // ── ③ 원자 세상: 핵분열 연쇄 ──
-  const back = mesh(new THREE.CircleGeometry(4.3, 56), '#ede9fe', 0, .9, -1.2), rim = mesh(new THREE.TorusGeometry(4.3, .07, 8, 72), '#c4b5fd', 0, .9, -1.2);
-  A.add(back, rim);
-  const nG = new THREE.SphereGeometry(.07, 12, 8), nM = emat('#94a3b8', .5), hG = new THREE.SphereGeometry(.2, 16, 12);
-  const atoms = [];
-  const mkAtom = (x, y, tS) => {
-    const body = critter(.28, '#84cc16', { squash: 1 }); body.position.set(x, y, 0); A.add(body);
-    const a = new THREE.Mesh(hG, tmat('#a3e635', 1)), b = new THREE.Mesh(hG, tmat('#facc15', 1)); A.add(a, b);
-    const ang = atoms.length * 2.39, ns = [0, 1, 2].map(() => { const m = new THREE.Mesh(nG, nM); A.add(m); return m; });
-    const o = { body, a, b, x, y, tS, ang, ns, dirs: [0, 1, 2].map(k => ang + k * 2.1) }; atoms.push(o); return o;
+  // ── ② 작은 갈래 판 ──
+  G2.add(floor(9, 4.4, '#fde7c4'));
+  const duri = animal('rabbit', '#f5f5f4', .95); duri.position.set(-2.1, 0, .9); duri.rotation.y = Math.PI / 3; G2.add(duri);
+  const small = mkBoard(G2, 3, 1.35, V(.75, 0, 0), { edgeOff: true, t0: 1.2, dt: .55 });
+  const lTuk = label2('툭! 밖으로', .44, '#fde047', 1.75, 1.35, 0, G2), lStop = label2('6개만 넘어지고 멈춰요', .4, '#fde047', .2, 2.0, 0, G2);
+  const smallAt = (t) => {
+    small.at(t);
+    duri.userData.armR.rotation.z = t > 3.6 ? -.4 - .3 * Math.sin(t * 6) : -.2; waddle(duri, t, .1);
+    lTuk.visible = t > 2.9 && !nm(); lStop.visible = t > 4.4 && !nm();
   };
-  // 적게 모인 원자: 4개, 멀리 떨어져 있어요 (1개 → 1개 더 → 멈춤)
-  const S0 = mkAtom(-3.2, 1.0, 2.2), S1 = mkAtom(-2.3, 1.75, 2.85); mkAtom(-2.0, .1, Infinity); mkAtom(-3.3, -.15, Infinity);
-  S0.dirs = [Math.atan2(.75, .9), 2.6, -1.6]; S1.dirs = [.4, 2.3, -2.4];
-  // 많이 모인 원자: 4x4, 촘촘
-  const grid = [];
-  for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) grid.push([r, c]);
-  const start = [1, 0];
-  grid.forEach(([r, c]) => { const hop = Math.abs(r - start[0]) + Math.abs(c - start[1]); mkAtom(.75 + c * .62, -.05 + r * .62, 6.7 + hop * .5); });
-  const inA = new THREE.Mesh(nG, nM), inB = new THREE.Mesh(nG, nM); A.add(inA, inB);
-  const glow = ball(1.6, tmat('#fde047', .5)); glow.position.set(1.68, .88, .1); A.add(glow);
-  const lFew = label('적으면 멈춰요', .5, '#7c3aed', '#ffffffcc'), lMany = label('많으면 와르르!', .5, '#7c3aed', '#ffffffcc');
-  lFew.position.set(-2.6, 2.6, 0); lMany.position.set(1.8, 2.6, 0); A.add(lFew, lMany);
-  const atomAt = (t) => {
-    const nm = nmode();
-    inA.visible = t > 1.4 && t < 2.2; inA.position.set(lerp(-4.3, -3.2, seg(t, 1.4, 2.2)), 1.0, .1);
-    inB.visible = t > 5.9 && t < 6.7; inB.position.set(lerp(-.6, .75, seg(t, 5.9, 6.7)), -.05 + .62, .1);
-    atoms.forEach((o, i) => {
-      const a = t - o.tS, split = a >= 0;
-      o.body.visible = !split; if (!split) { o.body.position.set(o.x + .02 * Math.sin(t * 5 + i), o.y, 0); wobble(o.body, t + i, .5); }
-      const u = ease(a / .6), px = -Math.sin(o.ang), py = Math.cos(o.ang);
-      for (const [h, s] of [[o.a, 1], [o.b, -1]]) { h.visible = split; if (split) { h.position.set(o.x + s * px * .3 * u, o.y + s * py * .3 * u, 0); h.scale.setScalar(1 - .35 * u); h.material.opacity = 1 - .55 * seg(a, .6, 2); } }
-      o.ns.forEach((n, k) => { const d = o.dirs[k], tr = (o === S0 && k === 0) ? .62 : 1.0, L = tr * a / .6 * 1.2; n.visible = split && a < (tr < 1 ? .62 : 1.0); if (n.visible) n.position.set(o.x + Math.cos(d) * Math.min(L, 2.2), o.y + Math.sin(d) * Math.min(L, 2.2), .1); });
-    });
-    const gk = seg(t, 9.2, 9.9) * (1 - seg(t, 10.4, 12.5)); glow.visible = gk > .01; glow.scale.setScalar(.5 + .6 * gk); glow.material.opacity = .55 * gk;
-    lFew.visible = t > 3.6 && !nm; lMany.visible = t > 9.2 && !nm;
+
+  // ── ③ 큰 갈래 판 ──
+  G3.add(floor(9, 4.6, '#fde7c4'));
+  const ggul = animal('pig', '#f9a8d4', .9); ggul.position.set(-2.3, 0, 1.0); ggul.rotation.y = Math.PI / 3; G3.add(ggul);
+  const bigB = mkBoard(G3, 6, 1, V(.5, 0, 0), { t0: 1, dt: .5 });
+  const lAll3 = label2('와르르! 21개', .46, '#fde047', .3, 1.9, 0, G3), lTwo = label2('하나가 둘을', .4, '#fde047', -.6, 1.4, 0, G3);
+  const bigAt = (t) => {
+    bigB.at(t); waddle(ggul, t, .1); ggul.position.y = t > 4 ? .14 * Math.abs(Math.sin(t * 6)) : 0;
+    lTwo.visible = t > 1.2 && t < 3.2 && !nm(); lAll3.visible = t > 4 && !nm();
+  };
+
+  // ── ④ 다리: 같은 자리에서 도미노 → 원자 ──
+  const C4 = V(.5, 0, 0);
+  const fl4 = floor(9, 4.6, '#fde7c4'); G4.add(fl4);
+  const b4 = mkBoard(G4, 6, 1, C4, { t0: .7, dt: .3 });
+  const a4 = mkAtoms(G4, 6, 1, C4, { a0: 5.6, da: .65, Rd: 2.05 });
+  const glow4 = ball(1.4, tmat('#fde047', .25)); glow4.position.set(C4.x, .4, C4.z); G4.add(glow4);
+  const lMorph = label2('도미노 → 원자', .44, '#fde047', .3, 1.9, 0, G4);
+  // 짝 표시: 초록 도미노 = 초록 원자, 회색 구슬 = 회색 알갱이
+  const key = new THREE.Group(); key.position.set(-1.2, 1.0, 1.5); G4.add(key);
+  key.add(box(.16, .26, .04, GREEN, -.55, .32, 0), ball(.13, GREEN2, .35, .32, 0), ball(.08, GREY, -.55, -.12, 0), ball(.06, GREY, .35, -.12, 0));
+  const kA = label('=', .3, '#23324a', '#ffffffcc'); kA.position.set(-.1, .32, 0); const kB = label('=', .3, '#23324a', '#ffffffcc'); kB.position.set(-.1, -.12, 0); key.add(kA, kB);
+  const lAtom = label2('큰 원자', .3, '#a3e635', -.95, 1.62, 1.5, G4), lPar = label2('작은 알갱이', .3, '#e2e8f0', -.95, .55, 1.7, G4);
+  const bridgeAt = (t) => {
+    const mf = seg(t, 3.0, 5.0);           // 0: 도미노, 1: 원자
+    b4.at(t, 1 - mf); b4.board.material.transparent = true; b4.board.material.opacity = 1 - mf; b4.board.visible = mf < 1;
+    a4.disk.material.opacity = mf; a4.rim.material.opacity = mf; a4.disk.visible = a4.rim.visible = mf > 0;
+    a4.render(t, mf);
+    // 도미노가 쓰러진 자리에서 원자가 쏙 솟아나요
+    a4.list.forEach(o => { if (t < o.tS) o.body.scale.setScalar(.3 + .7 * mf); });
+    const gk = seg(t, 9.4, 10) * (1 - seg(t, 10.6, 12)); glow4.visible = gk > .01; glow4.material.opacity = .25 * gk; glow4.scale.setScalar(.5 + .4 * gk);
+    const kv = !nm() && t > 3.4; key.visible = kv; lAtom.visible = lPar.visible = kv;
+    lMorph.visible = mf > .1 && t < 6.2 && !nm();
+  };
+
+  // ── ⑤ 원자: 적게 vs 많이 ──
+  const few = mkAtoms(G5, 3, .85, V(-1.5, 0, 0), { a0: 1.2, da: .7 });
+  const lots = mkAtoms(G5, 6, .62, V(1.5, 0, 0), { a0: 1.2, da: .55 });
+  const glow5 = ball(1.0, tmat('#fde047', .25)); glow5.position.set(1.5, .4, 0); G5.add(glow5);
+  const lFew = label2('적으면 멈춰요', .38, '#c4b5fd', -1.5, 1.35, 0, G5), lMany = label2('많으면 와르르!', .38, '#fde047', 1.5, 1.35, 0, G5);
+  const lOut = label2('밖으로 새요', .3, '#e2e8f0', -.55, .75, .3, G5);
+  const twoAt = (t) => {
+    few.render(t); lots.render(t);
+    const gk = seg(t, 4.6, 5.2) * (1 - seg(t, 6, 8)); glow5.visible = gk > .01; glow5.material.opacity = .25 * gk; glow5.scale.setScalar(.5 + .4 * gk);
+    lFew.visible = t > 4 && !nm(); lMany.visible = t > 5 && !nm(); lOut.visible = t > 3.2 && t < 7 && !nm();
   };
 
   const draw = (t, ph) => {
-    D.visible = ph === 1 || (ph === 0 && t < 5.5); C.visible = ph === 2; A.visible = ph === 3 || (ph === 0 && t >= 5.5);
-    if (ph === 1) dominoAt(t);
-    else if (ph === 2) popAt(t);
-    else if (ph === 3) atomAt(t);
-    else if (t < 5.5) dominoAt(t); else atomAt(t - 5.5 + 5.6);
+    G1.visible = ph === 1; G2.visible = ph === 2; G3.visible = ph === 3; G4.visible = ph === 4 || ph === 0; G5.visible = ph === 5;
+    if (ph === 1) lineAt(t); else if (ph === 2) smallAt(t); else if (ph === 3) bigAt(t); else if (ph === 5) twoAt(t);
+    else bridgeAt(Math.min(t, 12));
   };
+  const P = (rows, s, c, k, j, y = .3) => { const p = npos(k, j, rows, s, c); return [p.x, y * s, p.z]; };
+  const bridgeSpots = [['🔍 바뀌는 도미노', P(6, 1, C4, 1, 0, .5), 2.6, '초록 도미노가 같은 자리에서 초록 원자로 바뀌어요', null, { loop: [2.6, 5.4], slow: .5 }],
+    ['🔍 쪼개지는 원자', P(6, 1, C4, 0, 0, .3), 2.4, '회색 알갱이에 맞은 원자가 둘로 쪼개지며 알갱이 두 개를 내보내요', null, { loop: [5.2, 7.6], slow: .5 }]];
   draw.spots = {
-    1: [['🔍 멈춘 곳', [-2.0, TY + .4, -1.0], 2.6, '너무 멀어서 다음 도미노에 닿지 않아요', null, { loop: [.8, 3.4], slow: .5 }], ['🔍 촘촘한 줄', [-1.0, .4, .9], 3.0, '하나가 넘어지면 옆을 밀어 끝까지 이어져요', null, { loop: [.8, 4.0], slow: .5 }]],
-    2: [['🔍 톡톡 이어지는 곳', [0, .55, 0], 2.3, '하나가 터지면서 옆 알갱이를 건드려요', [0, .85], { loop: [1.8, 5.6], slow: .5 }], ['🔍 나비', nabi, 2.4]],
-    3: [['🔍 적게 모인 원자', [-2.7, .9, 0], 2.9, '나온 알갱이가 밖으로 새어 나가서 멈춰요', null, { loop: [1.3, 4.0], slow: .5 }], ['🔍 많이 모인 원자', [1.7, .9, 0], 3.1, '쪼개질 때 나온 알갱이가 옆 원자를 또 쳐요', null, { loop: [5.8, 9.6], slow: .5 }]],
-    0: [['🔍 촘촘한 줄', [-1.0, .4, .9], 3.0, null, null, { loop: [.6, 4.4], slow: .5 }], ['🔍 많이 모인 원자', [1.7, .9, 0], 3.1, null, null, { loop: [5.6, 9.6], slow: .5 }]],
+    1: [['🔍 구슬이 툭', [-2.1, .4, 0], 2.4, '회색 구슬이 첫 초록 도미노를 툭 쳐요', null, { loop: [.2, 2.2], slow: .5 }], ['🔍 와르르 줄', [.3, .4, 0], 3.6, '앞 도미노가 뒤 도미노를 밀어 줄줄이 넘어져요']],
+    2: [['🔍 판 끝', P(3, 1.35, V(.75, 0, 0), 2, 1, .2), 2.6, '판이 끝나서 밖으로 툭 떨어지고 멈춰요', null, { loop: [2.0, 4.4], slow: .5 }], ['🔍 하나가 둘을', P(3, 1.35, V(.75, 0, 0), 0, 0, .4), 2.4, '넘어진 도미노가 앞의 두 도미노를 넘어뜨려요', null, { loop: [.6, 2.6], slow: .5 }]],
+    3: [['🔍 하나가 둘을', P(6, 1, V(.5, 0, 0), 1, 0, .4), 2.4, '넘어진 도미노가 앞의 두 도미노를 넘어뜨려요', null, { loop: [.6, 2.6], slow: .5 }], ['🔍 끝까지 와르르', P(6, 1, V(.5, 0, 0), 4, 2, .3), 3.2, '큰 판은 맨 끝까지 이어져요', null, { loop: [2.0, 4.6], slow: .5 }]],
+    4: bridgeSpots,
+    5: [['🔍 적게 모인 원자', [-1.2, .3, 0], 2.8, '회색 알갱이가 다음 원자를 못 만나고 밖으로 새어 나가 멈춰요', null, { loop: [1.8, 4.4], slow: .5 }], ['🔍 많이 모인 원자', [1.5, .3, 0], 3.4, '알갱이가 옆 원자를 또 쳐서 끝까지 이어져요', null, { loop: [1, 5.2], slow: .5 }]],
+    0: bridgeSpots,
   };
-  draw.cam = { 2: [[1.6, 0], [7.2, -1]], 3: [[1.3, 0], [4.4, -1], [6.2, 1], [10.6, -1]], 0: [[1.0, 0], [5.3, -1], [6.2, 1], [10.5, -1]] };
+  draw.cam = { 2: [[1.0, 1], [2.8, 0], [5.0, -1]], 3: [[3.0, 1], [6.0, -1]], 4: [[2.4, 0], [5.4, 1], [8.4, -1]], 5: [[2.0, 0], [4.8, -1], [5.4, 1], [8.6, -1]], 0: [[2.4, 0], [5.4, 1], [8.4, -1]] };
   return draw;
 };
 
