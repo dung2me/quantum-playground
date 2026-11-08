@@ -775,6 +775,7 @@ LESSONS[1] = {
     ['더 멀리! 지구 → 해 가족 → 별 마을. 파란 줄 지구가 노란 줄 해 가족 속 작은 점이 돼요.', 12, '🔍 「여기!」를 누르면 파란 지구가 작은 점이 되는 순간이 천천히 되풀이돼요'],
     ['분홍 줄 별 마을을 크게 봐요. 노란 동그라미 속 우리 해는 반짝이는 작은 점 하나예요!', 10],
     ['마지막 줄은 우주! 우주에는 이런 별 마을이 아주아주 많아요.', 10],
+    ['⚛️ 양자 한 조각 · 별빛을 무지개 띠로 펼치면 검은 줄이 있어요. 별 속 원자의 전자가 그 색 빛만 먹고 계단을 올라가서 생긴 자국이에요!', 10, '🔍 「전자 계단」을 누르면 전자가 초록 빛을 냠 먹고 콩 올라가는 순간이 천천히 되풀이돼요'],
   ],
   q: '우리 집에서 점점 멀리 가면 무엇이 나왔나요?',
   choices: [['🌍', '동네, 나라, 지구!'], ['🍪', '과자 나라만 잔뜩 나와요!'], ['🧱', '큰 벽에 꽉 막혀 끝나요!']], answer: 0,
@@ -785,7 +786,7 @@ LESSONS[1] = {
   kid: '우리 해는 별 마을의 작은 별 하나!',
   name: { term: '은하', kid: '별들의 큰 마을', what: '별이 아주아주 많이 모인 큰 마을이에요. 우리 해는 우리 은하 속 별 하나예요!' },
   habit: '우리 집 주소를 외워 두어요. 길을 잃으면 가까운 어른에게 말해요.',
-  adult: '어른용 · 은하(galaxy): 별·가스·먼지가 중력으로 묶인 거대한 무리. 우리은하(Milky Way)는 지름 약 10만 광년의 막대 나선 은하로 별이 1000억~4000억 개, 태양은 중심에서 약 2만 6천 광년 떨어진 나선팔 근처에 있다. 관측 가능한 우주의 은하 수는 약 2조 개로 추정(2016 추정치, 이후 수천억 개로 보는 연구도 있음). 주소 비유: 집 → 동네 → 나라 → 지구 → 태양계 → 우리은하 → 우주.',
+  adult: '어른용 · 은하(galaxy): 별·가스·먼지가 중력으로 묶인 거대한 무리. 우리은하(Milky Way)는 지름 약 10만 광년의 막대 나선 은하로 별이 1000억~4000억 개, 태양은 중심에서 약 2만 6천 광년 떨어진 나선팔 근처에 있다. 관측 가능한 우주의 은하 수는 약 2조 개로 추정(2016 추정치, 이후 수천억 개로 보는 연구도 있음). 주소 비유: 집 → 동네 → 나라 → 지구 → 태양계 → 우리은하 → 우주. 양자 한 조각: 별빛을 프리즘으로 펼친 스펙트럼의 검은 흡수선(프라운호퍼선)은 별 대기의 원자가 전자 에너지 준위 차이에 꼭 맞는 색(진동수)의 빛만 흡수해서 생기고, 원소마다 선의 위치가 달라 가 보지 않고도 별의 성분을 알 수 있다(분광학).',
 };
 
 SCENES.q2_galaxy = (g, ctx) => {
@@ -865,6 +866,59 @@ SCENES.q2_galaxy = (g, ctx) => {
   lMany.position.set(1.4, 3.3, 0); g.add(lSun, lMany);
   const lightC = new THREE.Color(Q2A.light), darkC = new THREE.Color(Q2A.dark), bgC = new THREE.Color(), tmpC = new THREE.Color();
 
+  // ── ⚛️ 양자 한 조각 (장면 5): 별빛 → 무지개 띠의 검은 줄 → 전자가 그 색만 먹고 계단 콩 ──
+  const qb = new THREE.Group(); g.add(qb);
+  const SP = V(-3.2, 1.7, 0), PR = V(-1.55, 1.7, 0), BX = .15, BW = .5, BY = 1.7;
+  const qStar = ball(.42, emat('#fde047', 1.2)), qGlow = ball(.62, new THREE.MeshBasicMaterial({ color: '#fde68a', transparent: true, opacity: .3, depthWrite: false }));
+  qb.add(qStar, qGlow);
+  const beam = rod(.05, emat('#fef9c3', .9)); qb.add(beam);
+  const prism = mesh(new THREE.CylinderGeometry(.55, .55, .45, 3), tmat('#e0f2fe', .6), PR.x, PR.y, 0); prism.rotation.x = Math.PI / 2; prism.rotation.y = Math.PI / 2; qb.add(prism);
+  const RB = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6'];
+  const segs = RB.map((c, i) => { const s = box(BW, .72, .06, emat(c, .5), BX + i * BW + BW / 2, BY, 0); qb.add(s); return s; });
+  const fan = RB.map(c => { const r = rod(.025, emat(c, .7)); qb.add(r); return r; });
+  const greenX = BX + 3 * BW + BW * .55, blueX = BX + 5 * BW + BW * .3;
+  const dark1 = box(.08, .78, .08, '#0f172a', greenX, BY, .03), dark2 = box(.06, .78, .08, '#0f172a', blueX, BY, .03); qb.add(dark1, dark2);
+  // 돋보기 속 '별 속 원자' (계단 모양, 2권 5편과 같은 색)
+  const inset = new THREE.Group(); inset.position.set(-2.55, -.55, 0); qb.add(inset);
+  inset.add(ball(1.05, tmat('#c7d2fe', .28)));
+  const ring = mesh(new THREE.TorusGeometry(1.06, .04, 8, 48), '#fde047'); inset.add(ring);
+  const steps = [['#fef3c7', -.45, .2], ['#fde68a', 0, .5], ['#fbbf24', .45, .8]].map(([c, x, h]) => { const b = box(.42, h, .4, c, x, -.6 + h / 2, 0); inset.add(b); return { x, top: -.6 + h }; });
+  const qE = critter(.15, '#38bdf8', { squash: 1 }); inset.add(qE);
+  const qPh = ball(.1, emat('#22c55e', 1)); inset.add(qPh);
+  const qFlash = ball(.25, new THREE.MeshBasicMaterial({ color: '#bbf7d0', transparent: true, depthWrite: false })); inset.add(qFlash);
+  const link = line([[-3.2, 1.25, 0], [-2.7, .5, 0]], '#fde047', true); qb.add(link);
+  const lA = label('무지개 띠에 검은 줄!', .4, '#fde047'); lA.position.set(1.9, 2.75, 0); qb.add(lA);
+  const lB = label('전자가 초록 빛만 냠!', .36, '#86efac'); lB.position.set(-2.55, .78, 0); qb.add(lB);
+  const quantumBit = t => {
+    ctx.bg(Q2A.dark); stars.visible = true; qb.visible = true;
+    // 0~2초: 분홍 별 마을 속 우리 해 점이 그 자리에서 커다란 별빛으로
+    const k0 = seg(t, .4, 2);
+    if (k0 < 1) { L5.visible = true; Q2A.fade(L5, 1 - k0); }
+    world.updateMatrixWorld(true);
+    const p0 = g.worldToLocal(sunDot.getWorldPosition(V()));
+    qStar.position.lerpVectors(p0, SP, k0); qGlow.position.copy(qStar.position);
+    qStar.scale.setScalar(lerp(.25, 1, k0)); qGlow.scale.setScalar(lerp(.25, 1, k0) * pulse(t * .7));
+    // 2~3.4초: 빛줄기가 유리 세모로, 무지개 띠로 펼쳐져요
+    const kb = seg(t, 1.8, 2.6), kf = seg(t, 2.6, 3.6);
+    beam.visible = kb > .01; if (beam.visible) stick(beam, SP, SP.clone().lerp(PR, kb));
+    prism.visible = t > 1.6; prism.scale.setScalar(Math.max(.01, seg(t, 1.6, 2.2)));
+    fan.forEach((r, i) => { r.visible = kf > .01; if (r.visible) stick(r, PR, PR.clone().lerp(segs[i].position, kf)); });
+    segs.forEach(s => { s.visible = kf > .05; s.scale.set(1, Math.max(.01, kf), 1); });
+    // 3.8~5초: 검은 줄이 나타나요
+    const kd = seg(t, 3.8, 4.8);
+    dark1.visible = dark2.visible = kd > .01; dark1.scale.y = dark2.scale.y = Math.max(.01, kd);
+    lA.visible = t > 4 && t < 9.6;
+    // 5.4초~: 돋보기 속 원자, 전자가 초록 빛만 먹고 콩 올라가요
+    const ki = seg(t, 5.2, 5.9); inset.visible = link.visible = ki > .01; inset.scale.setScalar(Math.max(.01, ki));
+    const hop = seg(t, 7.0, 7.45), sx = lerp(steps[0].x, steps[1].x, hop), sy = lerp(steps[0].top, steps[1].top, hop) + .16 + .35 * Math.sin(hop * Math.PI);
+    qE.position.set(sx, sy, .05); wobble(qE, t, .6);
+    const kp = seg(t, 6.0, 7.0); qPh.visible = t > 6 && t < 7.05; qPh.position.set(lerp(-1.1, steps[0].x, kp), lerp(.55, steps[0].top + .16, kp), .1);
+    const kq = (t - 7) / .5; qFlash.visible = kq >= 0 && kq < 1; qFlash.position.copy(qE.position); qFlash.scale.setScalar(.6 + kq); qFlash.material.opacity = .8 * (1 - kq);
+    lB.visible = t > 6.2;
+    // 먹힌 초록 줄이 콩 할 때 한 번 반짝
+    dark1.scale.x = 1 + .6 * Math.max(0, 1 - Math.abs(t - 7.2) * 2);
+  };
+
   const animate = t => {
     p4.forEach(o => { const a = o.ph + o.w * t; o.m.position.set(Math.cos(a) * o.R, 0, -Math.sin(a) * o.R); });
     spin5.rotation.y = -t * .08;
@@ -908,6 +962,8 @@ SCENES.q2_galaxy = (g, ctx) => {
   };
   const draw = (t, ph) => {
     reset(); marker.visible = false; hideAll(lSun, lMany); animate(t);
+    qb.visible = false; env.visible = ph !== 5;
+    if (ph === 5) { quantumBit(t); return; }
     if (ph === 1) address(t, 4, 0, 2);
     else if (ph === 2) address(t, 4, 3, 5);
     else if (ph === 0) address(t, 2.1, 0, 6);
@@ -929,8 +985,9 @@ SCENES.q2_galaxy = (g, ctx) => {
     3: [['🔍 우리 해', sunDot, 1.6, '노란 동그라미 속 작은 점이 우리 해예요. 둘레에 별이 가득!', null, { loop: [.4, 6], slow: .5 }]],
     4: [['🔍 우리 은하', ours, 2.6, '이 분홍 별 마을 어딘가에 우리 해와 지구가 있어요', null, { loop: [0, 6], slow: .5 }], ['🔍 다른 은하', gal6[1].t, 2.0, '다른 별 마을도 빙글빙글 돌아요']],
     0: [['🔍 여기!', mPos, 3.6, '한 줄 쓸 때마다 방금 있던 곳이 작은 점이 돼요', null, { loop: [8.2, 11], slow: .5 }], ['🔍 봉투', env, 3.6, '봉투 줄 색 = 동그라미 색']],
+    5: [['🔍 전자 계단', inset, 3.5, '전자가 초록 빛 알갱이만 냠! 먹고 계단을 콩 올라가요', null, { loop: [5.8, 8.4], slow: .5 }], ['🔍 검은 줄', [greenX, BY + .3, 0], 3.6, '먹혀서 빠진 초록 빛 자리가 검은 줄이 돼요', null, { loop: [3.6, 5.4], slow: .5 }]],
   };
-  draw.cam = { 1: [[4.2, 0], [7.4, -1]], 2: [[4.2, 0], [7.6, -1]], 3: [[2, 0], [7.4, -1]], 4: [[3, 0], [7, -1]], 0: [[8.6, 0], [11.4, -1]] };
+  draw.cam = { 1: [[4.2, 0], [7.4, -1]], 2: [[4.2, 0], [7.6, -1]], 3: [[2, 0], [7.4, -1]], 4: [[3, 0], [7, -1]], 0: [[8.6, 0], [11.4, -1]], 5: [[4.0, 1], [5.6, 0], [9.0, -1]] };
   return draw;
 };
 
@@ -946,6 +1003,7 @@ LESSONS[2] = {
     ['나침반을 자석 둘레로 옮겨 봐요. 빨간 바늘도 주황 자석 길을 따라 빙글 돌아요!', 11, '🔍 「나침반」을 누르면 바늘이 주황 길을 따라 도는 모습이 천천히 되풀이돼요'],
     ['자석과 주황 길을 그대로 지구 속에 넣어 봐요. 지구 속 쇳물이 빙글빙글 돌아 큰 자석이 돼요. 그래서 바늘이 북쪽을 봐요!', 12, '🔍 「지구 속 자석」을 누르면 자석이 지구 속으로 들어가는 순간이 천천히 되풀이돼요'],
     ['지구의 주황 자석 길은 방패예요! 해 바람을 비켜 내고, 끝으로 들어온 알갱이는 오로라로 빛나요.', 12],
+    ['⚛️ 양자 한 조각 · 자석 속 전자는 모두 같은 쪽을 보는 빙글 작은 자석이에요. 쇠못 속 작은 자석은 제각각이다가, 자석이 오면 줄을 맞춰 착!', 11, '🔍 「자석 속」을 누르면 작은 자석들이 같은 쪽을 보는 모습이 천천히 되풀이돼요'],
   ],
   q: '쇳가루와 빨간 바늘은 무엇을 따라 줄을 섰나요?',
   choices: [['🟠', '주황 자석 길을요!'], ['🌬️', '부는 바람을 따라요!'], ['🐶', '바둑이 꼬리를요!']], answer: 0,
@@ -956,7 +1014,7 @@ LESSONS[2] = {
   kid: '지구 속 쇳물이 돌아서 큰 자석!',
   name: { term: '자기장', kid: '지구 자석 방패', what: '자석 둘레에 생기는 보이지 않는 자석 길이에요. 지구의 자기장은 해 바람을 막아 주는 방패예요!' },
   habit: '자석은 휴대폰이나 카드 가까이 두지 않아요.',
-  adult: '어른용 · 자기장(magnetic field): 자석·전류 둘레에 생기는 힘의 장. 쇳가루와 나침반 바늘은 자기력선 방향으로 정렬한다. 지구 자기장은 외핵의 액체 철·니켈이 대류하며 만드는 지구 다이너모로 생기며(지구 속에 실제 막대자석이 있는 것은 아님, 쌍극자 모양이 비슷할 뿐), 자기권이 태양풍(대전 입자)을 비켜 내 대기를 지킨다. 극지방으로 들어온 입자가 공기 원자(산소·질소)를 들뜨게 하면 오로라가 빛난다(초록은 산소). 나침반 N극(빨강)은 지리상 북극 근처의 자기 S극에 끌린다.',
+  adult: '어른용 · 자기장(magnetic field): 자석·전류 둘레에 생기는 힘의 장. 쇳가루와 나침반 바늘은 자기력선 방향으로 정렬한다. 지구 자기장은 외핵의 액체 철·니켈이 대류하며 만드는 지구 다이너모로 생기며(지구 속에 실제 막대자석이 있는 것은 아님, 쌍극자 모양이 비슷할 뿐), 자기권이 태양풍(대전 입자)을 비켜 내 대기를 지킨다. 극지방으로 들어온 입자가 공기 원자(산소·질소)를 들뜨게 하면 오로라가 빛난다(초록은 산소). 나침반 N극(빨강)은 지리상 북극 근처의 자기 S극에 끌린다. 양자 한 조각: 전자 하나하나는 스핀이라는 양자 성질 때문에 아주 작은 자석처럼 행동한다. 철 같은 강자성체 속에서는 이웃한 전자 스핀들이 같은 방향으로 정렬하려 하고(교환 상호작용), 그렇게 정렬한 작은 구역(자기 구역)들이 한 방향을 보면 자석이 된다. 그림의 「제각각인 쇠못」은 구역들의 방향이 제각각인 상태를 단순화한 것이며, 자석을 대면 구역들이 자석 둘레 자기장 방향으로 정렬해 쇠못이 끌려간다(그래서 쇠못 화살표는 자석 아래 자기장 방향인 왼쪽을 본다).',
 };
 
 SCENES.q2_field = (g, ctx) => {
@@ -1099,8 +1157,44 @@ SCENES.q2_field = (g, ctx) => {
     yard.visible = w === 1; lab.visible = w === 2; sp.visible = w === 3;
     if (w !== 2) { stars.visible = w === 3; if (stars.visible) Q2A.fade(stars, 1); ctx.bg(w === 3 ? Q2A.dark : Q2A.light); }
   };
+  // ── 장면 6: ⚛️ 양자 한 조각 · 자석 속 빙글 작은 자석(전자 스핀) ──
+  const qz = new THREE.Group(); g.add(qz);
+  const spinE = () => { const p = new THREE.Group(); p.add(ball(.1, '#38bdf8')); const a = arrow(.44, '#f97316', .028); a.position.set(0, .22, .1); p.add(a); return p; };
+  const mag = new THREE.Group(); mag.position.set(0, 2.15, 0); qz.add(mag);
+  const magBody = new THREE.Group(); mag.add(magBody);
+  magBody.add(box(1.6, .9, .3, '#ef4444', .8, 0, 0), box(1.6, .9, .3, '#3b82f6', -.8, 0, 0));
+  const magE = new THREE.Group(); mag.add(magE);
+  const nail = new THREE.Group(); qz.add(nail);
+  const nailBody = new THREE.Group(); nail.add(nailBody);
+  const shaft = cyl(.38, .38, 3.0, '#9ca3af'); shaft.rotation.z = Math.PI / 2; nailBody.add(shaft);
+  const nHead = cyl(.56, .56, .14, '#6b7280', -1.57, 0, 0); nHead.rotation.z = Math.PI / 2; nailBody.add(nHead);
+  const nTip = mesh(new THREE.ConeGeometry(.38, .55, 20), '#9ca3af', 1.77, 0, 0); nTip.rotation.z = -Math.PI / 2; nailBody.add(nTip);
+  const nailE = new THREE.Group(); nail.add(nailE);
+  const QR = Q2A.rnd(77), mE = [], nE = [];
+  for (let r = 0; r < 2; r++) for (let i = 0; i < 6; i++) {
+    const a = spinE(); a.position.set(-1.35 + .54 * i, r ? -.22 : .22, .25); magE.add(a); mE.push({ p: a, ph: QR() * 6 });
+    const b = spinE(); b.position.set(-1.35 + .54 * i, r ? -.17 : .17, .45); nailE.add(b); nE.push({ p: b, a0: QR() * Math.PI * 2, ph: QR() * 6 });
+  }
+  const lE = label('● 전자 = 빙글 작은 자석', .4, '#7dd3fc'), lMag = label('같은 쪽을 봐요!', .46, '#fde047'), lNail = label('쇠못은 제각각', .42, '#e5e7eb'), lAlign = label('쇠못도 줄을 맞춰요!', .46, '#fde047');
+  lE.position.set(0, 3.2, .3); lMag.position.set(0, 3.2, .3); lNail.position.set(0, -.5, .5); lAlign.position.set(0, 3.2, .3); qz.add(lE, lMag, lNail, lAlign);
+  const qzFl = mesh(new THREE.SphereGeometry(.3, 14, 10), new THREE.MeshBasicMaterial({ color: '#fde047', transparent: true, opacity: 0, depthWrite: false })); qz.add(qzFl);
+  const wrapA = a => Math.atan2(Math.sin(a), Math.cos(a));
+  const qzAt = t => {
+    const m = seg(t, 2, 3.5);
+    Q2A.fade(magBody, lerp(1, .22, m)); Q2A.fade(nailBody, lerp(1, .22, m));
+    Q2A.show(magE, m); Q2A.show(nailE, m); magE.scale.setScalar(lerp(.4, 1, m)); nailE.scale.setScalar(lerp(.4, 1, m));
+    mE.forEach(o => { o.p.rotation.z = Math.PI / 2 + .08 * Math.sin(t * 3 + o.ph); });
+    const al = seg(t, 7, 8.5);
+    nE.forEach(o => { const free = o.a0 + .5 * Math.sin(t * 1.7 + o.ph), d = wrapA(Math.PI - free); o.p.rotation.z = Math.PI / 2 + free + d * al + .05 * Math.sin(t * 3 + o.ph) * al; });
+    const up = ease(seg(t, 8.6, 9.4)); nail.position.set(0, lerp(.35, 1.27, up), 0);
+    const fk = (t - 9.4) / .6; qzFl.visible = fk > 0 && fk < 1; if (qzFl.visible) { qzFl.position.set(0, 1.68, .5); qzFl.scale.setScalar(.6 + 2 * fk); qzFl.material.opacity = .7 * (1 - fk); }
+    const nm = Q2A.naming();
+    lE.visible = !nm && t > 2.5 && t < 4.6; lMag.visible = !nm && t >= 4.6 && t < 7.1; lNail.visible = !nm && t >= 4.6 && t < 7.1; lAlign.visible = !nm && t >= 7.1;
+  };
+  qz.visible = false;
+
   const draw = (t, ph) => {
-    hideAll(lStick, lPath, lFollow, lBig, lN);
+    hideAll(lStick, lPath, lFollow, lBig, lN); qz.visible = false;
     if (ph === 1) { which(1); yardAt(t); }
     else if (ph === 2) { which(2); morphAt(0, 0); comp3.visible = false; filAt(t); linesAt(seg(t, 5, 7.2)); lPath.visible = t > 6; }
     else if (ph === 3) { which(2); morphAt(0, 0); filAt(9); Q2A.fade(fil, .35); linesAt(1); comp3At(seg(t, 1.2, 9.5)); lPath.visible = true; lFollow.visible = t > 2; }
@@ -1110,6 +1204,7 @@ SCENES.q2_field = (g, ctx) => {
       lPath.visible = t < 1.5; lBig.visible = t > 5.8; lN.visible = t > 7;
     }
     else if (ph === 5) { which(3); spaceAt(t); }
+    else if (ph === 6) { which(0); qz.visible = true; qzAt(t); }
     else { which(2); const m = seg(t, 1, 5); morphAt(m, t - 5); filAt(9); linesAt(1); comp3At(.5); Q2A.show(fil, .35 * (1 - m)); lPath.visible = t < 1; lBig.visible = t > 5.3; lN.visible = t > 6.3; }
     if (Q2A.naming()) hideAll(lStick, lPath, lFollow, lBig, lN, lShield, lAur);
   };
@@ -1119,9 +1214,10 @@ SCENES.q2_field = (g, ctx) => {
     3: [['🔍 나침반', comp3, 1.9, '빨간 바늘이 주황 길을 따라 빙글 돌아요', null, { loop: [1.2, 6.5], slow: .5 }]],
     4: [['🔍 지구 속 자석', [0, 1.25, 0], 3.0, '판 위 자석이 작아져서 지구 속으로 쏙! 쇳물이 빙글빙글', null, { loop: [1.3, 7], slow: .5 }], ['🔍 나침반', compE, 1.5, '지구 위 나침반 빨간 바늘은 북쪽을 봐요']],
     5: [['🔍 속의 쇳물', core, 2.0, '지구 속 쇳물이 빙글빙글 돌아 큰 자석이 돼요', null, { loop: [0, 3.5], slow: .5 }], ['🔍 오로라', aurN, 2.0, '방패 끝으로 들어온 알갱이가 하늘을 빛나게 해요', null, { loop: [6, 10], slow: .5 }], ['🔍 비켜 가는 곳', () => sp.localToWorld(V(EX - 1.5, 1.0, 0)), 2.8, '해 바람이 주황 방패를 만나 옆으로 비켜 가요', null, { loop: [2, 6], slow: .5 }]],
+    6: [['🔍 자석 속', [0, 2.15, .3], 2.6, '자석 속 작은 자석(전자)들은 모두 같은 쪽을 봐요', null, { loop: [2, 6], slow: .5 }], ['🔍 쇠못 속', nail, 2.6, '쇠못 속 작은 자석은 제각각이다가, 자석이 오면 줄을 맞춰요', null, { loop: [6.5, 10], slow: .5 }]],
     0: [['🔍 지구 속 자석', [0, 1.25, 0], 3.0, '판 위 자석이 지구 속으로 쏙!', null, { loop: [.8, 6], slow: .5 }], ['🔍 나침반', compE, 1.5, '빨간 바늘은 북쪽을 봐요', null, { loop: [5, 9], slow: .5 }]],
   };
-  draw.cam = { 1: [[3.2, 0], [6.6, -1]], 2: [[1.4, 0], [4.6, -1], [5.2, 1], [9.4, -1]], 3: [[1.5, 0], [9.2, -1]], 4: [[1.6, 0], [6.4, -1], [7.4, 1], [10.6, -1]], 5: [[1.5, 0], [4.2, -1], [6.6, 1], [10.6, -1]], 0: [[1, 0], [5.4, -1], [6.2, 1], [10, -1]] };
+  draw.cam = { 1: [[3.2, 0], [6.6, -1]], 2: [[1.4, 0], [4.6, -1], [5.2, 1], [9.4, -1]], 3: [[1.5, 0], [9.2, -1]], 4: [[1.6, 0], [6.4, -1], [7.4, 1], [10.6, -1]], 5: [[1.5, 0], [4.2, -1], [6.6, 1], [10.6, -1]], 6: [[2.4, 0], [5.6, -1], [6.8, 1], [10.4, -1]], 0: [[1, 0], [5.4, -1], [6.2, 1], [10, -1]] };
   return draw;
 };
 
@@ -1578,6 +1674,7 @@ LESSONS[5] = {
     ['꿀이 자전거가 밖에서 비를 맞았어요. 며칠 지나니 빨갛게 변했어요!', 12],
     ['아주 크게 보면, 쇠 원자에 산소 원자가 날아와 손을 잡아요. 손잡으면 빨간 녹이 돼요.', 11, '🔍 「손잡는 곳」을 누르면 쇠와 산소가 손잡는 순간이 천천히 되풀이돼요.'],
     ['우주에서도 똑같아요! 화성 땅에는 쇠가 많아요. 온 땅이 녹슬어서 빨간 별로 보여요.', 14],
+    ['⚛️ 양자 한 조각 · 햇빛 속 초록·파랑 빛 알갱이는 녹 속 전자가 쏙 먹고 계단을 콩 올라가요. 빨간 빛 알갱이만 튕겨 나와 눈에 들어와서 빨갛게 보여요.', 10, '🔍 「먹는 전자」를 누르면 전자가 빛 알갱이를 먹고 계단을 올라가는 순간이 천천히 되풀이돼요'],
   ],
   q: '비 맞은 자전거는 어떻게 됐나요?',
   choices: [['🟤', '빨갛게 녹슬었어요!'], ['✨', '반짝반짝해졌어요!'], ['🫧', '비누 거품이 났어요!']], answer: 0,
@@ -1588,7 +1685,7 @@ LESSONS[5] = {
   kid: '땅의 쇠가 녹슬어서!',
   name: { term: '산화철', kid: '쇠의 녹', what: '쇠(철) 원자가 산소 원자와 손잡아서 생긴 빨간 가루예요. 화성이 빨간 까닭이에요!' },
   habit: '자전거가 비를 맞으면 마른 수건으로 닦아서 보관해요.',
-  adult: '어른용 · 산화철: 철(Fe)이 산소·물과 반응하면 녹(주로 수화된 Fe₂O₃)이 된다. 화성 표면이 붉은 것은 먼지와 레골리스에 퍼진 산화철(헤마타이트 Fe₂O₃ 등) 때문이며, 먼지 폭풍이 이 가루를 행성 전체에 퍼뜨린다. 지구 흙에도 산화철이 있지만 바다·식물·구름에 덮여 푸르게 보인다.',
+  adult: '어른용 · 산화철: 철(Fe)이 산소·물과 반응하면 녹(주로 수화된 Fe₂O₃)이 된다. 화성 표면이 붉은 것은 먼지와 레골리스에 퍼진 산화철(헤마타이트 Fe₂O₃ 등) 때문이며, 먼지 폭풍이 이 가루를 행성 전체에 퍼뜨린다. 지구 흙에도 산화철이 있지만 바다·식물·구름에 덮여 푸르게 보인다. 양자 한 조각: 물체의 색은 그 속 전자가 올라갈 수 있는 에너지 계단(에너지 준위)에 따라 정해진다. 빛 알갱이(광자)는 에너지가 계단 차이와 맞을 때만 흡수되는데, 산화철 속 철 이온의 전자는 파랑·초록 빛 에너지를 주로 흡수하고(전하 이동·d-d 전이) 빨간 빛은 흡수하지 못해 반사·산란한다. 그래서 녹과 화성은 붉게 보인다. 흡수된 에너지는 대부분 열로 바뀐다.',
 };
 
 SCENES.q2_rust = (g, ctx) => {
@@ -1667,27 +1764,77 @@ SCENES.q2_rust = (g, ctx) => {
     lMars.visible = labels && t < 3.5; lLand.visible = labels && t > 6.2 && t < 9.6; lDust.visible = labels && t > 10.2;
   }
 
+  // ── ④ ⚛️ 양자 한 조각: 녹 속 전자가 초록·파랑 빛을 먹고, 빨강만 튕겨요 ──
+  const qz6 = new THREE.Group(); g.add(qz6);
+  qz6.add(starField(220, 25));
+  const qSun = ball(.45, emat('#facc15', .9), -3.0, 2.3, 0); qz6.add(qSun);
+  const GP = V(-.2, .55, 0);
+  const qMars = ball(.9, '#c2410c'); qMars.position.copy(GP); qz6.add(qMars);
+  const grain = new THREE.Group(); grain.position.copy(GP); qz6.add(grain);
+  const gFe = critter(.5, '#b4410c'); grain.add(gFe);
+  const gO = critter(.32, '#ef4444'); gO.position.set(.05, .72, 0); grain.add(gO);
+  const gB = rod(.06, '#fbbf24'); stick(gB, V(0, .4, 0), V(.04, .5, 0)); grain.add(gB);
+  // 전자 계단 (2권 5편과 같은 모양): 녹 알갱이 바로 오른쪽
+  const stairs = new THREE.Group(); stairs.position.set(1.05, -.05, 0); qz6.add(stairs);
+  const SH = [0, .42, .84], SX = [0, .45, .9];
+  SH.forEach((h, i) => stairs.add(box(.45, h + .12, .5, ['#fef3c7', '#fde68a', '#fbbf24'][i], SX[i], (h + .12) / 2 - .06, 0)));
+  const qe = critter(.13, '#38bdf8', { squash: 1 }); stairs.add(qe);
+  const eyeG = new THREE.Group(); eyeG.position.set(2.9, 2.25, .3); qz6.add(eyeG);
+  eyeG.add(ball(.42, '#ffffff'), ball(.17, '#1f2937', 0, 0, .33));
+  const iris = mesh(new THREE.TorusGeometry(.24, .05, 8, 28), '#ef4444', 0, 0, .3); eyeG.add(iris);
+  const phGeo = new THREE.SphereGeometry(.12, 12, 8);
+  const PH = [['#3b82f6', 1.4, 'eat', 2], ['#22c55e', 2.2, 'eat', 1], ['#ef4444', 3.0, 'bounce', 0]].map(([c, t0, kind, st]) => { const m = new THREE.Mesh(phGeo, emat(c, 1)); qz6.add(m); const f = mesh(new THREE.SphereGeometry(.3, 12, 8), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0, depthWrite: false })); qz6.add(f); return { m, f, t0, kind, st }; });
+  const SUNP = V(-3.0, 2.3, 0), HIT = GP.clone().add(V(-.3, .2, .3)), EYEP = V(2.9, 2.25, .5);
+  const lQ1 = label('화성 녹 가루를 아주 크게!', .42, '#fdba74'), lQ2 = label('● 햇빛 = 빨·초·파 빛 알갱이', .4, '#fde68a'), lQ3 = label('초록·파랑은 쏙 먹어요', .44, '#86efac'), lQ4 = label('빨강만 튕겨 눈으로!', .46, '#fca5a5');
+  [lQ1, lQ2, lQ3, lQ4].forEach(l => { l.position.set(.2, 3.25, .3); qz6.add(l); });
+  // 전자 높이: 파랑을 먹으면 두 칸, 초록을 먹으면 한 칸 올라갔다가 천천히 내려와요(열)
+  const stepAt = t => { const up2 = seg(t, 2.6, 2.9) * (1 - seg(t, 3.3, 3.9)), up1 = seg(t, 3.4, 3.7) * (1 - seg(t, 4.3, 4.9)); return Math.max(2 * up2, up1); };
+  function qzAt(t) {
+    const m = seg(t, .3, 1.4); qMars.scale.setScalar(Math.max(.01, 1 - m)); qMars.visible = m < .99;
+    grain.visible = m > .01; grain.scale.setScalar(Math.max(.01, m)); wobble(gFe, t, .3); wobble(gO, t + 1, .4);
+    stairs.visible = eyeG.visible = m > .5; stairs.scale.setScalar(Math.max(.01, seg(t, .8, 1.6)));
+    const sk = stepAt(t), i0 = Math.floor(sk), fr = sk - i0, i1 = Math.min(2, i0 + 1);
+    qe.position.set(lerp(SX[i0], SX[i1], fr), lerp(SH[i0], SH[i1], fr) + .19 + .12 * Math.sin(Math.PI * fr), .05); wobble(qe, t, .6);
+    PH.forEach(o => {
+      const a = seg(t, o.t0, o.t0 + 1.2);
+      if (o.kind === 'eat') {
+        o.m.visible = a > 0 && a < 1; o.m.position.lerpVectors(SUNP, HIT, a);
+        const fk = (t - o.t0 - 1.2) / .6; o.f.visible = fk > 0 && fk < 1; if (o.f.visible) { o.f.position.copy(HIT); o.f.scale.setScalar(.5 + 1.5 * fk); o.f.material.opacity = .7 * (1 - fk); }
+      } else {
+        const b = seg(t, o.t0 + 1.25, o.t0 + 2.9);
+        o.m.visible = a > 0 && b < 1; o.m.position.copy(a < 1 ? SUNP.clone().lerp(HIT, a) : HIT.clone().lerp(EYEP, b)); if (a >= 1 && b > 0) o.m.position.y += .5 * Math.sin(Math.PI * b);
+        o.f.visible = false; iris.scale.setScalar(.6 + .6 * seg(t, o.t0 + 2.8, o.t0 + 3.2)); iris.visible = t > o.t0 + 2.8;
+      }
+    });
+    const nm = Q2C.naming();
+    lQ1.visible = !nm && t < 1.4; lQ2.visible = !nm && t >= 1.4 && t < 2.6; lQ3.visible = !nm && t >= 2.6 && t < 4.6; lQ4.visible = !nm && t >= 4.6;
+  }
+  qz6.visible = false;
+
   const draw = (t, ph) => {
     const nm = Q2C.naming(), lab = !nm;
-    let L = false, A = false, S = false;
+    let L = false, A = false, S = false; qz6.visible = false;
     if (ph === 1) { L = true; lifeAt(t, lab); }
     else if (ph === 2) { A = true; atomsAt(t, lab); }
     else if (ph === 3) { S = true; spaceAt(t, lab); }
+    else if (ph === 4) { qz6.visible = true; qzAt(t); }
     else if (t < 6) { L = true; lifeAt(t * 2, lab); }          // 요약: 자전거 녹슬기(빠르게) → 화성
     else { S = true; spaceAt((t - 6) * 1.75, lab); }
     life.visible = L; atoms.visible = A; space.visible = S;
-    ctx.bg(S ? '#0b1026' : BOOK.sceneBg);
+    ctx.bg(S || ph === 4 ? '#0b1026' : BOOK.sceneBg);
   };
   const patchSpot = () => patch.localToWorld(V(0, .6, 0));
   draw.spots = {
     1: [['🔍 녹스는 자전거', [.7, 1, 0], 3.4, '비를 맞은 쇠가 며칠 동안 조금씩 빨개져요', null, { loop: [6.3, 9.8], slow: .5 }], ['🔍 꿀이', pig, 3]],
     2: [['🔍 손잡는 곳', () => g.localToWorld(V(-1.65, 1.3, 0)), 2.5, '산소가 쇠 원자에 와서 손잡으면 빨갛게 변해요', null, { loop: [.6, 3.4], slow: .5 }], ['🔍 빨간 녹', [0, .9, 0], 4.6, '쇠와 산소가 손잡은 녹 알갱이들이에요']],
     3: [['🔍 녹슨 땅', patchSpot, 2.8, '화성 땅의 쇠가 산소와 손잡아 녹이 됐어요', null, { loop: [4.6, 7.8], slow: .5 }], ['🔍 먼지 바람', mars, 5.2, '빨간 녹 가루가 바람에 날려 온 화성을 덮어요', null, { loop: [9.6, 13.5], slow: .5 }]],
+    4: [['🔍 먹는 전자', [.55, .8, 0], 3.0, '초록·파랑 빛 알갱이를 먹고 전자가 계단을 콩 올라가요', null, { loop: [1.6, 4.4], slow: .5 }], ['🔍 튕기는 빨간 빛', [1.4, 1.5, 0], 4.3, '빨간 빛 알갱이만 튕겨 나와 눈으로 가요', null, { loop: [3.4, 6.6], slow: .5 }]],
     0: [['🔍 녹스는 자전거', [.7, 1, 0], 3.4, '비를 맞은 쇠가 빨개져요', null, { loop: [3, 5], slow: .5 }], ['🔍 녹슨 땅', patchSpot, 2.8, '화성 땅의 쇠도 녹슬었어요', null, { loop: [8.6, 10.4], slow: .5 }]],
   };
   draw.cam = {
     2: [[1, 0], [5.4, 1], [9.4, -1]],
     3: [[4.2, 0], [8.8, 1], [13.2, -1]],
+    4: [[2.2, 0], [5, -1], [5.6, 1], [8.8, -1]],
     0: [[3, 0], [5.6, -1], [8.6, 1], [12.6, -1]],
   };
   return draw;
@@ -1709,6 +1856,7 @@ LESSONS[6] = {
     ['노란 밤바람이 불어요! 보라 창문을 닫은 보리 이불은 그대로. 창문이 열린 두리의 얇은 이불은 휘익 날아가요.', 13, '🔍 「날아가는 이불」을 누르면 이불이 휘익 날아가는 순간이 천천히 되풀이돼요.'],
     ['이불을 우주로 옮겨 봐요. 하늘색 두꺼운 이불은 지구, 분홍 얇은 이불은 화성, 보라 창문은 지구의 자석 방패가 돼요.', 11, '🔍 「이불이 지구로」를 누르면 이불이 지구로 바뀌는 순간이 천천히 되풀이돼요.'],
     ['우주에서도 똑같아요! 노란 해 바람이 불어도 보라 방패가 지구의 공기 이불을 지켜요. 방패가 없는 화성은 공기가 날아갔어요.', 16],
+    ['⚛️ 양자 한 조각 · 방패 둘레로 들어온 노란 알갱이가 산소 원자를 톡 쳐요. 전자가 계단을 올라갔다가 두 칸 콩 내려오며 초록 빛을 뿅! 그게 오로라예요.', 10, '🔍 「산소 원자 계단」을 누르면 전자가 톡 올라갔다 콩 내려오며 초록 빛이 뿅 나오는 순간이 천천히 되풀이돼요.'],
   ],
   q: '보라 창문을 닫은 보리 이불은 어떻게 됐나요?',
   choices: [['🛏️', '그대로 있어요!'], ['🌬️', '휘익 날아갔어요!'], ['🔥', '이불이 타 버렸어요!']], answer: 0,
@@ -1719,7 +1867,7 @@ LESSONS[6] = {
   kid: '방패가 없어서 공기가 날아갔어요!',
   name: { term: '대기', kid: '공기 이불', what: '행성을 이불처럼 감싼 공기예요. 지구는 두껍고 자석 방패가 지켜 주지만, 화성은 아주 얇아요!' },
   habit: '추운 밤에는 창문을 꼭 닫고 이불을 덮고 자요.',
-  adult: '어른용 · 대기(atmosphere): 행성을 둘러싼 기체층. 화성은 지름이 지구의 약 53%, 질량 약 11%라 내부가 빨리 식었고, 약 40억 년 전 전 지구적 자기장이 사라진 뒤 태양풍에 대기가 깎여 나갔다(NASA MAVEN 관측). 지금 표면 기압은 지구의 약 0.6%(평균 약 610 Pa), 대기의 약 95%가 이산화탄소, 평균 기온 약 −60°C라 액체 물이 표면에 오래 머물지 못한다. 지구는 자기장(자기권)과 두꺼운 대기(질소 78%, 산소 21%)가 열을 붙잡고 바다를 지킨다. 비유: 두꺼운/얇은 이불 = 지구/화성 대기, 보라 창문 = 지구 자기장, 노란 바람 = 태양풍.',
+  adult: '어른용 · 대기(atmosphere): 행성을 둘러싼 기체층. 화성은 지름이 지구의 약 53%, 질량 약 11%라 내부가 빨리 식었고, 약 40억 년 전 전 지구적 자기장이 사라진 뒤 태양풍에 대기가 깎여 나갔다(NASA MAVEN 관측). 지금 표면 기압은 지구의 약 0.6%(평균 약 610 Pa), 대기의 약 95%가 이산화탄소, 평균 기온 약 −60°C라 액체 물이 표면에 오래 머물지 못한다. 지구는 자기장(자기권)과 두꺼운 대기(질소 78%, 산소 21%)가 열을 붙잡고 바다를 지킨다. 비유: 두꺼운/얇은 이불 = 지구/화성 대기, 보라 창문 = 지구 자기장, 노란 바람 = 태양풍. 양자 한 조각: 오로라의 초록빛(557.7 nm)과 붉은빛(630 nm)은 태양풍 입자에 부딪혀 들뜬 산소 원자의 전자가 더 낮은 에너지 준위로 내려오며 내는 빛이고(정해진 계단 높이만큼의 색), 보랏빛·푸른빛은 질소가 낸다.',
 };
 
 SCENES.q2_air = (g, ctx) => {
@@ -1926,15 +2074,70 @@ SCENES.q2_air = (g, ctx) => {
   }
   const resetSpace = () => { earth.scale.setScalar(1); mars.scale.setScalar(1); stars.material.opacity = 1; sun.scale.setScalar(1); sunGlow.scale.setScalar(1); eAirM.opacity = .35; };
 
+  // ── ⑥ 양자 한 조각: 오로라 = 산소 원자 속 전자가 계단을 두 칸 콩 내려오며 내는 초록 빛 ──
+  const C_AUR = '#4ade80', C_E = '#38bdf8';
+  const aur = new THREE.Group(); earth.add(aur);
+  const aurRingM = new THREE.MeshStandardMaterial({ color: C_AUR, emissive: C_AUR, emissiveIntensity: .9, transparent: true, opacity: 0 });
+  const aurRing = mesh(new THREE.TorusGeometry(.42, .05, 8, 40), aurRingM, 0, .9, 0); aurRing.rotation.x = Math.PI / 2;
+  const aurCurM = new THREE.MeshBasicMaterial({ color: C_AUR, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false });
+  const aurCur = mesh(new THREE.CylinderGeometry(.42, .52, .38, 32, 1, true), aurCurM, 0, 1.05, 0);
+  aur.add(aurRing, aurCur);
+  const poleWinds = Array.from({ length: 6 }, (_, k) => { const w = new THREE.Mesh(solarGeo, solarM); w.userData.j = (k % 3 - 1) * .18; aur.add(w); return w; });
+  const PW0 = V(-2.6, 1.5, 0), PW1 = V(-1.1, 2.15, 0), PW2 = V(0, 1.02, 0);
+  const MAG = new THREE.Group(); MAG.position.set(2.0, 1.55, .5); aur.add(MAG);
+  MAG.add(mesh(new THREE.CircleGeometry(.8, 40), new THREE.MeshBasicMaterial({ color: '#16204a', transparent: true, opacity: .92 }), 0, 0, -.02));
+  MAG.add(mesh(new THREE.TorusGeometry(.8, .03, 8, 48), emat('#e5e7eb', .4)));
+  const oAtom = atomBall('O', 1.15, true); oAtom.position.set(-.4, -.05, .05); MAG.add(oAtom);
+  const STEP_Y = [-.45, -.15, .15], STEP_X = [.12, .34, .56], STEP_C = ['#fef3c7', '#fde68a', '#fbbf24'];
+  STEP_Y.forEach((top, i) => MAG.add(box(.22, top + .62, .14, STEP_C[i], STEP_X[i], (top - .62) / 2, 0)));
+  const eM = emat(C_E, .8), elec = ball(.075, eM); MAG.add(elec);
+  for (const sx of [-1, 1]) elec.add(ball(.016, '#1f2937', sx * .028, .02, .07));
+  const hitP = ball(.05, emat('#fde047', 1)); MAG.add(hitP);
+  const grn = ball(.13, emat(C_AUR, 1)); aur.add(grn);
+  const zap = ball(.16, tmat('#fde047', .7)); MAG.add(zap);
+  const magLine = line([[0, 1.0, 0], [1.22, 1.4, .5]], '#e5e7eb', true); aur.add(magLine);
+  const lO = tag('산소 원자', .3, '#ef4444'), lG = tag('초록 빛 뿅!', .34, C_AUR), lA = tag('오로라', .34, C_AUR);
+  lO.position.set(2.0, 2.45, .5); lG.position.set(.9, 2.35, .5); lA.position.set(0, 1.62, .3); aur.add(lO, lG, lA);
+  const stepPos = i => V(STEP_X[i], STEP_Y[i] + .075, .06);
+  const MAGW = () => aur.localToWorld(MAG.position.clone()), POLEW = () => aur.localToWorld(V(0, 1.0, 0));
+  function auroraAt(t, labels) {
+    resetSpace(); spaceAt(t + 5, false);
+    poleWinds.forEach((w, k) => {
+      const u = ((t * .45 + k / 6) % 1); w.visible = true;
+      const a = PW0.clone().lerp(PW1, u), b = PW1.clone().lerp(PW2, u); w.position.copy(a.lerp(b, u)); w.position.z += w.userData.j;
+    });
+    const glow = seg(t, .3, 1.8), boost = Math.exp(-((t - 7.6) ** 2) * 3);
+    aurRingM.opacity = .55 * glow + .4 * boost; aurCurM.opacity = (.22 * glow + .3 * boost) * (1 + .15 * Math.sin(t * 7));
+    aurRing.scale.setScalar(1 + .25 * boost);
+    const mk = seg(t, 1.6, 2.6); MAG.visible = mk > .01; MAG.scale.setScalar(Math.max(.01, mk)); magLine.visible = mk > .5;
+    const s0 = stepPos(0), s2 = stepPos(2);
+    hitP.visible = t > 2.8 && t < 3.5; hitP.position.copy(V(-.85, .55, .06).lerp(s0, seg(t, 2.8, 3.5)));
+    zap.visible = (t > 3.45 && t < 3.75) || (t > 5.35 && t < 5.65); zap.position.copy(s0);
+    if (t < 3.5) elec.position.copy(s0);
+    else if (t < 4.1) { const u = seg(t, 3.5, 4.1); elec.position.copy(s0).lerp(s2, u); elec.position.y += .25 * Math.sin(Math.PI * u); }
+    else if (t < 5.0) elec.position.copy(s2);
+    else if (t < 5.5) { const u = seg(t, 5.0, 5.5); elec.position.copy(s2).lerp(s0, u); elec.position.y += .12 * Math.sin(Math.PI * u); }
+    else elec.position.copy(s0);
+    eM.emissiveIntensity = t > 4.1 && t < 5.0 ? 1.4 + .4 * Math.sin(t * 20) : .8;
+    const gU = seg(t, 5.4, 7.4); grn.visible = t > 5.4 && t < 7.5;
+    const from = MAG.position.clone().add(s0.clone().multiplyScalar(MAG.scale.x)), to = V(0, 1.0, 0);
+    grn.position.copy(from).lerp(to, gU); grn.position.y += .5 * Math.sin(Math.PI * gU); grn.scale.setScalar(1 + .2 * Math.sin(t * 15));
+    hideAll(lO, lG, lA);
+    if (!labels) return;
+    lA.visible = (t > .6 && t < 2.6) || t > 7.4; lO.visible = t > 2.6 && t < 5.4; lG.visible = t > 5.4 && t < 7.6;
+  }
+
   const draw = (t, ph) => {
     const lab = !Q2C.naming();
     let mode_ = 'room';
     if (ph === 1 || ph === 2 || ph === 3) roomAt(t, ph, lab);
     else if (ph === 4) { mode_ = 'bridge'; bridgeAt(t, lab); }
     else if (ph === 5) { mode_ = 'space'; resetSpace(); spaceAt(t, lab); }
+    else if (ph === 6) { mode_ = 'space'; auroraAt(t, lab); }
     else if (t < 7) { mode_ = 'bridge'; bridgeAt(t + 1.5, lab); }          // 요약: 이불 → 지구·화성 → 해 바람
     else { mode_ = 'space'; resetSpace(); spaceAt(4 + (t - 7), lab); }
     room.visible = mode_ === 'room'; space.visible = mode_ !== 'room'; bridge.visible = mode_ === 'bridge';
+    aur.visible = ph === 6; mars.visible = ph !== 6;
     if (mode_ === 'room') ctx.bg(BG_ROOM); else if (mode_ === 'space') ctx.bg(BG_SPACE);
   };
   const thinW = () => room.localToWorld(thin.position.clone());
@@ -1944,6 +2147,7 @@ SCENES.q2_air = (g, ctx) => {
     3: [['🔍 보라 창문', RW(BX[0], WY - .1, -1.2), 3.4, '닫힌 보라 창문이 노란 바람을 콩 튕겨 내요', null, { loop: [1.6, 4.6], slow: .5 }], ['🔍 날아가는 이불', thinW, 3.8, '열린 창문으로 노란 바람이 들어와 얇은 이불이 휘익', null, { loop: [3, 7], slow: .5 }]],
     4: [['🔍 이불이 지구로', earth, 4.6, '하늘색 두꺼운 이불이 지구의 공기 이불이 되고, 보라 창문이 방패가 돼요', null, { loop: [2, 7], slow: .5 }], ['🔍 이불이 화성으로', mars, 3.4, '분홍 얇은 이불이 화성의 얇은 공기 이불이 돼요', null, { loop: [2, 7], slow: .5 }]],
     5: [['🔍 자석 방패', earth, 5.4, '노란 해 바람을 지구의 보라 방패가 옆으로 비켜 내요', null, { loop: [4.5, 8], slow: .5 }], ['🔍 화성 공기', mars, 4.2, '방패가 없는 화성은 바람에 분홍 공기가 조금씩 날아가요', null, { loop: [6, 9.5], slow: .5 }]],
+    6: [['🔍 산소 원자 계단', MAGW, 2.9, '노란 알갱이가 톡! 전자가 두 칸 올라갔다가 콩 내려오며 초록 빛이 뿅 나와요', null, { loop: [2.8, 6.0], slow: .5 }], ['🔍 오로라', POLEW, 2.8, '초록 빛 알갱이가 모여 지구 북쪽에 초록 오로라 커튼이 생겨요', null, { loop: [5.4, 8.4], slow: .5 }]],
     0: [['🔍 이불이 지구로', earth, 4.6, '하늘색 이불이 지구의 공기 이불로 바뀌어요', null, { loop: [.5, 5.5], slow: .5 }], ['🔍 화성 공기', mars, 4.2, '방패가 없는 화성은 공기가 날아가요', null, { loop: [9, 13.5], slow: .5 }]],
   };
   draw.cam = {
@@ -1951,6 +2155,7 @@ SCENES.q2_air = (g, ctx) => {
     3: [[1.6, 0], [4.6, 1], [8.8, -1]],
     4: [[7.2, 0], [9.8, -1]],
     5: [[5, 0], [8.6, 1], [12.4, -1]],
+    6: [[2.2, 0], [6.6, 1], [9.2, -1]],
     0: [[9.4, 1], [13.8, -1]],
   };
   return draw;
@@ -2486,6 +2691,7 @@ LESSONS[9] = {
     ['하늘색 눈덩이가 하늘색 수소 알갱이로 바뀌어요! 우주에서 수소가 아주아주 많이 모이면, 눈 더미처럼 가운데가 꾹 눌려요.', 13, '🔍 「바뀌는 눈덩이」를 누르면 눈덩이가 수소 알갱이로 바뀌는 순간이 천천히 되풀이돼요'],
     ['꾹 눌린 가운데는 펌프처럼 주황색으로 뜨끈뜨끈! 아주 뜨거워지면 별이 반짝 켜져요.', 12, '🔍 「뜨끈한 가운데」를 누르면 별이 켜지는 순간이 천천히 되풀이돼요'],
     ['수소가 조금 모자라게 모인 목성은 덜 눌려서, 덜 뜨거워요. 그래서 별이 못 켜졌어요.', 11, '🔍 「목성」을 누르면 덜 뜨거운 가운데가 천천히 되풀이돼요'],
+    ['⚛️ 양자 한 조각 · 별 속을 크게 보면, 뜨끈해도 하늘색 수소 알갱이는 서로 밀어내는 초록 언덕을 못 넘어요. 그런데 아주 가끔 쏙! 알갱이가 아주 많아서 별이 계속 빛나요.', 11, '🔍 「쏙 통과하는 곳」을 누르면 언덕을 쏙 지나 합쳐지는 순간이 천천히 되풀이돼요'],
   ],
   q: '눈덩이를 많이 쌓으면 맨 아래 눈덩이는?',
   choices: [['🫓', '아래가 꾹 눌려요!'], ['🎈', '위로 둥둥 떠올라요!'], ['😐', '그대로 똑같아요!']], answer: 0,
@@ -2496,7 +2702,7 @@ LESSONS[9] = {
   kid: '꾹 눌려서 뜨끈해지면 별이 켜져요!',
   name: { term: '질량', kid: '얼마나 모였나', what: '물건에 든 것이 얼마나 많은지예요. 수소가 아주 많이 모여야 꾹 눌리고 뜨끈해져서 별이 켜져요!' },
   habit: '자전거 펌프는 어른과 함께 써요. 뜨거워지면 손으로 만지지 않아요.',
-  adult: '어른용 · 질량(mass): 물체에 든 물질의 양. 기체 구름은 자기 중력으로 수축하며(눈 더미의 아래가 눌리는 것) 중심이 뜨거워지고(공기를 압축하면 뜨거워지는 단열 압축과 같은 원리), 중심이 약 1000만 K를 넘으면 수소 핵융합이 켜져 별이 된다. 점화에 필요한 최소 질량은 약 0.075~0.08 태양질량(목성의 약 75~80배)이고, 이보다 작으면 갈색 왜성이 된다. 목성은 그 약 1/80이라 별이 되지 못했다. 태양 질량은 지구의 약 33만 배, 중심 온도 약 1500만 K.',
+  adult: '어른용 · 질량(mass): 물체에 든 물질의 양. 기체 구름은 자기 중력으로 수축하며(눈 더미의 아래가 눌리는 것) 중심이 뜨거워지고(공기를 압축하면 뜨거워지는 단열 압축과 같은 원리), 중심이 약 1000만 K를 넘으면 수소 핵융합이 켜져 별이 된다. 점화에 필요한 최소 질량은 약 0.075~0.08 태양질량(목성의 약 75~80배)이고, 이보다 작으면 갈색 왜성이 된다. 목성은 그 약 1/80이라 별이 되지 못했다. 태양 질량은 지구의 약 33만 배, 중심 온도 약 1500만 K. 양자 한 조각: 중심 약 1500만 K에서도 양성자는 서로 밀어내는 전기적 장벽(쿨롱 장벽)을 넘기에 에너지가 모자라지만, 양자 터널 효과로 아주 드물게 장벽을 통과해 융합한다(가모프, 1928). 양성자 수가 매우 많아(약 10^57개) 개별 사건은 드물어도 별은 꾸준히 빛난다.',
 };
 
 SCENES.q2_mass = (g, ctx) => {
@@ -2680,7 +2886,48 @@ SCENES.q2_mass = (g, ctx) => {
     lJup.visible = on > .7 && !nm; lJup.position.set(2.0, 2.2, 0);
   };
 
+  // ── ⑥ 양자 한 조각: 별 속 하늘색 수소 알갱이가 초록 언덕을 아주 가끔 쏙 (2권 8편 터널) ──
+  const TG = new THREE.Group(); TG.position.copy(CEN).add(V(0, -.35, .2)); U.add(TG);
+  const coreBg = mesh(new THREE.SphereGeometry(2.3, 32, 20), tmat('#fdba74', .2)); coreBg.position.set(0, .35, -.4); TG.add(coreBg);
+  TG.add(box(3.6, .05, .5, '#fb923c', 0, -.025, 0));
+  const hill = mesh(new THREE.SphereGeometry(.62, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2), tmat('#86efac', .85)); TG.add(hill);
+  const HR = .62, PR = .2;
+  const hA = critter(PR, Q2D.SKY, { squash: 1 }), hB = critter(PR, Q2D.SKY, { squash: 1 }); TG.add(hA, hB);
+  hB.rotation.y = -.5; hA.rotation.y = .5;
+  const merged = new THREE.Group(); merged.add(ball(.26, emat('#fde047', 1))); const mRays = new THREE.Group(); merged.add(mRays); TG.add(merged);
+  for (let k = 0; k < 8; k++) { const r = rod(.025, emat('#fde68a', 1)); const a = k / 8 * Math.PI * 2; stick(r, V(Math.cos(a) * .32, Math.sin(a) * .32, 0), V(Math.cos(a) * .55, Math.sin(a) * .55, 0)); mRays.add(r); }
+  const tFlash = ball(.35, tmat('#fef9c3', .8)); TG.add(tFlash);
+  const tDash = line([[-.33, PR + .52, .05], [.33, PR + .52, .05]], '#f8fafc', true); TG.add(tDash);
+  const tw = Array.from({ length: 16 }, (_, k) => { const m = ball(.1, emat('#ffffff', 1)); const dd = new THREE.Vector3().randomDirection(); dd.z = Math.abs(dd.z) + .3; m.userData.d = dd.normalize().multiplyScalar(.86 + .12 * ((k * 37) % 10) / 10); m.userData.ph = (k * .61) % 1; U.add(m); return m; });
+  const lHill = label('꾹 밀어내요', .34, '#bbf7d0'), lSok = label('아주 가끔 쏙!', .4, '#fde047'), lJoin = label('합쳐져요!', .4, '#fde047'), lMany = label('아주 많아서 계속 반짝!', .38, '#fde047');
+  lHill.position.set(0, 1.25, 0); lSok.position.set(0, 1.25, 0); lJoin.position.set(.9, .95, 0); TG.add(lHill, lSok, lJoin); lMany.position.set(0, 2.55, 0); U.add(lMany);
+  const yOn = x => PR + (Math.abs(x) < HR ? Math.sqrt(HR * HR - x * x) * .95 : 0);
+  const tunnelAt = (t) => {
+    const nm = Q2D.naming();
+    hideU(); space(1); mFloor.visible = false; snow3.forEach(m => m.visible = false); hyd.forEach(h => h.visible = false); big.pts.visible = false; big.core.visible = false;
+    const inK = seg(t, .8, 2.0), outK = seg(t, 8.0, 8.9), sc = Math.max(.01, inK * (1 - outK));
+    showSun(CEN, 1 - seg(t, .6, 1.8) + seg(t, 8.2, 9.2), t);
+    TG.visible = sc > .02; TG.scale.setScalar(sc);
+    // 시도 1 (2.2~4.2): 올라가다 데굴 / 시도 2 (4.2~6.4): 꼭대기 근처에서 흐려지고 저편에 쏙
+    let xA = -1.35, oA = 1;
+    if (t >= 2.2 && t < 4.2) xA = -1.35 + 1.0 * Math.sin(Math.PI * seg(t, 2.2, 4.2));
+    else if (t >= 4.2 && t < 6.4) { const u = seg(t, 4.2, 6.4); if (u < .45) xA = -1.35 + 1.0 * ease(u / .45); else if (u < .6) { xA = -.35; oA = 1 - (u - .45) / .15; } else { xA = lerp(.35, .95, (u - .6) / .4); oA = Math.min(1, (u - .6) / .1); } }
+    else if (t >= 6.4) xA = .95;
+    hA.position.set(xA, yOn(xA), 0); setOpacity(hA, oA); wobble(hA, t, .8);
+    hB.position.set(1.3, PR, 0); wobble(hB, t + 1, .8);
+    const mg = seg(t, 6.4, 7.0); hA.visible = hB.visible = mg < .95; if (mg > 0) { hA.position.x = lerp(.95, 1.12, mg); hB.position.x = lerp(1.3, 1.12, mg); }
+    merged.visible = mg > .3; merged.position.set(1.12, .3, 0); merged.scale.setScalar(ease(mg)); mRays.rotation.z = t;
+    tFlash.visible = t > 6.6 && t < 7.1; tFlash.position.set(1.12, .3, 0); tFlash.scale.setScalar(1 + 2 * seg(t, 6.6, 7.1));
+    tDash.visible = t > 5.1 && t < 5.9;
+    tw.forEach(m => { const on = t > 8.6; const u = ((t * .9 + m.userData.ph) % 1); m.visible = on && u < .35; m.position.copy(CEN).add(m.userData.d); m.scale.setScalar(1.2 * Math.sin(Math.PI * u / .35)); });
+    hideAll(lHill, lSok, lJoin, lMany);
+    if (nm) return;
+    lHill.visible = t > 2.2 && t < 4.4; lSok.visible = t > 5.0 && t < 6.6; lJoin.visible = t > 6.7 && t < 8.0; lMany.visible = t > 8.8;
+  };
+  const tunHide = () => { TG.visible = false; tw.forEach(m => m.visible = false); lMany.visible = false; };
+
   const draw = (t, ph) => {
+    tunHide();
     const sp = ph >= 3 || (ph === 0 && t >= 3.6);
     S.visible = ph === 1 || (ph === 0 && t < 3.6); P.visible = ph === 2; U.visible = sp;
     if (!sp) ctx.bg(cBg);
@@ -2689,6 +2936,7 @@ SCENES.q2_mass = (g, ctx) => {
     else if (ph === 3) morphAt(t);
     else if (ph === 4) heatAt(t);
     else if (ph === 5) twoAt(t);
+    else if (ph === 6) tunnelAt(t);
     else if (t < 3.6) snowAt(Math.min(11, t * 2.4));
     else if (t < 7.4) morphAt((t - 3.6) * 2.42);
     else heatAt(Math.min(12, (t - 7.4) * 1.7), 2.0);
@@ -2699,9 +2947,10 @@ SCENES.q2_mass = (g, ctx) => {
     3: [['🔍 바뀌는 눈덩이', [0, .8, 0], 3.2, '하늘색 눈덩이에 눈이 생기며 하늘색 수소 알갱이로 바뀌어요', null, { loop: [1.8, 6.2], slow: .5 }], ['🔍 꾹 모이는 곳', [0, 1.2, 0], 4.2, '수소 알갱이가 가운데로 꾹 모여요', null, { loop: [8.6, 12.8], slow: .5 }]],
     4: [['🔍 뜨끈한 가운데', [0, 1.2, 0], 3.2, '가운데가 하늘색에서 주황색으로 뜨끈해지다 별이 켜져요', null, { loop: [5, 10], slow: .5 }], ['🔍 생각 속 펌프', [-2.75, 2.0, -.3], 2.2, '펌프 공기처럼 주황색으로 뜨끈해져요']],
     5: [['🔍 목성', [2.0, 1.2, 0], 2.8, '조금 모자라서 덜 눌리고 덜 뜨거워요', null, { loop: [5.5, 10], slow: .5 }], ['🔍 별', [-1.8, 1.2, 0], 3.2, '많이 모여서 별이 켜졌어요', null, { loop: [5.5, 10], slow: .5 }]],
+    6: [['🔍 쏙 통과하는 곳', [0, 1.05, .2], 3.1, '하늘색 수소 알갱이가 초록 언덕 꼭대기 근처에서 사라졌다가 저편에 쏙 나타나 합쳐져요', null, { loop: [4.2, 7.4], slow: .5 }], ['🔍 반짝이는 별', [0, 1.2, 0], 3.4, '여기저기서 아주 가끔 쏙! 수가 아주 많아서 별이 계속 빛나요', null, { loop: [8.4, 11], slow: .5 }]],
     0: [['🔍 바뀌는 눈덩이', [0, .8, 0], 3.4, null, null, { loop: [3.8, 7.2], slow: .5 }], ['🔍 별 켜지는 곳', [0, 1.2, 0], 3.4, null, null, { loop: [10, 13.4], slow: .5 }]],
   };
-  draw.cam = { 2: [[2.6, 0], [8.6, -1]], 3: [[1.8, 0], [6.6, -1], [8.8, 1], [12.6, -1]], 4: [[4.5, 0], [10.6, -1]], 5: [[6, 0], [10.4, -1]], 0: [[4.2, 0], [7.4, -1], [10, 1], [13.3, -1]] };
+  draw.cam = { 2: [[2.6, 0], [8.6, -1]], 3: [[1.8, 0], [6.6, -1], [8.8, 1], [12.6, -1]], 4: [[4.5, 0], [10.6, -1]], 5: [[6, 0], [10.4, -1]], 6: [[1.6, 0], [8.0, -1]], 0: [[4.2, 0], [7.4, -1], [10, 1], [13.3, -1]] };
   return draw;
 };
 

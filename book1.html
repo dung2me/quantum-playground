@@ -1030,6 +1030,7 @@ LESSONS[4] = {
     ['우주에 가장 많은 원자는 수소예요. 수소 구름이 뭉치고 또 뭉치면… 해가 돼요!', 9],
     ['해 속 깊은 곳에서 수소 알맹이들이 꽝! 합쳐져 헬륨이 되며 빛이 나와요.', 11, '🔍 「꽝 부딪히는 곳」을 누르고 🐢 느리게로 봐요!'],
     ['그 빛과 열이 우주를 날아 8분 만에 지구에 와요. 그래서 따뜻하고 새싹이 자라요!', 9.5, '🔍 「지구」를 눌러 새싹을 찾아봐요!'],
+    ['⚛️ 양자 한 조각 · 해 속 수소 알맹이는 서로 밀어내는 언덕을 넘을 힘이 모자라요. 그래도 아주 가끔 쏙 통과해서 합쳐져요. 알맹이가 아주 많아서 날마다 똑같이 빛나요!', 10, '🔍 「쏙 통과하는 곳」을 누르면 언덕을 쏙 통과하는 순간이 천천히 되풀이돼요'],
   ],
   q: '해 속에서 수소들이 부딪히면 어떻게 됐나요?',
   choices: [['✨', '합쳐져서 빛이 나요!'], ['🧊', '얼음처럼 꽁꽁 얼어요!'], ['😴', '조용히 잠이 들어요!']], answer: 0,
@@ -1040,7 +1041,7 @@ LESSONS[4] = {
   kid: '수소가 계속 합쳐져서!',
   name: { term: '핵융합', what: '작은 원자핵들이 꽝 부딪혀 하나로 합쳐지는 거예요. 이때 빛과 열이 나와서 해가 반짝여요!' },
   habit: '햇빛이 센 날에는 모자를 쓰고 선크림을 발라요. 해를 맨눈으로 똑바로 보지 않아요!',
-  adult: '어른용 · 핵융합(nuclear fusion): 태양 중심(약 1,500만 ℃)에서 수소 원자핵 4개가 양성자-양성자 연쇄 반응으로 헬륨 원자핵 1개가 되며(양성자 2개는 중성자로 바뀜), 줄어든 질량이 에너지로 바뀐다(E = mc²). 우주 보통 물질 질량의 약 74%가 수소. 햇빛은 지구까지 약 8분 20초.',
+  adult: '어른용 · 핵융합(nuclear fusion): 태양 중심(약 1,500만 ℃)에서 수소 원자핵 4개가 양성자-양성자 연쇄 반응으로 헬륨 원자핵 1개가 되며(양성자 2개는 중성자로 바뀜), 줄어든 질량이 에너지로 바뀐다(E = mc²). 우주 보통 물질 질량의 약 74%가 수소. 햇빛은 지구까지 약 8분 20초. 양자 한 조각: 태양 중심 온도만으로는 양성자끼리 밀어내는 전기적 장벽(쿨롱 장벽)을 넘기에 부족하지만, 양자 터널 효과로 아주 드물게 장벽을 통과해 융합하며(가모프), 양성자 수가 매우 많아(약 10^57개) 확률이 낮아도 꾸준히 빛난다.',
 };
 
 SCENES.fusion = (g, ctx) => {
@@ -1075,7 +1076,21 @@ SCENES.fusion = (g, ctx) => {
   const lH = L('수소가 제일 많아요', .42, '#fff', 0, 2.4), lPull = L('뭉쳐요!', .5, '#fde047', 0, 2.2), lSun = L('해 탄생!', .55, '#fde047', 0, 2);
   const lBang1 = L('꽝!', .55, '#fff7ae', 0, 1.9), lBang2 = L('꽝!', .55, '#fff7ae', 0, -.1), lHe = L('헬륨 탄생!', .5, '#fde047', 0, 1.6), lLight = L('빛과 열', .45, '#fff7ae', 2.6, -1.7);
   const lRay = L('빛과 열', .42, '#fde047', 0, 1.1), lMin = L('8분 만에 도착!', .4, '#fff', 2.9, 1.6), lWarm = L('따뜻해요', .42, '#fdba74', 3.2, -1.2);
-  const all = [cloudG, coreG, skyG, lH, lPull, lSun, lBang1, lBang2, lHe, lLight, lRay, lMin, lWarm];
+  // ── ⚛️ 양자 한 조각 (장면 4): 해 속 빨간 수소 둘 사이 초록 언덕, 아주 가끔 쏙 ──
+  const tunG = new THREE.Group(); g.add(tunG);
+  const back4 = ball(3.8, new THREE.MeshBasicMaterial({ color: '#c2410c', transparent: true, opacity: .32, depthWrite: false })); back4.position.z = -3; tunG.add(back4);
+  const hill = mesh(new THREE.SphereGeometry(1.1, 36, 18, 0, Math.PI * 2, 0, Math.PI / 2), tmat('#86efac', .75), 0, -.9, 0); hill.scale.set(1, 1.05, .45); tunG.add(hill);
+  const HB = -.9, HR = 1.1, PR4 = .28, hillY = x => HB + PR4 + (Math.abs(x) < HR ? 1.05 * Math.sqrt(1 - (x / HR) ** 2) : 0);
+  const floorLine = box(7.4, .05, .3, '#fdba74', 0, HB - .02, 0); tunG.add(floorLine);
+  const pLM = new THREE.MeshStandardMaterial({ color: '#ef4444', transparent: true, roughness: .5 }), pRM = mat('#ef4444');
+  const pL = new THREE.Mesh(pg, pLM), pR = new THREE.Mesh(pg, pRM); tunG.add(pL, pR);
+  const ghost = line([[-.75, -.2, .35], [.75, -.2, .35]], '#22c55e', true); tunG.add(ghost);
+  const merged = ball(.42, emat('#fb923c', .8)); tunG.add(merged);
+  const mFlash = ball(.5, fM()); tunG.add(mFlash);
+  const rays4 = Array.from({ length: 10 }, (_, i) => { const a = arrow(.6, '#fde047', .05); a.userData.ang = i / 10 * Math.PI * 2; tunG.add(a); return a; });
+  const twinkles = Array.from({ length: 26 }, () => { const b = ball(.13, emat('#fde047', 1.2)); const ang = rnd() * Math.PI * 2, r = 1 + rnd() * 2.4; b.position.set(Math.cos(ang) * r, Math.sin(ang) * r * .8, -.6); b.userData.ph = rnd(); b.userData.sp = .5 + rnd() * .7; tunG.add(b); return b; });
+  const lT1 = L('밀어내는 언덕', .4, '#86efac', 0, 1.15), lT2 = L('아주 가끔 쏙!', .46, '#fde047', .2, 1.0), lT3 = L('알맹이가 많아서 늘 반짝!', .42, '#fde047', 0, 3.1);
+  const all = [cloudG, coreG, skyG, tunG, lH, lPull, lSun, lBang1, lBang2, lHe, lLight, lRay, lMin, lWarm, lT1, lT2, lT3];
 
   const cloudScene = t => {
     cloudG.visible = true; const c = seg(t, 2.4, 6.2), sw = t * .25 + c * 2.2, cs = Math.cos(sw), sn = Math.sin(sw), k = lerp(1, .1, c);
@@ -1125,16 +1140,43 @@ SCENES.fusion = (g, ctx) => {
     sprout.visible = t > 4.2; sprout.scale.setScalar(Math.max(.01, seg(t, 4.2, 7.2) * 1.4)); sprout.rotation.z = .1 * Math.sin(t * 2);
     lRay.visible = t > .8; lMin.visible = t > 2.6; lWarm.visible = t > 4.6;
   };
+  const tunnelScene = t => {
+    tunG.visible = true; pR.visible = pL.visible = true;
+    // 왼쪽 빨간 알맹이: 두 번은 언덕을 못 넘고 데굴, 세 번째는 쏙 통과
+    const tries = [[0, 2], [2, 4]];
+    let x = -3, op = 1;
+    for (const [a, b] of tries) if (t >= a && t < b) { const u = (t - a) / (b - a), up = Math.sin(u * Math.PI); x = lerp(-3, -.72, up); }
+    if (t >= 4) {
+      const u1 = seg(t, 4, 5.1), u2 = seg(t, 5.1, 5.9), u3 = seg(t, 5.9, 6.5);
+      if (t < 5.1) x = lerp(-3, -.72, u1); else if (t < 5.9) { x = lerp(-.72, .72, u2); op = .25 + .75 * Math.abs(u2 * 2 - 1); } else x = lerp(.72, 1.45, u3);
+    }
+    const yL = t >= 5.1 && t < 5.9 ? HB + PR4 + .55 : hillY(x);
+    pL.position.set(x, yL, .35); pLM.opacity = op; pLM.transparent = true;
+    pR.position.set(1.75 + .04 * Math.sin(t * 12), HB + PR4, .35);
+    ghost.visible = t > 5 && t < 6.2;
+    // 6.5초: 합쳐져요 → 빛
+    const fused = t >= 6.5;
+    if (fused) { pL.visible = pR.visible = false; }
+    merged.visible = fused; merged.position.set(1.6, HB + .42, .35); merged.scale.setScalar(pulse(t));
+    const kf = (t - 6.5) / .7; mFlash.visible = kf >= 0 && kf < 1; mFlash.position.copy(merged.position); mFlash.scale.setScalar(.6 + 2 * kf); mFlash.material.opacity = .9 * (1 - kf);
+    rays4.forEach((a, i) => { a.visible = fused; const k = ((t - 6.5) * .9 + (i % 2) * .5) % 1, ang = a.userData.ang, d = V(Math.cos(ang), Math.sin(ang), 0); a.position.copy(merged.position).add(d.multiplyScalar(.5 + 1.4 * k)); a.rotation.z = ang + Math.PI / 2; a.scale.setScalar(.5 + .5 * k); });
+    // 7.6초~: 해 속 여기저기 늘 비슷하게 반짝 (하나하나는 언제일지 몰라요)
+    twinkles.forEach(b => { const k = (t * b.userData.sp + b.userData.ph) % 1; b.visible = t > 7.4 && k < .22; b.scale.setScalar(.6 + 2 * k); });
+    lT1.visible = t < 5; lT2.visible = t > 5.1 && t < 7.4; lT3.visible = t > 7.6;
+    back4.material.opacity = .3 + .12 * seg(t, 7.4, 8);
+  };
   const draw = (t, ph) => {
     ctx.bg(SPACE); hideAll(...all);
-    if (ph === 1) cloudScene(t); else if (ph === 3) skyScene(t); else coreScene(t);
+    if (ph === 1) cloudScene(t); else if (ph === 3) skyScene(t); else if (ph === 4) tunnelScene(t); else coreScene(t);
   };
   draw.spots = {
     1: [['🔍 수소 친구', pals[2], 2.4, '우주에서 가장 많은 원자, 수소예요'], ['🔍 뭉치는 곳', [0, 0, 0], 3.2, '수소들이 모이고 모이면 뜨거워져서 반짝 빛나요']],
     2: [['🔍 꽝 부딪히는 곳', [0, 1, 0], 2.4, '수소 알맹이 둘이 꽝! 하나는 회색으로 바뀌어요'], ['🔍 헬륨', [0, 0, 0], 2.2, '빨강 둘, 회색 둘이 붙은 헬륨이에요']],
     3: [['🔍 지구', [3.2, .2, 0], 2.3, '햇빛을 받은 지구에서 새싹이 자라요'], ['🔍 해', [-3.1, 0, 0], 4, '해는 쉬지 않고 빛과 열을 내보내요']],
     0: [['🔍 꽝 부딪히는 곳', [0, 1, 0], 2.4], ['🔍 헬륨', [0, 0, 0], 2.2]],
+    4: [['🔍 쏙 통과하는 곳', [.3, -.2, 0], 4.4, '힘이 모자라도 아주 가끔 초록 언덕을 쏙 통과해요', null, { loop: [4.6, 7.2], slow: .5 }], ['🔍 반짝이는 해 속', [0, .3, 0], 6, '하나하나는 언제일지 몰라도, 아주 많아서 늘 반짝여요', null, { loop: [7.4, 10], slow: .5 }]],
   };
+  draw.cam = { 4: [[4.6, 0], [7.3, -1]] };
   return draw;
 };
 

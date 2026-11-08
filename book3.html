@@ -807,6 +807,7 @@ LESSONS[1] = {
     ['작은 판이 그 자리에서 원자 마당으로 바뀌어요. 초록 도미노는 초록 원자, 회색 구슬은 회색 알갱이! 원자가 적으니 알갱이가 마당 밖으로 새서 멈춰요.', 13, '🔍 「바뀌는 도미노」를 누르면 도미노가 원자로 바뀌는 순간이 천천히 되풀이돼요'],
     ['나란히 봐요. 원자가 적은 마당은 알갱이가 밖으로 새서 멈추고, 많은 마당은 끝까지 이어져요.', 12, '🔍 「밖으로 새는 곳」을 누르면 알갱이가 마당 밖으로 나가는 순간이 천천히 되풀이돼요'],
     ['적은 마당에 초록 원자를 더 모아 볼까요? 딱 충분히 모이니 이번엔 끝까지 이어져요!', 14, '🔍 「모여드는 원자」를 누르면 원자가 날아와 모이는 순간이 천천히 되풀이돼요'],
+    ['⚛️ 양자 한 조각 · 회색 알갱이가 원자에 붙을지 그냥 지나갈지는 매번 몰라요. 동전 던지기처럼요! 원자가 많을수록 붙을 기회가 많아서 끝까지 이어져요.', 13.5, '🔍 「동전 던지는 곳」을 누르면 붙을지 지나갈지 정해지는 순간이 천천히 되풀이돼요'],
   ],
   q: '작은 판 맨 끝 초록 도미노는 어떻게 됐나요?',
   choices: [['⬇️', '판 밖으로 툭!'], ['🧍', '다시 벌떡 일어나요!'], ['🛫', '옆 판으로 날아가요!']], answer: 0,
@@ -819,7 +820,7 @@ LESSONS[1] = {
   habit: '간식을 나눌 때는 모두 받을 만큼 충분한지 먼저 세어 봐요.',
   adult: {
     core: '임계 질량: 연쇄 반응이 스스로 꺼지지 않고 이어지는 데 필요한 최소한의 양.',
-    cond: ['덩어리가 작으면 겉면 비율이 커서 중성자가 밖으로 많이 샌다 → 반응이 꺼진다(미임계).', '같은 양이라도 공 모양으로 뭉칠수록, 밀도가 높을수록, 둘레에 중성자를 되튕기는 반사체가 있을수록 임계 질량이 작아진다.', '순도도 중요하다. 천연 우라늄은 우라늄-235가 약 0.7%뿐이라 감속재 없이 그냥 모아서는 임계가 되지 않는다.'],
+    cond: ['덩어리가 작으면 겉면 비율이 커서 중성자가 밖으로 많이 샌다 → 반응이 꺼진다(미임계).', '같은 양이라도 공 모양으로 뭉칠수록, 밀도가 높을수록, 둘레에 중성자를 되튕기는 반사체가 있을수록 임계 질량이 작아진다.', '순도도 중요하다. 천연 우라늄은 우라늄-235가 약 0.7%뿐이라 감속재 없이 그냥 모아서는 임계가 되지 않는다.', '양자 한 조각: 중성자 하나가 원자핵에 흡수되어 분열을 일으킬지, 그냥 지나갈지는 확률로 정해진다(반응 단면적). 원자핵이 많고 촘촘할수록 흡수될 기회가 늘어 임계에 가까워진다.'],
     map: '초록 도미노·원자 = 우라늄-235 원자핵, 회색 구슬·알갱이 = 중성자, 작은 판·작은 마당 = 중성자가 많이 새는 작은 덩어리',
     more: '유효 증배 계수 k(이번 세대 중성자 수 ÷ 앞 세대): k = 1이면 임계, k < 1이면 미임계. 반사체 없는 공 기준 우라늄-235 약 52 kg(지름 약 17 cm), 플루토늄-239 약 10 kg.',
   },
@@ -979,9 +980,100 @@ SCENES.q3_critical = (g, ctx) => {
     lMore.visible = t > 1.0 && t < 5.4 && !nm(); lEnough.visible = t > 9.2 && !nm();
   };
 
+  // ── ⑥ ⚛️ 양자 한 조각: 붙을지 지나갈지는 동전처럼 확률 (2권 9편 금색 동전·금색 바구니) ──
+  const G6 = new THREE.Group(); g.add(G6); G6.scale.setScalar(1.2); const Q6S = 1.2;
+  const q6At = (() => {
+    const C_GREEN = '#65a30d', C_LIME = '#bef264', C_GREY = '#94a3b8', C_LILAC = '#ddd6fe', C_RIM = '#c4b5fd', C_NAVY = '#334155', C_GOLD = '#fbbf24', C_COIN2 = '#9ca3af';
+    const nm6 = () => typeof mode !== 'undefined' && mode === 'name';
+    const SPEC = { t0: .6, tSum: 11.2, sumX: -.2, summary: '많을수록 붙을 기회가 많아요!', yards: [
+      { cx: -1.45, R: .8, kind: 'atom', items: [-1.75, -1.15], out: [[0, 0], [0, 0], [0, 1], [0, 0]], label: '적은 마당' },
+      { cx: 1.05, R: 1.25, kind: 'atom', items: [.15, .6, 1.05, 1.5, 1.95], out: [[0, 0, 1], [0, 1], [0, 0, 0, 1], [1]], label: '많은 마당', deco: [[.6, .55], [1.5, .55], [.6, -.55], [1.5, -.55], [1.05, .85], [1.05, -.85]] }] };
+    const V6 = 1.6, PAUSE = .5, SPIN = .38, FLY = .6;
+    const coinG = new THREE.CylinderGeometry(.12, .12, .016, 24), fxG = new THREE.SphereGeometry(.12, 12, 8);
+    const mkCoin = () => { const c = new THREE.Group(); const a = new THREE.Mesh(coinG, new THREE.MeshStandardMaterial({ color: C_GOLD, metalness: .3, roughness: .35, transparent: true })); a.position.y = .009; const b = new THREE.Mesh(coinG, new THREE.MeshStandardMaterial({ color: C_COIN2, roughness: .5, transparent: true })); b.position.y = -.009; c.add(a, b); c.visible = false; G6.add(c); return c; };
+    const coinOp = (c, o) => c.children.forEach(m => m.material.opacity = o);
+    const mkFx = c => { const m = new THREE.Mesh(fxG, new THREE.MeshBasicMaterial({ color: c, transparent: true, depthWrite: false })); m.visible = false; G6.add(m); return m; };
+    const fx = (m, t, t0, p, s = 1) => { const a = t - t0; if (a < 0 || a >= .45) return false; m.visible = true; m.position.copy(p); m.scale.setScalar(s * (1 + 2 * a)); m.material.opacity = 1 - a / .45; return true; };
+    const mkAtom = (x, z) => { const m = mat(C_GREEN); const a = critter(.17, m); a.position.set(x, .2, z); G6.add(a); return { a, m }; };
+    const yards = SPEC.yards.map(Y => {
+      const disk = cyl(Y.R, Y.R, .04, C_LILAC, Y.cx, .02, 0); G6.add(disk);
+      const rim = mesh(new THREE.TorusGeometry(Y.R, .025, 8, 48), C_RIM, Y.cx, .04, 0); rim.rotation.x = Math.PI / 2; G6.add(rim);
+      const items = Y.items.map(x => Y.kind === 'rod' ? { x, rod: (() => { const r = cyl(.06, .06, .75, C_NAVY, x, .38, 0); G6.add(r); return r; })() } : Object.assign({ x }, mkAtom(x, 0)));
+      const src = Y.src != null ? mkAtom(Y.src, 0) : null, end = Y.end != null ? mkAtom(Y.end, 0) : null;
+      (Y.deco || []).forEach(([x, z]) => mkAtom(x, z));
+      const bx = Y.cx + Y.R * .55, bz = Y.R + .4;
+      const bm = new THREE.MeshStandardMaterial({ color: '#f59e0b', roughness: .5, side: THREE.DoubleSide });
+      const basket = mesh(new THREE.CylinderGeometry(.3, .24, .3, 24, 1, true), bm, bx, .15, bz); G6.add(basket);
+      G6.add(cyl(.24, .24, .02, '#f59e0b', bx, .01, bz));
+      const part = ball(.075, C_GREY); G6.add(part);
+      const x0 = Y.src != null ? Y.src + .2 : Y.cx - Y.R - .15, xEnd = Y.end != null ? Y.end - .2 : Y.cx + Y.R + .25;
+      let tc = SPEC.t0, gold = 0; const runs = [], events = [];
+      Y.out.forEach(res => {
+        const r = { ts: tc, segs: [], stop: null, endHit: null, fxEnd: null };
+        let x = x0, tt = tc;
+        for (let k = 0; k < res.length; k++) {
+          const it = items[k], dt = (it.x - x) / V6;
+          r.segs.push([tt, tt + dt, x, it.x]); tt += dt;
+          events.push({ t: tt, x: it.x, gold: !!res[k], item: it, coin: mkCoin(), n: res[k] ? gold++ : -1, bx, bz, fxm: mkFx(res[k] ? '#fde047' : '#e2e8f0') });
+          r.segs.push([tt, tt + PAUSE, it.x, it.x]); tt += PAUSE; x = it.x;
+          if (res[k]) { r.stop = tt - PAUSE + SPIN; break; }
+        }
+        if (r.stop == null) { const dt = (xEnd - x) / V6; r.segs.push([tt, tt + dt, x, xEnd]); tt += dt; r.endHit = tt; r.fxEnd = mkFx('#fde047'); }
+        r.done = tt + .35; runs.push(r); tc = tt + .45;
+      });
+      const lab = label(Y.label, .34, '#fde047'); lab.position.set(Y.cx, 1.25, 0); G6.add(lab);
+      return { Y, items, src, end, part, runs, events, lab, bx, bz, gold, tEnd: tc };
+    });
+    const sum = label(SPEC.summary, .36, '#fde047'); sum.position.set(SPEC.sumX, 1.75, 0); G6.add(sum);
+    const draw6 = t => {
+      yards.forEach(Y => {
+        let shown = false;
+        Y.runs.forEach(r => {
+          if (shown || t < r.ts || t >= r.done) return;
+          const gone = (r.stop != null && t >= r.stop) || (r.endHit != null && t >= r.endHit);
+          if (gone) return;
+          let p = r.segs[r.segs.length - 1][3];
+          for (const [a, b, xa, xb] of r.segs) if (t >= a && t < b) { p = lerp(xa, xb, (t - a) / Math.max(.001, b - a)); break; }
+          Y.part.visible = true; Y.part.position.set(p, .2, 0); shown = true;
+        });
+        if (!shown) Y.part.visible = false;
+        Y.items.forEach(it => { if (it.m) it.m.color.set(C_GREEN); if (it.rod) it.rod.rotation.z = 0; });
+        Y.events.forEach(e => {
+          const a = t - e.t, c = e.coin;
+          if (!fx(e.fxm, t, e.t + SPIN, V(e.x, .3, 0), e.gold ? 1.3 : .6)) e.fxm.visible = false;
+          if (a < 0) { c.visible = false; return; }
+          const top = V(e.x, .72, 0);
+          if (a < SPIN) { c.visible = true; coinOp(c, 1); c.position.copy(top); c.position.y += .12 * Math.sin(Math.PI * a / SPIN); c.rotation.set(a * 28, 0, 0); }
+          else if (e.gold) {
+            const f = ease(clamp((a - SPIN - .15) / FLY, 0, 1)), dest = V(e.bx, .06 + e.n * .034, e.bz);
+            c.visible = true; coinOp(c, 1); c.rotation.set(0, 0, 0); c.position.copy(top).lerp(dest, f); c.position.y += .7 * Math.sin(Math.PI * f);
+          } else { const o = 1 - clamp((a - SPIN - .35) / .3, 0, 1); c.visible = o > .01; coinOp(c, o); c.rotation.set(Math.PI, 0, 0); c.position.copy(top); }
+          if (e.gold && a >= SPIN) {
+            if (e.item.m) e.item.m.color.set(C_GREEN).lerp(new THREE.Color(C_LIME), clamp((a - SPIN) / .3, 0, 1));
+            if (e.item.rod && a < SPIN + .5) e.item.rod.rotation.z = .12 * Math.sin((a - SPIN) * 30);
+          }
+        });
+        Y.runs.forEach(r => { if (r.fxEnd && !fx(r.fxEnd, t, r.endHit, V(Y.Y.end, .3, 0), 1.3)) r.fxEnd.visible = false; });
+        if (Y.end) Y.end.a.scale.setScalar(Y.runs.some(r => r.endHit != null && t >= r.endHit && t < r.endHit + .5) ? 1.18 : 1);
+        if (Y.src) Y.src.a.scale.setScalar(Y.runs.some(r => t >= r.ts && t < r.ts + .3) ? 1.12 : 1);
+        Y.lab.visible = t < SPEC.tSum && !nm6();
+      });
+      sum.visible = t >= SPEC.tSum && !nm6();
+    };
+    draw6.yards = yards; draw6.SPEC = SPEC; return draw6;
+  })();
+  const q6R = q6At.yards[1], q6L = q6At.yards[0];
+  const q6eR = q6R.events.find(e => e.gold), q6eL = q6L.events.find(e => e.gold);
+  const q6Spots = [
+    ['🔍 동전 던지는 곳', [q6eR.x * Q6S, .5 * Q6S, 0], 2.4, '회색 알갱이가 원자 옆에서 동전을 던져요. 금색이면 붙고, 회색이면 지나가요', null, { loop: [Math.max(0, q6eR.t - .9), q6eR.t + 1.3], slow: .5 }],
+    ['🔍 적은 마당', [q6L.Y.cx * Q6S, .4 * Q6S, 0], 2.8, '원자가 적으면 동전 던질 기회가 적어서 대부분 밖으로 나가요', null, { loop: [Math.max(0, q6eL.t - 1.0), q6eL.t + 1.3], slow: .5 }],
+    ['🔍 금색 바구니', [(q6L.bx + q6R.bx) / 2 * Q6S, .3 * Q6S, (q6L.bz + q6R.bz) / 2 * Q6S], 3.8, '금색 동전이 많이 모인 쪽이 원자가 많은 마당이에요'],
+  ];
+  const q6Cam = [[Math.max(0, q6eR.t - .9), 0], [q6eR.t + 1.5, -1], [q6At.SPEC.tSum - .2, 2], [q6At.SPEC.tSum + 1.8, -1]];
+
   const draw = (t, ph) => {
-    G1.visible = ph === 1; G2.visible = ph === 2; G3.visible = ph === 3 || ph === 0; G4.visible = ph === 4; G5.visible = ph === 5;
-    if (ph === 1) smallAt(t); else if (ph === 2) bigAt(t); else if (ph === 4) twoAt(t); else if (ph === 5) gatherAt(t);
+    G1.visible = ph === 1; G2.visible = ph === 2; G3.visible = ph === 3 || ph === 0; G4.visible = ph === 4; G5.visible = ph === 5; G6.visible = ph === 6;
+    if (ph === 1) smallAt(t); else if (ph === 2) bigAt(t); else if (ph === 4) twoAt(t); else if (ph === 5) gatherAt(t); else if (ph === 6) q6At(t);
     else bridgeAt(Math.min(t, 13));
   };
   const P = (rows, s, c, k, j, y = .3) => { const p = npos(k, j, rows, s, c); return [p.x, y * s, p.z]; };
@@ -990,6 +1082,7 @@ SCENES.q3_critical = (g, ctx) => {
     ['🔍 밖으로 새는 곳', P(3, 1.35, C1, 2, 1, .2), 3.0, '맨 끝 원자의 회색 알갱이는 만날 원자가 없어서 마당 밖으로 나가요', null, { loop: [7.4, 9.8], slow: .5 }],
   ];
   draw.spots = {
+    6: q6Spots,
     1: [['🔍 판 끝', P(3, 1.35, C1, 2, 1, .2), 3.2, '판이 끝나서 밖으로 툭 떨어지고 멈춰요', null, { loop: [2.4, 4.8], slow: .5 }], ['🔍 하나가 둘을', P(3, 1.35, C1, 0, 0, .4), 2.4, '넘어진 도미노가 앞의 두 도미노를 넘어뜨려요', null, { loop: [.6, 2.8], slow: .5 }]],
     2: [['🔍 하나가 둘을', P(6, 1, C2, 1, 0, .4), 2.4, '넘어진 도미노가 앞의 두 도미노를 넘어뜨려요', null, { loop: [.6, 2.6], slow: .5 }], ['🔍 끝까지 와르르', P(6, 1, C2, 4, 2, .3), 3.2, '큰 판은 넘어뜨릴 도미노가 계속 있어서 맨 끝까지 이어져요', null, { loop: [2.0, 4.6], slow: .5 }]],
     3: bridgeSpots,
@@ -997,7 +1090,7 @@ SCENES.q3_critical = (g, ctx) => {
     5: [['🔍 모여드는 원자', P(6, S5, C5, 4, 2, .3), 3.4, '초록 원자가 날아와 마당이 커져요', null, { loop: [1.0, 4.4], slow: .5 }], ['🔍 끝까지 이어지는 곳', P(6, S5, C5, 4, 2, .3), 3.4, '딱 충분히 모이니 알갱이가 계속 옆 원자를 만나요', null, { loop: [8.4, 10.6], slow: .5 }]],
     0: bridgeSpots,
   };
-  draw.cam = {
+  draw.cam = { 6: q6Cam,
     1: [[2.4, 0], [5.4, -1]],
     2: [[1.0, 0], [3.0, 1], [6.0, -1]],
     3: [[2.4, 0], [5.6, -1], [7.2, 1], [10.2, -1]],
@@ -1246,6 +1339,7 @@ LESSONS[3] = {
     ['같은 자리에서 바뀌어요! 초록 도미노는 초록 원자, 남색 칸막이는 남색 막대가 돼요. 막대가 회색 알갱이를 쏙 붙잡아요.', 13, '🔍 「쏙 붙잡는 막대」를 누르면 막대가 알갱이를 붙잡는 순간이 천천히 되풀이돼요'],
     ['그래서 원자가 하나씩 꾸준히 쪼개져요. 쪼개질 때마다 주황색 따뜻한 열이 나와요.', 11, '🔍 「따뜻한 열」을 누르면 열이 모이는 순간이 천천히 되풀이돼요'],
     ['따뜻한 열로 물을 데우면 김이 나요. 김이 바람개비를 돌리고, 전구가 반짝! 너무 빨라지면 위험해서 어른들이 막대로 꼭 조절해요.', 13, '🔍 「반짝 전구」를 누르면 전구가 켜지는 순간이 천천히 되풀이돼요'],
+    ['⚛️ 양자 한 조각 · 남색 막대가 회색 알갱이를 붙잡을지도 동전 던지기처럼 매번 몰라요. 막대가 많으면 붙잡을 기회가 많아서 더 천천히 이어져요.', 12.5, '🔍 「동전 던지는 곳」을 누르면 붙잡을지 지나갈지 정해지는 순간이 천천히 되풀이돼요'],
   ],
   q: '남색 칸막이를 꽂으면 도미노는 어떻게 됐나요?',
   choices: [['🐢', '하나씩 천천히!'], ['💨', '더 빨리 와르르!'], ['🧍', '다시 일어나요!']], answer: 0,
@@ -1258,7 +1352,7 @@ LESSONS[3] = {
   habit: '전기는 아껴 쓰고, 콘센트에는 손가락이나 물건을 넣지 않아요.',
   adult: {
     core: '제어봉: 원자로에 넣고 빼며 중성자를 흡수해 연쇄 반응의 빠르기를 조절하는 막대.',
-    cond: ['중성자를 잘 흡수하는 물질(붕소, 카드뮴, 하프늄)로 만든다.', '깊이 넣으면 느려지고 빼면 빨라진다. 감속재(물 등)와 함께 k ≈ 1(임계)을 유지해 일정한 열을 낸다.', '이상이 생기면 제어봉을 한꺼번에 넣어 원자로를 멈춘다(스크램).'],
+    cond: ['중성자를 잘 흡수하는 물질(붕소, 카드뮴, 하프늄)로 만든다.', '깊이 넣으면 느려지고 빼면 빨라진다. 감속재(물 등)와 함께 k ≈ 1(임계)을 유지해 일정한 열을 낸다.', '이상이 생기면 제어봉을 한꺼번에 넣어 원자로를 멈춘다(스크램).', '양자 한 조각: 제어봉이 중성자를 흡수할지도 확률로 정해진다(흡수 단면적, 붕소-10이 특히 크다). 제어봉을 더 깊이 넣을수록 흡수될 확률이 커져 k가 줄어든다.'],
     life: '원자력 발전: 핵분열 열 → 물을 끓여 증기 → 터빈 회전 → 발전기 → 전기. 화력 발전과는 열을 만드는 방법만 다르다.',
     map: '남색 칸막이·막대 = 제어봉, 회색 구슬·알갱이 = 중성자, 초록 도미노·원자 = 우라늄-235 원자핵',
     more: '핵무기는 제어 없이 순간적으로 초임계를 만드는 것으로, 핵확산금지조약(NPT)으로 관리한다.',
@@ -1509,9 +1603,100 @@ SCENES.q3_rod = (g, ctx) => {
     lSteam.visible = t > 4 && t < 7.4 && !nm(); lBulb.visible = t > 8 && !nm(); lYard.visible = t < 3.8 && !nm();
   };
 
+  // ── ⑥ ⚛️ 양자 한 조각: 붙을지 지나갈지는 동전처럼 확률 (2권 9편 금색 동전·금색 바구니) ──
+  const G6 = new THREE.Group(); g.add(G6); G6.scale.setScalar(1.2); const Q6S = 1.2;
+  const q6At = (() => {
+    const C_GREEN = '#65a30d', C_LIME = '#bef264', C_GREY = '#94a3b8', C_LILAC = '#ddd6fe', C_RIM = '#c4b5fd', C_NAVY = '#334155', C_GOLD = '#fbbf24', C_COIN2 = '#9ca3af';
+    const nm6 = () => typeof mode !== 'undefined' && mode === 'name';
+    const SPEC = { t0: .6, tSum: 9.8, sumX: -.2, summary: '막대 많으면 더 많이 붙잡아요!', yards: [
+      { cx: -1.45, R: .8, kind: 'rod', src: -2.0, items: [-1.45], end: -.9, out: [[0], [1], [0], [0]], label: '막대 1개' },
+      { cx: 1.05, R: 1.25, kind: 'rod', src: .05, items: [.5, 1.0, 1.5], end: 2.05, out: [[1], [0, 1], [0, 0, 1], [0, 0, 0]], label: '막대 3개' }] };
+    const V6 = 1.6, PAUSE = .5, SPIN = .38, FLY = .6;
+    const coinG = new THREE.CylinderGeometry(.12, .12, .016, 24), fxG = new THREE.SphereGeometry(.12, 12, 8);
+    const mkCoin = () => { const c = new THREE.Group(); const a = new THREE.Mesh(coinG, new THREE.MeshStandardMaterial({ color: C_GOLD, metalness: .3, roughness: .35, transparent: true })); a.position.y = .009; const b = new THREE.Mesh(coinG, new THREE.MeshStandardMaterial({ color: C_COIN2, roughness: .5, transparent: true })); b.position.y = -.009; c.add(a, b); c.visible = false; G6.add(c); return c; };
+    const coinOp = (c, o) => c.children.forEach(m => m.material.opacity = o);
+    const mkFx = c => { const m = new THREE.Mesh(fxG, new THREE.MeshBasicMaterial({ color: c, transparent: true, depthWrite: false })); m.visible = false; G6.add(m); return m; };
+    const fx = (m, t, t0, p, s = 1) => { const a = t - t0; if (a < 0 || a >= .45) return false; m.visible = true; m.position.copy(p); m.scale.setScalar(s * (1 + 2 * a)); m.material.opacity = 1 - a / .45; return true; };
+    const mkAtom = (x, z) => { const m = mat(C_GREEN); const a = critter(.17, m); a.position.set(x, .2, z); G6.add(a); return { a, m }; };
+    const yards = SPEC.yards.map(Y => {
+      const disk = cyl(Y.R, Y.R, .04, C_LILAC, Y.cx, .02, 0); G6.add(disk);
+      const rim = mesh(new THREE.TorusGeometry(Y.R, .025, 8, 48), C_RIM, Y.cx, .04, 0); rim.rotation.x = Math.PI / 2; G6.add(rim);
+      const items = Y.items.map(x => Y.kind === 'rod' ? { x, rod: (() => { const r = cyl(.06, .06, .75, C_NAVY, x, .38, 0); G6.add(r); return r; })() } : Object.assign({ x }, mkAtom(x, 0)));
+      const src = Y.src != null ? mkAtom(Y.src, 0) : null, end = Y.end != null ? mkAtom(Y.end, 0) : null;
+      (Y.deco || []).forEach(([x, z]) => mkAtom(x, z));
+      const bx = Y.cx + Y.R * .55, bz = Y.R + .4;
+      const bm = new THREE.MeshStandardMaterial({ color: '#f59e0b', roughness: .5, side: THREE.DoubleSide });
+      const basket = mesh(new THREE.CylinderGeometry(.3, .24, .3, 24, 1, true), bm, bx, .15, bz); G6.add(basket);
+      G6.add(cyl(.24, .24, .02, '#f59e0b', bx, .01, bz));
+      const part = ball(.075, C_GREY); G6.add(part);
+      const x0 = Y.src != null ? Y.src + .2 : Y.cx - Y.R - .15, xEnd = Y.end != null ? Y.end - .2 : Y.cx + Y.R + .25;
+      let tc = SPEC.t0, gold = 0; const runs = [], events = [];
+      Y.out.forEach(res => {
+        const r = { ts: tc, segs: [], stop: null, endHit: null, fxEnd: null };
+        let x = x0, tt = tc;
+        for (let k = 0; k < res.length; k++) {
+          const it = items[k], dt = (it.x - x) / V6;
+          r.segs.push([tt, tt + dt, x, it.x]); tt += dt;
+          events.push({ t: tt, x: it.x, gold: !!res[k], item: it, coin: mkCoin(), n: res[k] ? gold++ : -1, bx, bz, fxm: mkFx(res[k] ? '#fde047' : '#e2e8f0') });
+          r.segs.push([tt, tt + PAUSE, it.x, it.x]); tt += PAUSE; x = it.x;
+          if (res[k]) { r.stop = tt - PAUSE + SPIN; break; }
+        }
+        if (r.stop == null) { const dt = (xEnd - x) / V6; r.segs.push([tt, tt + dt, x, xEnd]); tt += dt; r.endHit = tt; r.fxEnd = mkFx('#fde047'); }
+        r.done = tt + .35; runs.push(r); tc = tt + .45;
+      });
+      const lab = label(Y.label, .34, '#fde047'); lab.position.set(Y.cx, 1.25, 0); G6.add(lab);
+      return { Y, items, src, end, part, runs, events, lab, bx, bz, gold, tEnd: tc };
+    });
+    const sum = label(SPEC.summary, .36, '#fde047'); sum.position.set(SPEC.sumX, 1.75, 0); G6.add(sum);
+    const draw6 = t => {
+      yards.forEach(Y => {
+        let shown = false;
+        Y.runs.forEach(r => {
+          if (shown || t < r.ts || t >= r.done) return;
+          const gone = (r.stop != null && t >= r.stop) || (r.endHit != null && t >= r.endHit);
+          if (gone) return;
+          let p = r.segs[r.segs.length - 1][3];
+          for (const [a, b, xa, xb] of r.segs) if (t >= a && t < b) { p = lerp(xa, xb, (t - a) / Math.max(.001, b - a)); break; }
+          Y.part.visible = true; Y.part.position.set(p, .2, 0); shown = true;
+        });
+        if (!shown) Y.part.visible = false;
+        Y.items.forEach(it => { if (it.m) it.m.color.set(C_GREEN); if (it.rod) it.rod.rotation.z = 0; });
+        Y.events.forEach(e => {
+          const a = t - e.t, c = e.coin;
+          if (!fx(e.fxm, t, e.t + SPIN, V(e.x, .3, 0), e.gold ? 1.3 : .6)) e.fxm.visible = false;
+          if (a < 0) { c.visible = false; return; }
+          const top = V(e.x, .72, 0);
+          if (a < SPIN) { c.visible = true; coinOp(c, 1); c.position.copy(top); c.position.y += .12 * Math.sin(Math.PI * a / SPIN); c.rotation.set(a * 28, 0, 0); }
+          else if (e.gold) {
+            const f = ease(clamp((a - SPIN - .15) / FLY, 0, 1)), dest = V(e.bx, .06 + e.n * .034, e.bz);
+            c.visible = true; coinOp(c, 1); c.rotation.set(0, 0, 0); c.position.copy(top).lerp(dest, f); c.position.y += .7 * Math.sin(Math.PI * f);
+          } else { const o = 1 - clamp((a - SPIN - .35) / .3, 0, 1); c.visible = o > .01; coinOp(c, o); c.rotation.set(Math.PI, 0, 0); c.position.copy(top); }
+          if (e.gold && a >= SPIN) {
+            if (e.item.m) e.item.m.color.set(C_GREEN).lerp(new THREE.Color(C_LIME), clamp((a - SPIN) / .3, 0, 1));
+            if (e.item.rod && a < SPIN + .5) e.item.rod.rotation.z = .12 * Math.sin((a - SPIN) * 30);
+          }
+        });
+        Y.runs.forEach(r => { if (r.fxEnd && !fx(r.fxEnd, t, r.endHit, V(Y.Y.end, .3, 0), 1.3)) r.fxEnd.visible = false; });
+        if (Y.end) Y.end.a.scale.setScalar(Y.runs.some(r => r.endHit != null && t >= r.endHit && t < r.endHit + .5) ? 1.18 : 1);
+        if (Y.src) Y.src.a.scale.setScalar(Y.runs.some(r => t >= r.ts && t < r.ts + .3) ? 1.12 : 1);
+        Y.lab.visible = t < SPEC.tSum && !nm6();
+      });
+      sum.visible = t >= SPEC.tSum && !nm6();
+    };
+    draw6.yards = yards; draw6.SPEC = SPEC; return draw6;
+  })();
+  const q6R = q6At.yards[1], q6L = q6At.yards[0];
+  const q6eR = q6R.events.find(e => e.gold), q6eL = q6L.events.find(e => e.gold);
+  const q6Spots = [
+    ['🔍 동전 던지는 곳', [q6eR.x * Q6S, .5 * Q6S, 0], 2.4, '회색 알갱이가 남색 막대 옆에서 동전을 던져요. 금색이면 붙잡히고, 회색이면 지나가요', null, { loop: [Math.max(0, q6eR.t - .9), q6eR.t + 1.3], slow: .5 }],
+    ['🔍 막대 1개', [q6L.Y.cx * Q6S, .4 * Q6S, 0], 2.8, '막대가 하나뿐이면 붙잡을 기회가 적어서 알갱이가 다음 원자까지 많이 가요', null, { loop: [Math.max(0, q6eL.t - 1.0), q6eL.t + 1.3], slow: .5 }],
+    ['🔍 금색 바구니', [(q6L.bx + q6R.bx) / 2 * Q6S, .3 * Q6S, (q6L.bz + q6R.bz) / 2 * Q6S], 3.8, '금색 동전(붙잡힌 알갱이)이 많은 쪽이 막대 3개 마당이에요'],
+  ];
+  const q6Cam = [[Math.max(0, q6eR.t - .9), 0], [q6eR.t + 1.5, -1], [q6At.SPEC.tSum - .2, 2], [q6At.SPEC.tSum + 1.8, -1]];
+
   const draw = (t, ph) => {
-    G[1].visible = ph === 1; G[2].visible = ph === 2; G[3].visible = ph === 3 || ph === 0; G[4].visible = ph === 4; G[5].visible = ph === 5;
-    if (ph === 1) s1(t); else if (ph === 2) s2(t); else if (ph === 4) s4(t); else if (ph === 5) s5(t); else s3(Math.min(t, 13));
+    G[1].visible = ph === 1; G[2].visible = ph === 2; G[3].visible = ph === 3 || ph === 0; G[4].visible = ph === 4; G[5].visible = ph === 5; G6.visible = ph === 6;
+    if (ph === 1) s1(t); else if (ph === 2) s2(t); else if (ph === 4) s4(t); else if (ph === 5) s5(t); else if (ph === 6) q6At(t); else s3(Math.min(t, 13));
   };
   const P = (k, j, y = .4) => { const p = npos(k, j, y); return [p.x, p.y, p.z]; };
   const R = (k, y = .4) => { const q = divPos(k); return [q.x, y, q.z]; };
@@ -1520,13 +1705,14 @@ SCENES.q3_rod = (g, ctx) => {
     ['🔍 쏙 붙잡는 막대', R(0, .35), 2.2, '쪼개진 원자에서 나온 회색 알갱이 하나는 다음 원자로, 하나는 남색 막대가 쏙 붙잡아요', null, { loop: [4.4, 6.2], slow: .5 }],
   ];
   draw.spots = {
+    6: q6Spots,
     1: [['🔍 칸막이', R(0, .5), 2.2, '남색 칸막이가 옆 도미노를 막아요', null, { loop: [.2, 2.2], slow: .5 }], ['🔍 하나씩', P(2, 0), 2.8, '칸막이 때문에 도미노가 한 줄로만, 하나씩 넘어져요', null, { loop: [2.4, 5.4], slow: .5 }]],
     2: [['🔍 하나가 둘을', P(1, 0), 2.4, '넘어진 도미노가 앞의 두 도미노를 넘어뜨려요', null, { loop: [1.8, 3.6], slow: .5 }], ['🔍 끝까지 와르르', P(3, 2, .3), 3.2, '칸막이가 없으면 줄마다 점점 많이 넘어져요', null, { loop: [2.6, 4.8], slow: .5 }]],
     3: bridgeSpots, 0: bridgeSpots,
     4: [['🔍 쏙 붙잡는 막대', R(1, .35), 2.2, '남색 막대가 회색 알갱이를 붙잡아서 하나씩만 이어져요', null, { loop: [2.6, 4.4], slow: .5 }], ['🔍 따뜻한 열', [1.85, .9, -.4], 2.6, '쪼개질 때마다 나온 주황 열이 꾸준히 모여요', null, { loop: [5.2, 8.0], slow: .5 }]],
     5: [['🔍 김과 바람개비', [PW.x - .2, 1.2, 0], 2.4, '물이 데워져 나온 김이 바람개비를 빙글빙글 돌려요', null, { loop: [3.6, 6.6], slow: .5 }], ['🔍 반짝 전구', [1.45, .9, -.05], 2.0, '바람개비가 돌면 전기가 줄을 타고 가서 전구가 반짝 켜져요', null, { loop: [6.4, 9.4], slow: .5 }]],
   };
-  draw.cam = { 1: [[3.0, 1], [7.4, -1]], 2: [[1.8, 0], [3.8, -1]], 3: [[1.4, 0], [4.2, -1], [4.5, 1], [6.6, -1]], 0: [[1.4, 0], [4.2, -1], [4.5, 1], [6.6, -1]], 4: [[2.6, 0], [4.6, -1], [5.4, 1], [8.4, -1]], 5: [[3.8, 0], [6.6, 1], [10, -1]] };
+  draw.cam = { 6: q6Cam, 1: [[3.0, 1], [7.4, -1]], 2: [[1.8, 0], [3.8, -1]], 3: [[1.4, 0], [4.2, -1], [4.5, 1], [6.6, -1]], 0: [[1.4, 0], [4.2, -1], [4.5, 1], [6.6, -1]], 4: [[2.6, 0], [4.6, -1], [5.4, 1], [8.4, -1]], 5: [[3.8, 0], [6.6, 1], [10, -1]] };
   return draw;
 };
 
@@ -2456,6 +2642,494 @@ SCENES.q3_horizon = (g, ctx) => {
     0: [['🔍 바뀌는 점선', dashMid, 4.2, '빨간 점선이 휘어서 빨간 고리가 돼요', null, { loop: [2, 6.2], slow: .5 }], ['🔍 고리 안 빛', pB, 2.9, '고리 안 빛 알갱이는 다시 못 나와요', null, { loop: [8, 12.8], slow: .5 }]],
   };
   draw.cam = { 1: [[1.2, 0], [8.6, -1]], 2: [[3.4, 0], [6.9, 1], [9.4, -1]], 3: [[2.4, 0], [6.2, -1], [6.8, 1], [10.2, -1]], 4: [[1.0, 1], [4.4, -1], [5.4, 0], [10.6, -1]], 5: [[1.5, 0], [6, -1], [6.5, 1], [9.8, -1]], 0: [[2.4, 0], [6.2, -1], [8.4, 1], [12.6, -1]] };
+  return draw;
+};
+
+// ── L09.js ──
+// 양자물리 3권 9. 백색 왜성 — 놀이방 칸칸이 상자(한 칸에 한 친구) → 양쪽에서 꾹 밀어도 꽉 차면 더는 못 눌려요 → 같은 자리에서 친구가 하늘색 전자로, 상자가 늙은 해로: 해가 쭈그러들다 전자가 꽉 차서 멈춰요 → 지구만 한 하얀 별 → 아주 무거운 별은 못 버텨 블랙홀로
+// 색 짝: 친구 = 하늘색 전자(#38bdf8) / 주황 칸(#f59e0b) = 전자 한 자리(2권 4편 주황 의자) / 분홍 미는 판·보라 화살표 = 별을 쭈그러뜨리는 힘 / 하얀 별 #f8fafc / 블랙홀 #111827 + 주황 고리
+LESSONS[8] = {
+  scene: 'q3_whiteDwarf', law: '해는 왜 블랙홀이 안 될까', title: '칸칸이 상자와 하얀 별',
+  cam: [0, 1.6, 6.6], tgt: [0, 1.45, 0], fit: 1.25, T: 13,
+  story: "지난번엔 빨간 고리 안에서는 빛도 못 나왔지요? 그런데 해는 왜 블랙홀이 안 될까요? 2권의 '한 자리에 하나씩'이 답이에요!",
+  watch: [
+    ['보리네 놀이방 칸칸이 상자! 친구들이 한 칸에 하나씩 쏙. 나비가 찬 칸에 들어가려다 콩!', 10, '🔍 「콩! 찬 칸」을 누르면 나비가 튕겨 나오는 순간이 천천히 되풀이돼요'],
+    ['보리와 두리가 양쪽에서 꾹 밀어요. 칸이 다 차니까 아무리 밀어도 더는 안 들어가요!', 11, '🔍 「꽉 찬 칸」을 누르면 밀어도 멈춰 있는 순간이 천천히 되풀이돼요'],
+    ['같은 자리에서 바뀌어요! 친구는 하늘색 전자, 상자는 늙은 해예요. 해가 꾹 쭈그러들다가 전자가 꽉 차서 멈춰요.', 13, '🔍 「멈추는 별」을 누르면 쭈그러들다 멈추는 순간이 천천히 되풀이돼요'],
+    ['멈춘 별은 지구만큼 작고 하얗게 빛나요. 우리 해도 아주아주 오랜 뒤에 이렇게 돼요.', 12, '🔍 「하얀 별 속」을 누르면 꽉 찬 전자가 천천히 보여요'],
+    ['해보다 훨씬 무거운 별은 전자도 못 버텨요. 계속 쭈그러들어 블랙홀이 돼요.', 12, '🔍 「못 버티는 별」을 누르면 쭈그러드는 순간이 천천히 되풀이돼요'],
+  ],
+  q: '칸칸이 상자가 꽉 차면 어떻게 됐나요?',
+  choices: [['🛑', '더는 못 눌려요!'], ['🙌', '친구가 또 들어가요!'], ['💨', '상자가 사라져요!']], answer: 0,
+  hint: '보리와 두리가 아무리 밀어도, 칸이 다 차니까 멈췄지요?',
+  q2: '하얀 별 속 하늘색 전자는 어떻게 버텼나요?',
+  choices2: [['🪑', '한 자리에 하나씩!'], ['🤝', '모두 한곳에 모여서!'], ['✨', '빛을 뿅 내놓아서!']], answer2: 0,
+  hint2: '주황 칸마다 하늘색 전자가 하나씩 꽉 차서, 별이 더는 쭈그러들지 못했지요?',
+  kid: '전자가 한 자리에 하나씩이라서!',
+  name: { term: '백색 왜성', kid: '꽉 찬 하얀 별', what: '연료를 다 쓴 별이 꾹 쭈그러들다가, 속의 전자들이 한 자리에 하나씩이라 더는 못 눌려서 멈춘 작고 하얀 별이에요.' },
+  habit: '놀이 상자 한 칸에는 한 친구만 들어가요. 억지로 밀면 다칠 수 있어요!',
+  adult: {
+    core: '백색 왜성: 연료를 다 쓴 별의 중심이, 전자들이 같은 자리에 둘 들어가지 못해 생기는 버티는 힘(전자 축퇴압, 파울리 배타 원리)으로 쭈그러듦을 멈춘 지구만 한 별.',
+    cond: [
+      '중심 질량이 해의 약 1.4배(찬드라세카르 한계)를 넘으면 전자도 버티지 못한다 → 중성자가 버티는 중성자별이 되고, 더 무거우면 블랙홀이 된다.',
+      '해도 약 50억 년 뒤 적색 거성을 거쳐 바깥 껍질을 날려 보내고 백색 왜성이 된다.',
+      '"한 칸에 한 친구"는 비유다. 실제로 전자는 스핀(↑↓) 덕분에 한 에너지 자리에 둘까지 들어간다(4권 6편).',
+    ],
+    life: '밤하늘에서 가장 밝은 별 시리우스의 짝별 시리우스 B가 백색 왜성이다. 이런 별의 물질은 한 찻숟가락이 수 톤이나 나간다.',
+    map: '친구 = 전자, 주황 칸 = 전자가 들어갈 수 있는 자리(양자 상태), 분홍 미는 판·보라 화살표 = 별을 쭈그러뜨리는 중력, 칸칸이 상자 = 늙은 별의 중심',
+    more: '밀도는 1 cm³에 약 1톤(약 10^6 g/cm³)이다. 새로 핵융합을 하지 않아 남은 열로 빛나다가 아주 오랜 시간에 걸쳐 식는다.',
+  },
+};
+
+SCENES.q3_whiteDwarf = (g, ctx) => {
+  const SKY = new THREE.Color(BOOK.sceneBg), SPACE = new THREE.Color('#0b1026'), BGC = new THREE.Color();
+  const ORG = '#f59e0b', ELEC = '#38bdf8', YEL = '#fde047', PUR = '#8b5cf6', PINK = '#f9a8d4', WARM = '#fdba74', WHITE = '#f8fafc', HOLE = '#111827', RING = '#fb923c';
+  const nm = () => typeof mode !== 'undefined' && mode === 'name';
+  const G = [0, 1, 2, 3, 4, 5].map(() => { const q = new THREE.Group(); g.add(q); return q; });
+  const L2 = (txt, sz, col, x, y, z, par) => { const l = label(txt, sz, col); l.position.set(x, y, z); par.add(l); return l; };
+  const sky = starField(500, 26); sky.material.transparent = true; g.add(sky);
+  const bgSet = k => { BGC.copy(SKY).lerp(SPACE, k); ctx.bg(BGC); sky.material.opacity = k; sky.visible = k > .01; };
+  const BASE = .95, TIGHT = .62, CY = 1.45;
+
+  // ── 칸칸이 상자: 3×3 주황 칸, 칸마다 친구(동물) 또는 하늘색 전자 ──
+  const barH = new THREE.BoxGeometry(1, .05, .12), barV = new THREE.BoxGeometry(.05, 1, .12), backG = new THREE.BoxGeometry(1, 1, .06);
+  const KINDS = [['bear', '#c68642'], ['rabbit', '#f5f5f4'], ['pig', '#f9a8d4'], ['dog', '#e7c08a'], ['cat', '#fdba74'], ['rabbit', '#f5f5f4'], ['pig', '#f9a8d4'], ['dog', '#e7c08a'], ['bear', '#c68642']];
+  function mkShelf(par, { friends = true, elecs = true, back = true } = {}) {
+    const grp = new THREE.Group(); par.add(grp);
+    const fm = new THREE.MeshStandardMaterial({ color: ORG, roughness: .5, transparent: true });
+    const bm = new THREE.MeshStandardMaterial({ color: '#fff7ed', roughness: .9, transparent: true });
+    const backM = back ? new THREE.Mesh(backG, bm) : null; if (backM) { backM.position.z = -.12; grp.add(backM); }
+    const cells = [];
+    for (let i = 0; i < 9; i++) {
+      const fr = new THREE.Group(), t1 = new THREE.Mesh(barH, fm), b1 = new THREE.Mesh(barH, fm), l1 = new THREE.Mesh(barV, fm), r1 = new THREE.Mesh(barV, fm);
+      fr.add(t1, b1, l1, r1); grp.add(fr);
+      const an = friends ? animal(KINDS[i][0], KINDS[i][1], .42) : null; if (an) grp.add(an);
+      const el = elecs ? critter(.2, ELEC, { squash: 1 }) : null; if (el) grp.add(el);
+      cells.push({ fr, t1, b1, l1, r1, an, el });
+    }
+    const S = {
+      grp, cells, sx: BASE, sy: BASE,
+      pos(i, sx = S.sx, sy = S.sy) { const r = Math.floor(i / 3), c = i % 3; return [(c - 1) * sx, (1 - r) * sy]; },
+      set(sx, sy, { fOp = 1, eOp = 0, frOp = 1, bOp = 1 } = {}) {
+        S.sx = sx; S.sy = sy; fm.opacity = frOp; bm.opacity = bOp;
+        if (backM) { backM.scale.set(3 * sx + .1, 3 * sy + .1, 1); backM.visible = bOp > .01; }
+        cells.forEach((c, i) => {
+          const [x, y] = S.pos(i);
+          c.fr.position.set(x, y, 0); c.fr.scale.set(1, 1, 1); c.fr.visible = frOp > .01;
+          c.t1.position.set(0, sy / 2, 0); c.t1.scale.x = sx; c.b1.position.set(0, -sy / 2, 0); c.b1.scale.x = sx;
+          c.l1.position.set(-sx / 2, 0, 0); c.l1.scale.y = sy; c.r1.position.set(sx / 2, 0, 0); c.r1.scale.y = sy;
+          if (c.an) { c.an.position.set(x, y - .25, 0); c.an.scale.set(1, 1, 1); c.an.visible = fOp > .01; if (c.an.visible) setOpacity(c.an, fOp); }
+          if (c.el) { c.el.position.set(x, y, 0); c.el.visible = eOp > .01; if (c.el.visible) setOpacity(c.el, eOp); }
+        });
+      },
+    };
+    S.set(BASE, BASE); return S;
+  }
+  // ── 안으로 꾹 미는 보라 화살표 둘레 ──
+  function mkArrows(par, n, len, w = .06) {
+    const arr = Array.from({ length: n }, () => { const a = arrow(len, PUR, w); par.add(a); return a; });
+    return {
+      set(cx, cy, R, vis, t, k = 1) {
+        arr.forEach((a, i) => {
+          a.visible = vis; if (!vis) return;
+          const ang = i / n * Math.PI * 2 + Math.PI / n, off = R + len * k + .1 + .06 * Math.sin(t * 6 + i);
+          a.position.set(cx + off * Math.cos(ang), cy + off * Math.sin(ang), .3); a.rotation.z = Math.atan2(-Math.cos(ang), Math.sin(ang)); a.scale.setScalar(k);
+        });
+      },
+    };
+  }
+  // ── 별: 반투명 공 + 테두리 (늙은 해 → 하얀 별 → 검은 구멍) ──
+  const starG = new THREE.SphereGeometry(1, 32, 20), outG = new THREE.TorusGeometry(1, .03, 8, 72);
+  function mkStar(par) {
+    const m = new THREE.MeshStandardMaterial({ color: WARM, emissive: WARM, emissiveIntensity: .5, transparent: true, opacity: .25, depthWrite: false });
+    const s = new THREE.Mesh(starG, m); s.renderOrder = -1;
+    const om = new THREE.MeshBasicMaterial({ color: WARM, transparent: true }), o = new THREE.Mesh(outG, om);
+    par.add(s, o);
+    const cW = new THREE.Color(WARM), cWh = new THREE.Color(WHITE), cH = new THREE.Color(HOLE);
+    return {
+      s, o,
+      set(x, y, R, op, white = 0, dark = 0, fill = .25) {
+        s.visible = o.visible = op > .01; s.position.set(x, y, 0); o.position.set(x, y, 0); s.scale.setScalar(R); o.scale.setScalar(R);
+        m.color.copy(cW).lerp(cWh, white).lerp(cH, dark); m.emissive.copy(m.color); m.emissiveIntensity = (.9 + .3 * white) * (1 - dark);
+        m.opacity = lerp(fill, .97, dark) * op; om.color.copy(m.color); om.opacity = op;
+      },
+    };
+  }
+  const flashM = emat(YEL, 1); flashM.transparent = true;
+  const mkFlash = par => { const f = new THREE.Mesh(new THREE.SphereGeometry(.18, 14, 10), flashM); par.add(f); return f; };
+  const flashAt = (f, t, t0, x, y, z = .3) => { const u = (t - t0) / .4; f.visible = u > 0 && u < 1; if (f.visible) { f.position.set(x, y, z); f.scale.setScalar(.5 + 1.6 * u); flashM.opacity = 1 - u; } };
+
+  // ══ ① 칸칸이 상자, 한 칸에 한 친구 ══
+  const g1 = G[1];
+  g1.add(floor(10, 5, '#fde7c4'));
+  const sh1 = mkShelf(g1, { elecs: false }); sh1.grp.position.y = CY;
+  const bori1 = animal('bear', '#c68642', .9); bori1.position.set(-2.45, 0, .7); bori1.rotation.y = .5; g1.add(bori1);
+  const nabi = animal('cat', '#fbbf24', .42); g1.add(nabi);
+  const fl1 = mkFlash(g1);
+  const l1a = L2('한 칸에 한 친구!', .42, YEL, 0, 3.25, 0, g1), l1b = L2('콩!', .44, YEL, .7, 2.35, .3, g1);
+  const s1 = t => {
+    sh1.set(BASE, BASE);
+    sh1.cells.forEach((c, i) => {
+      const tl = .5 + i * .5, [, y] = sh1.pos(i);
+      if (t < tl - .45) { c.an.visible = false; return; }
+      const k = ease((t - (tl - .45)) / .45);
+      c.an.position.y = lerp(y - .25 + 1.7, y - .25, k) + (t > tl && t < tl + .3 ? .07 * Math.sin((t - tl) / .3 * Math.PI) : 0);
+    });
+    const mid = sh1.cells[4].an; if (t > 7 && t < 7.6) mid.scale.set(1.08, .9, 1);
+    // 나비: 찬 가운데 칸으로 폴짝 → 콩! → 튕겨 나와요
+    nabi.rotation.y = -Math.PI / 2;
+    if (t < 6) nabi.position.set(2.8, 0, .3);
+    else if (t < 7) { const k = (t - 6); nabi.position.set(lerp(2.8, .45, k), lerp(0, CY - .1, k) + 1.0 * Math.sin(Math.PI * k), .3); }
+    else if (t < 7.9) { const k = (t - 7) / .9; nabi.position.set(lerp(.45, 2.5, k), lerp(CY - .1, 0, k) + .6 * Math.sin(Math.PI * k), .3); }
+    else { nabi.position.set(2.5, 0, .3); nabi.rotation.y = -Math.PI / 2 + .35 * Math.sin(t * 9); }
+    flashAt(fl1, t, 7, .3, CY + .15);
+    bori1.userData.armR.rotation.z = -1.2 - .4 * Math.sin(t * 5); waddle(bori1, t, .3);
+    l1a.visible = t > 8.1 && !nm(); l1b.visible = t > 7 && t < 8 && !nm();
+  };
+
+  // ══ ② 양쪽에서 꾹! 그래도 꽉 차면 더는 안 돼요 ══
+  const g2 = G[2];
+  g2.add(floor(10, 5, '#fde7c4'));
+  const sh2 = mkShelf(g2, { elecs: false }); sh2.grp.position.y = CY;
+  const bL = box(.18, 3.0, .5, PINK), bR = box(.18, 3.0, .5, PINK); g2.add(bL, bR);
+  const bori2 = animal('bear', '#c68642', .8), duri2 = animal('rabbit', '#f5f5f4', .8); g2.add(bori2, duri2);
+  const aL = arrow(.7, PUR, .07), aR = arrow(.7, PUR, .07); aL.rotation.z = Math.PI / 2; aR.rotation.z = -Math.PI / 2; g2.add(aL, aR);
+  const l2a = L2('꾹 꾹!', .44, YEL, 0, 3.35, 0, g2), l2b = L2('꽉 찼어요! 더는 안 돼요', .42, YEL, 0, 3.35, 0, g2);
+  const s2 = t => {
+    const sx = lerp(BASE, TIGHT, seg(t, 1.5, 5)), stuck = t > 5 && t < 8.6, sh = stuck ? .035 * Math.abs(Math.sin(t * 22)) : 0;
+    sh2.set(sx, BASE);
+    sh2.cells.forEach((c, i) => { if (t > 4.4 && t < 8.6) c.an.scale.set(1 - .07 * Math.abs(Math.sin(t * 8 + i)), 1, 1); });
+    const bx = 1.5 * sx + .13 - sh;
+    bL.position.set(-bx, CY, 0); bR.position.set(bx, CY, 0);
+    bori2.position.set(-bx - .42, 0, 0); bori2.rotation.y = Math.PI / 2; duri2.position.set(bx + .42, 0, 0); duri2.rotation.y = -Math.PI / 2;
+    for (const a of [bori2, duri2]) { a.userData.armL.rotation.x = a.userData.armR.rotation.x = t > 1 && t < 9 ? -1.35 : 0; }
+    const pv = t > 1 && t < 9;
+    aL.visible = aR.visible = pv; aL.position.set(-bx - 1.1, 3.0, 0); aR.position.set(bx + 1.1, 3.0, 0); aL.scale.setScalar(pulse(t)); aR.scale.setScalar(pulse(t));
+    l2a.visible = t > 1.5 && t < 5 && !nm(); l2b.visible = t > 5.2 && !nm();
+  };
+
+  // ══ ③ 바뀌는 장면: 친구 → 하늘색 전자, 상자 → 늙은 해. 쭈그러들다 꽉 차서 멈춰요 → 하얀 별 ══
+  const g3 = G[3];
+  const fl3floor = floor(10, 5, '#fde7c4'); fl3floor.material.transparent = true; g3.add(fl3floor);
+  const sh3 = mkShelf(g3); sh3.grp.position.y = CY;
+  const bL3 = box(.18, 3.0, .5, PINK), bR3 = box(.18, 3.0, .5, PINK); bL3.material.transparent = bR3.material.transparent = true; g3.add(bL3, bR3);
+  const star3 = mkStar(g3), arr3 = mkArrows(g3, 8, .55), fl3 = mkFlash(g3);
+  const l3a = L2('● 친구 = 하늘색 전자', .38, ELEC, 0, 4.15, 0, g3), l3b = L2('● 주황 칸 = 한 자리', .36, ORG, 0, -.35, .4, g3);
+  const l3c = L2('꾹 쭈그러들어요', .42, YEL, 0, 4.15, 0, g3), l3d = L2('꽉 차서 멈춰요!', .44, YEL, 0, 4.15, 0, g3), l3e = L2('작고 하얀 별!', .44, WHITE, 0, 4.15, 0, g3);
+  const s3 = t => {
+    const kF = seg(t, 1.2, 3.6), kS = seg(t, 4.6, 8), white = seg(t, 8.6, 10.4);
+    bgSet(kF);
+    fl3floor.material.opacity = 1 - kF; fl3floor.visible = kF < .99;
+    let s = lerp(BASE, TIGHT, kS); if (t > 8 && t < 9.4) s -= .012 * Math.abs(Math.sin(t * 25));
+    sh3.set(s, s, { fOp: 1 - kF, eOp: kF, frOp: 1, bOp: 1 - kF });
+    sh3.cells.forEach((c, i) => wobble(c.el, t + i, t > 7.6 && t < 9.4 ? 1.6 : .5));
+    const bop = 1 - seg(t, .6, 2.2), bx = 1.5 * BASE + .13;
+    bL3.material.opacity = bR3.material.opacity = bop; bL3.visible = bR3.visible = bop > .01; bL3.position.set(-bx, CY, 0); bR3.position.set(bx, CY, 0);
+    const R = lerp(2.4, 1.18, kS);
+    star3.set(0, CY, R, seg(t, 2.4, 4), white, 0, lerp(.55, .6, white));
+    arr3.set(0, CY, R, t > 3.8, t, 1 - .5 * white);
+    flashAt(fl3, t, 8, 0, CY, .5);
+    const N = nm();
+    l3a.visible = l3b.visible = t > 1.5 && t < 4.5 && !N; l3c.visible = t > 4.6 && t < 8 && !N; l3d.visible = t > 8.1 && t < 10.4 && !N; l3e.visible = t > 10.5 && !N;
+  };
+
+  // ══ ④ 지구만 한 하얀 별, 속은 꽉 찬 전자. 우리 해도 오랜 뒤에 ══
+  const g4 = G[4], XW = -1.1, XE = 1.1, Y4 = 1.25;
+  const wd4 = mkStar(g4);
+  const in4 = mkShelf(g4, { friends: false, back: false }); in4.grp.position.set(XW, Y4, 0); in4.grp.scale.setScalar(.3);
+  const earth = new THREE.Group(); earth.add(ball(.5, '#3b82f6'));
+  [[.3, .25, .3], [-.2, -.1, .42], [.05, .38, .1]].forEach(([x, y, z]) => { const p = ball(.17, '#22c55e', x, y, z); p.scale.set(1, .7, .6); p.lookAt(0, 0, 0); earth.add(p); });
+  earth.position.set(XE, Y4, 0); g4.add(earth);
+  const sun4 = critter(.45, emat('#fbbf24', .5), { squash: 1 }); sun4.position.set(1.3, Y4 + .1, 0); g4.add(sun4);
+  const ar4 = arrow(.9, YEL, .07); ar4.rotation.z = -Math.PI / 2; g4.add(ar4);
+  const l4a = L2('● 작고 하얀 별', .38, WHITE, XW, 2.25, 0, g4), l4b = L2('● 지구', .38, '#93c5fd', XE, 2.25, 0, g4);
+  const l4c = L2('속은 꽉 찬 전자', .4, ELEC, XW, 2.3, 0, g4), l4d = L2('우리 해도 오랜 뒤에', .4, YEL, 0, 2.75, 0, g4);
+  const s4 = t => {
+    const open = seg(t, 5, 6.2) * (1 - seg(t, 8, 8.6));
+    wd4.set(XW, Y4, .5, 1, 1, 0, lerp(.95, .22, open));
+    in4.set(TIGHT, TIGHT, { fOp: 0, eOp: open, frOp: open, bOp: 0 }); in4.cells.forEach((c, i) => wobble(c.el, t + i, 1));
+    const eOp = 1 - seg(t, 7.8, 8.6); earth.visible = eOp > .01; setOpacity(earth, eOp); earth.rotation.y = t * .6;
+    const sOp = seg(t, 8.4, 9.2); sun4.visible = sOp > .01; setOpacity(sun4, sOp); wobble(sun4, t, .6);
+    ar4.visible = t > 9.2; ar4.position.set(.65, Y4 + .1, .3); ar4.scale.setScalar(pulse(t));
+    const N = nm();
+    l4a.visible = l4b.visible = t > .4 && t < 5 && !N; l4c.visible = t > 5.2 && t < 8 && !N; l4d.visible = t > 9 && !N;
+  };
+
+  // ══ ⑤ 해만 한 무게는 버텨요 / 아주 무거운 별은 못 버텨서 블랙홀로 ══
+  const g5 = G[5], XL5 = -1.35, XR5 = 1.35, Y5 = 1.25, SC = .3;
+  const wdL = mkStar(g5), inL = mkShelf(g5, { friends: false, back: false }); inL.grp.position.set(XL5, Y5, 0); inL.grp.scale.setScalar(SC);
+  const arrL = mkArrows(g5, 6, .32, .045);
+  const stR = mkStar(g5), inR = mkShelf(g5, { friends: false, back: false }); inR.grp.position.set(XR5, Y5, 0);
+  const arrR = mkArrows(g5, 8, .45, .06);
+  const ringR = new THREE.Mesh(new THREE.TorusGeometry(1, .14, 10, 48), new THREE.MeshStandardMaterial({ color: RING, emissive: RING, emissiveIntensity: .9, transparent: true, depthWrite: false })); g5.add(ringR);
+  const l5a = L2('버텨요!', .4, WHITE, XL5, 2.3, 0, g5), l5b = L2('아주 무거운 별', .38, WARM, XR5, 2.45, 0, g5), l5c = L2('못 버텨요!', .42, YEL, XR5, 2.45, 0, g5), l5d = L2('블랙홀이 돼요', .42, RING, XR5, 2.45, 0, g5);
+  const s5 = t => {
+    wdL.set(XL5, Y5, .55, 1, 1, 0, .35);
+    inL.set(TIGHT, TIGHT, { fOp: 0, eOp: 1, frOp: 1, bOp: 0 }); inL.cells.forEach((c, i) => wobble(c.el, t + i, .6));
+    arrL.set(XL5, Y5, .55, true, t, 1);
+    const k1 = seg(t, .8, 4), k3 = seg(t, 5.6, 8.4), shake = t > 4 && t < 5.6 ? .025 * Math.sin(t * 30) : 0;
+    const R = t < 5.6 ? lerp(.95, .55, k1) : lerp(.55, .16, k3);
+    stR.set(XR5 + shake, Y5, R, 1, seg(t, 3, 4.6) * (1 - k3 * 0), seg(t, 6.2, 8.4), .3);
+    const sp = lerp(BASE, TIGHT, k1), pop = seg(t, 5.4, 6.2);
+    inR.grp.position.x = XR5 + shake; inR.grp.scale.setScalar(SC * lerp(1, .15, seg(t, 5.6, 8.2)));
+    inR.set(sp, sp, { fOp: 0, eOp: 1 - seg(t, 7, 8.4), frOp: 1 - pop, bOp: 0 });
+    inR.cells.forEach((c, i) => { wobble(c.el, t + i, t > 4 && t < 5.6 ? 1.8 : .6); c.fr.position.multiplyScalar(1 + .8 * pop); });
+    arrR.set(XR5, Y5, R, t < 9, t, 1 + .6 * seg(t, 4, 5.6));
+    const rk = seg(t, 8.2, 9.2); ringR.visible = rk > .01; ringR.material.opacity = .85 * rk; ringR.position.set(XR5, Y5, 0); ringR.scale.setScalar(.32 + .02 * Math.sin(t * 4));
+    const N = nm();
+    l5a.visible = !N; l5b.visible = t < 5.4 && !N; l5c.visible = t >= 5.4 && t < 8.3 && !N; l5d.visible = t >= 8.3 && !N;
+  };
+
+  const draw = (t, ph) => {
+    G.forEach((q, i) => q.visible = i === ph || (ph === 0 && i === 3));
+    if (ph === 1) { bgSet(0); s1(t); } else if (ph === 2) { bgSet(0); s2(t); } else if (ph === 4) { bgSet(1); s4(t); } else if (ph === 5) { bgSet(1); s5(t); } else s3(t);
+  };
+  const bridgeSpots = [
+    ['🔍 바뀌는 친구', [0, CY, 0], 2.6, '칸 속 친구가 같은 자리에서 하늘색 전자로 바뀌어요', null, { loop: [.8, 4.2], slow: .5 }],
+    ['🔍 멈추는 별', [0, CY, 0], 5.2, '해가 쭈그러들다가 전자가 꽉 차서 멈추고 하얗게 빛나요', null, { loop: [4.4, 10.8], slow: .5 }],
+  ];
+  draw.spots = {
+    1: [['🔍 쏙 들어가는 친구', [0, CY + .3, 0], 3.4, '친구들이 한 칸에 하나씩 쏙쏙 들어가요', null, { loop: [.3, 3.4], slow: .5 }],
+        ['🔍 콩! 찬 칸', [.2, CY, 0], 2.4, '나비가 찬 칸에 들어가려다 콩! 튕겨 나와요', null, { loop: [6, 8.2], slow: .5 }]],
+    2: [['🔍 꽉 찬 칸', [0, CY, 0], 2.5, '칸이 다 차니까 아무리 밀어도 더는 안 들어가요', null, { loop: [4.4, 8.4], slow: .5 }],
+        ['🔍 꾹 미는 판', [-1.4, CY, 0], 3, '보리와 두리가 양쪽에서 꾹 밀어요', null, { loop: [1.2, 5.2], slow: .5 }]],
+    3: bridgeSpots, 0: bridgeSpots,
+    4: [['🔍 하얀 별 속', [XW, Y4 + .3, 0], 2.5, '작고 하얀 별 속에는 하늘색 전자가 칸마다 꽉 차 있어요', null, { loop: [5, 8.2], slow: .5 }],
+        ['🔍 지구와 하얀 별', [0, Y4, 0], 3.6, '하얀 별은 지구만큼 작아요', null, { loop: [.4, 4.6], slow: .5 }]],
+    5: [['🔍 버티는 별', [XL5, Y5 + .3, 0], 2.9, '해만 한 무게는 전자가 꽉 차서 버텨요', null, { loop: [.5, 4.5], slow: .5 }],
+        ['🔍 못 버티는 별', [XR5, Y5 + .3, 0], 3.2, '아주 무거우면 전자도 못 버텨서 계속 쭈그러들어요', null, { loop: [3.6, 9.6], slow: .5 }]],
+  };
+  draw.cam = { 1: [[6.2, 1], [8.8, -1]], 2: [[5.2, 0], [9.4, -1]], 3: [[1.2, 0], [4.3, -1], [8.2, 0], [10.4, -1]], 0: [[1.2, 0], [4.3, -1], [8.2, 0], [10.4, -1]], 4: [[5.2, 0], [8.3, -1]], 5: [[3.8, 1], [10.4, -1]] };
+  return draw;
+};
+
+// ── L10.js ──
+// 양자물리 3권 10. 호킹 복사 — 연못가 쌍둥이 비눗방울 → 같은 자리에서 텅 빈 우주의 노란·보라 쌍둥이 알갱이 → 빨간 고리 옆에서 짝이 갈라져 하나가 빠져나와요
+// 색 짝: 노란 방울 = 노란 빛 알갱이 / 보라 방울 = 보라 알갱이 / 빨간 점선 고리·검은 블랙홀·주황 빛 고리 = 8편과 같은 그림
+LESSONS[9] = {
+  scene: 'q3_hawking', law: '블랙홀도 빛날까', title: '쌍둥이 비눗방울과 블랙홀',
+  cam: [0, 3.0, 6.6], tgt: [0, .5, 0], fit: 1.1, T: 15,
+  story: '지난번엔 전자들이 꽉 차서 별을 버텼지요? 그럼 블랙홀은 정말 아무것도 안 내보낼까요?',
+  watch: [
+    ['보리가 연못가에서 놀아요. 여기저기서 쌍둥이 비눗방울이 퐁! 생겼다가, 톡! 합쳐져 사라져요.', 11, '🔍 「쌍둥이 방울」을 누르면 방울 둘이 생기고 사라지는 모습이 천천히 되풀이돼요'],
+    ['짝꿍 방울을 크게 봐요. 노란 방울과 보라 방울은 언제나 둘이 같이 생기고, 같이 사라져요.', 11, '🔍 「같이 생겨요」를 누르면 둘이 함께 퐁 생기는 순간이 천천히 되풀이돼요'],
+    ['같은 자리에서 바뀌어요! 연못은 텅 빈 우주로, 쌍둥이 방울은 노란·보라 쌍둥이 알갱이로. 텅 빈 우주에서도 짝꿍이 퐁, 톡!', 12, '🔍 「바뀌는 방울」을 누르면 방울이 알갱이로 바뀌는 순간이 천천히 되풀이돼요'],
+    ['지난번 블랙홀의 빨간 고리 바로 옆에서 짝꿍이 생기면? 보라는 안으로 쏙, 노랑은 밖으로 날아가요. 다시는 못 만나요!', 13, '🔍 「갈라지는 짝꿍」을 누르면 짝이 갈라지는 순간이 천천히 되풀이돼요'],
+    ['그래서 블랙홀은 아주아주 조금 빛나요. 아주아주 오래오래 지나면 조금씩 작아져요.', 12, '🔍 「작아지는 블랙홀」을 누르면 블랙홀이 조금씩 작아지는 모습이 되풀이돼요'],
+  ],
+  q: '연못가 쌍둥이 비눗방울은 어떻게 생겼나요?',
+  choices: [['👯', '둘이 같이 생겨요!'], ['🫧', '하나씩 따로 생겨요!'], ['🚫', '아무것도 안 생겨요!']], answer: 0,
+  hint: '노란 방울과 보라 방울을 크게 봤지요? 언제나 둘이 함께 퐁 생겼어요.',
+  q2: '빨간 고리 옆에서 갈라진 노란·보라 알갱이는?',
+  choices2: [['✨', '하나만 빠져나와요!'], ['🕳️', '둘 다 안으로 쏙 들어가요!'], ['🧊', '둘 다 그대로 멈춰요!']], answer2: 0,
+  hint2: '보라 알갱이는 안으로 쏙, 노란 알갱이는 밖으로 날아갔어요.',
+  kid: '짝꿍 하나가 빠져나와서 블랙홀이 아주 조금 빛나요!',
+  name: { term: '호킹 복사', kid: '블랙홀의 아주 작은 빛', what: '블랙홀도 빨간 고리 바로 옆에서 아주아주 조금 빛을 내요. 그래서 아주아주 오래 지나면 조금씩 작아져요.' },
+  habit: '비눗방울 놀이를 할 때는 눈에 들어가지 않게 바람을 등지고 불어요.',
+  adult: {
+    core: '호킹 복사: 양자 효과 때문에 블랙홀이 사건의 지평선 근처에서 아주 약한 빛(열복사)을 내는 현상. 스티븐 호킹이 1974년에 이론으로 밝혔다.',
+    cond: ['"가상 입자 쌍이 생겨 하나는 빠지고 하나는 빠져나온다"는 호킹이 직접 쓴 대중적 비유이며, 실제 계산은 굽은 시공간의 양자장론으로 하고 그림과 다르다.', '블랙홀이 작을수록 더 뜨겁고 밝다. 해 질량 블랙홀은 온도가 약 60 나노켈빈이라 우주 배경 복사(약 2.7 K)보다 훨씬 차가워 아직 관측된 적이 없다.', '빛을 내는 만큼 질량을 잃어 아주 천천히 작아진다(블랙홀 증발).'],
+    life: '텅 빈 공간도 완전히 조용하지 않다(양자 요동). 가까이 놓은 두 금속판이 서로 끌리는 카시미르 효과로 실험실에서도 확인된다.',
+    map: '노란 방울·알갱이 = 빠져나오는 빛(복사), 보라 방울·알갱이 = 안으로 떨어지는 짝, 빨간 점선 고리 = 사건의 지평선',
+    more: '해 질량 블랙홀이 모두 증발하려면 약 10^67년이 걸린다. 우주의 나이(약 138억 년, 10^10년)보다 상상할 수 없을 만큼 길다.',
+  },
+};
+
+SCENES.q3_hawking = (g, ctx) => {
+  const YEL = '#fde047', PUR = '#8b5cf6', SKY = '#93c5fd', RED = '#ef4444', ORANGE = '#fb923c', HOLE = '#111827';
+  const DAY = new THREE.Color(BOOK.sceneBg), SPACE = new THREE.Color('#0b1026'), BGT = new THREE.Color();
+  const nm = () => { try { return mode === 'name'; } catch (e) { return false; } };
+  const hsh = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+  const L2 = (txt, sz, col, x, y, z) => { const l = label(txt, sz * 1.2, col); l.position.set(x, y, z); l.visible = false; g.add(l); return l; };
+
+  // ── 연못가 (생활 장면) ──
+  const pond = new THREE.Group(); g.add(pond);
+  pond.add(box(10, .1, 6.4, '#a7d98b', 0, -.05, 0));
+  pond.add(cyl(2.4, 2.4, .04, '#60a5fa', .3, .02, -.2));
+  for (const [x, z] of [[-1.9, -1.3], [2.5, -1.2], [2.6, .9], [-1.7, 1.1]]) for (let q = 0; q < 3; q++) pond.add(cyl(.025, .03, .7 + .2 * q, '#4d7c0f', x + q * .09, .35 + .1 * q, z + q * .05));
+  const bear = animal('bear', '#c68642', .95); bear.position.set(-2.1, 0, 1.9); bear.rotation.y = .6; pond.add(bear);
+  const wand = new THREE.Group(); wand.add(cyl(.02, .02, .5, '#f472b6', 0, .25, 0), mesh(new THREE.TorusGeometry(.09, .018, 8, 20), '#f472b6', 0, .55, 0));
+  wand.position.set(.1, -.15, .05); bear.userData.armR.add(wand);
+
+  // ── 우주 ──
+  const stars = starField(320, 22); stars.material.transparent = true; g.add(stars);
+  const fy = r => Math.max(-.9, -.35 / Math.max(r, .05));
+  const R = 1.1;
+  const bh = new THREE.Group(); bh.position.y = .5; g.add(bh);
+  const gridM = new THREE.LineBasicMaterial({ color: SKY, transparent: true, opacity: .5 });
+  for (let r = .55; r <= 3.7; r += .45) { const pts = []; for (let a = 0; a <= 64; a++) { const th = a / 64 * Math.PI * 2; pts.push(V(r * Math.cos(th), fy(r), r * Math.sin(th))); } bh.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), gridM)); }
+  for (let k = 0; k < 16; k++) { const th = k / 16 * Math.PI * 2, pts = []; for (let r = .45; r <= 3.7; r += .1) pts.push(V(r * Math.cos(th), fy(r), r * Math.sin(th))); bh.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), gridM)); }
+  const core = new THREE.Group(); core.position.y = -.62; bh.add(core);   // 작아질 때 함께 줄어드는 부분
+  const hole = mesh(new THREE.SphereGeometry(.4, 32, 20), new THREE.MeshBasicMaterial({ color: HOLE }), 0, 0, 0); core.add(hole);
+  const disk = mesh(new THREE.TorusGeometry(.64, .035, 10, 64), new THREE.MeshBasicMaterial({ color: ORANGE }), 0, 0, 0); disk.rotation.x = Math.PI / 2; core.add(disk);
+  const ringY = fy(R) + .04 + .62;
+  const dashM = new THREE.MeshBasicMaterial({ color: RED }), dashG = new THREE.BoxGeometry(.05, .05, .11);
+  for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2, d = new THREE.Mesh(dashG, dashM); d.position.set(R * Math.cos(a), ringY, R * Math.sin(a)); d.rotation.y = -a; core.add(d); }
+  const haloM = new THREE.MeshBasicMaterial({ color: YEL, transparent: true, opacity: 0, depthWrite: false });
+  const halo = mesh(new THREE.TorusGeometry(R + .08, .13, 10, 64), haloM, 0, ringY, 0); halo.rotation.x = Math.PI / 2; core.add(halo);
+  const P = (r, a, s = 1) => V(r * s * Math.cos(a), fy(r * s) + .15, r * s * Math.sin(a));   // bh 안 좌표
+
+  // ── 쌍둥이 방울 / 알갱이 ──
+  const bubM = [tmat(YEL, .55), tmat(PUR, .55)];
+  const parM = [new THREE.MeshBasicMaterial({ color: YEL, transparent: true }), new THREE.MeshBasicMaterial({ color: PUR, transparent: true })];
+  const hlM = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: .8 });
+  const NS = 7;
+  const slots = Array.from({ length: NS }, (_, j) => {
+    const r = j === 0 ? .26 : .18;
+    const mk = i => {
+      const bub = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), bubM[i]);
+      const hl = new THREE.Mesh(new THREE.SphereGeometry(r * .22, 8, 6), hlM); hl.position.set(-r * .4, r * .45, r * .6); bub.add(hl);
+      const par = new THREE.Mesh(new THREE.SphereGeometry(r * .55, 14, 10), parM[i]); g.add(bub, par); return { bub, par };
+    };
+    const flash = new THREE.Mesh(new THREE.SphereGeometry(r * .9, 14, 10), new THREE.MeshBasicMaterial({ color: '#fffbeb', transparent: true, depthWrite: false })); g.add(flash);
+    return { a: mk(0), b: mk(1), flash };
+  });
+  const _d = V();
+  function placePair(s, c, ang, sep, sc, k) {
+    _d.set(Math.cos(ang), .25, Math.sin(ang)).normalize().multiplyScalar(sep);
+    const pa = c.clone().add(_d), pb = c.clone().sub(_d);
+    for (const [o, p] of [[s.a, pa], [s.b, pb]]) {
+      o.bub.position.copy(p); o.par.position.copy(p);
+      o.bub.scale.setScalar(Math.max(.001, sc)); o.par.scale.setScalar(Math.max(.001, sc));
+      o.bub.visible = k < .99 && sc > .01; o.par.visible = k > .01 && sc > .01;
+    }
+  }
+  const hidePair = s => { s.a.bub.visible = s.a.par.visible = s.b.bub.visible = s.b.par.visible = s.flash.visible = false; };
+  function lifePair(s, c, ang, u, k, maxSep, big = 1) {
+    if (u < 0 || u > 1.18) { hidePair(s); return; }
+    if (u <= 1) { placePair(s, c, ang, maxSep * Math.sin(Math.PI * u), big * ease(u / .12), k); s.flash.visible = false; }
+    else { hidePair(s); const f = (u - 1) / .18; s.flash.visible = true; s.flash.position.copy(c); s.flash.scale.setScalar(big * (.6 + 1.6 * f)); s.flash.material.opacity = .85 * (1 - f); }
+  }
+  const cyc = (t, j, n, C, L) => { const tt = t - j * C / n; if (tt < 0) return { u: -1, idx: -1 }; const idx = Math.floor(tt / C); return { u: (tt - idx * C) / L, idx }; };
+  const C0 = V(.3, 1.05, .9);                     // 0번 짝꿍은 늘 같은 자리(돋보기용)
+  function pondLayout(j, idx) {
+    if (j === 0) return { c: C0.clone(), ang: .1 };
+    const n = j * 31 + idx * 7;
+    return { c: V(.3 + (hsh(n) - .5) * 3.8, .55 + hsh(n + 1) * 1.3, -.4 + (hsh(n + 2) - .5) * 2.6), ang: hsh(n + 3) * Math.PI * 2 };
+  }
+  function drawPairs(t, k, C = 3.2, L = 2.4) {
+    bubM.forEach(m => m.opacity = .55 * (1 - k)); hlM.opacity = .8 * (1 - k); parM.forEach(m => m.opacity = k);
+    slots.forEach((s, j) => { const { u, idx } = cyc(t, j, NS, C, L), { c, ang } = pondLayout(j, idx); lifePair(s, c, ang, u, k, j === 0 ? .42 : .3, j === 0 ? 1.25 : 1); });
+    return cyc(t, 0, NS, C, L).u;
+  }
+  const FAR = [V(-3.4, 1.7, -1.4), V(3.4, 1.9, -1.2), V(3.1, .9, 1.6)];   // 블랙홀에서 멀리: 다시 만나 톡
+  function drawFar(t) {
+    bubM.forEach(m => m.opacity = 0); hlM.opacity = 0; parM.forEach(m => m.opacity = 1);
+    slots.forEach((s, j) => { if (j < 1 || j > 3) { hidePair(s); return; } const { u, idx } = cyc(t, j - 1, 3, 3.6, 2.6); lifePair(s, FAR[j - 1], 1.2 + idx, u, 1, .3); });
+  }
+
+  // ── 고리 옆 짝꿍(갈라지는 것) ──
+  const evY = mesh(new THREE.SphereGeometry(.14, 16, 12), emat(YEL, .9)), evP = mesh(new THREE.SphereGeometry(.14, 16, 12), emat(PUR, .7)); bh.add(evY, evP);
+  const evF = mesh(new THREE.SphereGeometry(.16, 14, 10), new THREE.MeshBasicMaterial({ color: '#fffbeb', transparent: true, depthWrite: false })); bh.add(evF);
+  const trail = [0, 1, 2].map(i => { const m = mesh(new THREE.SphereGeometry(.09 - i * .02, 10, 8), new THREE.MeshBasicMaterial({ color: YEL, transparent: true, opacity: .5 - i * .13 })); bh.add(m); return m; });
+  const evC = V(); let evAng = 2.4;
+  const EVENTS = [{ t0: 1.0, a: 2.4 }, { t0: 6.6, a: .5 }];
+  const yR = tt => tt < .5 ? R + .05 : tt < 1.3 ? R + .05 + .3 * ease(seg(tt, .5, 1.3)) : R + .35 + 2.9 * Math.pow(seg(tt, 1.3, 4.2), 1.3);
+  function event(tt, a, s = 1) {   // tt: 짝꿍이 생긴 뒤 시간
+    evAng = a; evC.copy(bh.localToWorld(P(R, a, s)));
+    if (tt < 0 || tt > 4.3) { evY.visible = evP.visible = evF.visible = false; trail.forEach(m => m.visible = false); return false; }
+    const grow = ease(tt / .4);
+    evY.visible = true; evY.position.copy(P(yR(tt), a, s)); evY.scale.setScalar(Math.max(.01, grow * (1 - seg(tt, 3.5, 4.3))));
+    const pr = tt < .5 ? R - .05 : tt < 1.3 ? R - .05 - .3 * ease(seg(tt, .5, 1.3)) : R - .35 - .65 * ease(seg(tt, 1.3, 2.6));
+    evP.visible = tt < 2.7; evP.position.copy(P(pr, a, s)); evP.scale.setScalar(Math.max(.01, grow * (1 - seg(tt, 2.0, 2.7))));
+    evF.visible = tt < .6; evF.position.copy(P(R, a, s)); evF.scale.setScalar(.6 + 2 * tt); evF.material.opacity = .8 * (1 - tt / .6);
+    trail.forEach((m, i) => { m.visible = tt > 1.5 && tt < 4; m.position.copy(P(yR(tt - .16 * (i + 1)), a, s)); });
+    return true;
+  }
+  // 아주 조금 빛나기: 고리에서 여기저기 노란 알갱이가 가끔 빠져나와요
+  const escY = Array.from({ length: 6 }, () => { const m = mesh(new THREE.SphereGeometry(.1, 12, 8), emat(YEL, .9)); bh.add(m); return m; });
+  const escP = Array.from({ length: 6 }, () => { const m = mesh(new THREE.SphereGeometry(.09, 12, 8), emat(PUR, .7)); bh.add(m); return m; });
+  function glow(t, s) {
+    escY.forEach((m, i) => {
+      const { u, idx } = cyc(t, i, 6, 3.0, 2.4), a = hsh(i * 9 + idx * 5) * Math.PI * 2, p = escP[i];
+      m.visible = p.visible = false; if (u < 0 || u > 1) return;
+      m.visible = true; m.position.copy(P(R + .05 + 3.2 * Math.pow(u, 1.3), a, s)); m.scale.setScalar(Math.max(.01, ease(u / .12) * (1 - seg(u, .8, 1))));
+      p.visible = u < .45; p.position.copy(P(R - .05 - .6 * ease(u / .45), a, s)); p.scale.setScalar(Math.max(.01, 1 - seg(u, .3, .45)));
+    });
+  }
+  const hideEsc = () => { escY.forEach(m => m.visible = false); escP.forEach(m => m.visible = false); };
+
+  // 라벨 (한 화면 2개 이하)
+  const lPop = L2('퐁! 생겨요', .4, YEL, 0, 0, 0), lTok = L2('톡! 사라져요', .4, '#c4b5fd', 0, 0, 0);
+  const lTogether = L2('언제나 둘이 같이!', .4, '#fde047', .3, 2.75, .9);
+  const lM1 = L2('● 노란 방울 → 노란 알갱이', .34, YEL, .2, 2.7, 0), lM2 = L2('● 보라 방울 → 보라 알갱이', .34, '#c4b5fd', .2, 2.25, 0);
+  const lEmpty = L2('텅 빈 우주에서도 퐁, 톡!', .38, '#bfdbfe', .2, 2.6, 0);
+  const lRing = L2('● 빨간 고리', .36, '#fca5a5', 0, 1.2, 1.4);
+  const lSplit = L2('짝꿍이 갈라져요', .3, '#fde047', 0, 0, 0), lIn = L2('보라는 안으로 쏙', .28, '#c4b5fd', 0, 0, 0), lOut = L2('노랑은 밖으로!', .28, YEL, 0, 0, 0);
+  const lGlow = L2('아주 조금 빛나요', .4, YEL, 0, 1.9, 0), lLong = L2('아주아주 오래 지나면…', .38, '#bfdbfe', 0, 1.9, 0), lSmall = L2('조금씩 작아져요', .4, '#fde047', 0, 1.9, 0);
+  const allLabels = [lPop, lTok, lTogether, lM1, lM2, lEmpty, lRing, lSplit, lIn, lOut, lGlow, lLong, lSmall];
+  const say = (l, on) => { l.visible = on && !nm(); };
+  const at = (l, v, dx, dy, dz) => l.position.set(v.x + dx, v.y + dy, v.z + dz);
+
+  function world(k, t, showBH) {
+    ctx.bg(BGT.copy(DAY).lerp(SPACE, k));
+    const kr = 1 - k; pond.visible = kr > .01; if (pond.visible) setOpacity(pond, kr);
+    stars.visible = k > .01; stars.material.opacity = k;
+    bh.visible = showBH;
+    bear.userData.armR.rotation.z = -1.1 - .35 * Math.sin(t * 3); waddle(bear, t, .3);
+  }
+  function hideEv() { evY.visible = evP.visible = evF.visible = false; trail.forEach(m => m.visible = false); hideEsc(); }
+
+  function s1(t) {
+    world(0, t, false);
+    const u = drawPairs(t, 0);
+    at(lPop, C0, 0, .75, 0); at(lTok, C0, 0, .75, 0);
+    say(lPop, u >= 0 && u < .35); say(lTok, u > .85 && u < 1.18);
+  }
+  const C2 = V(.3, 1.3, 1.0);
+  function s2(t) {
+    world(0, t, false);
+    drawPairs(t + 1.6, 0); hidePair(slots[0]);
+    const u = cyc(t, 0, 1, 4.5, 3.6).u;
+    lifePair(slots[0], C2, .1, u, 0, .7, 2.0);
+    at(lPop, C2, 0, 1.0, 0); at(lTok, C2, 0, 1.0, 0);
+    say(lPop, u >= 0 && u < .3); say(lTok, u > .85 && u < 1.18); say(lTogether, u >= .3 && u <= .85);
+  }
+  function s3(t) {
+    const k = ease(seg(t, 2, 6)); world(k, t, false);
+    drawPairs(t, k);
+    say(lM1, t > 2.5 && t < 7.6); say(lM2, t > 3.2 && t < 7.6); say(lEmpty, t > 8 && t < 11.8);
+  }
+  function s4(t) {
+    world(1, t, true); core.scale.setScalar(1); haloM.opacity = 0; drawFar(t);
+    let tt = -1, a = EVENTS[0].a;
+    for (const e of EVENTS) if (t >= e.t0 - .01 && t < e.t0 + 4.5) { tt = t - e.t0; a = e.a; }
+    if (tt < 0) a = t > EVENTS[0].t0 ? EVENTS[1].a : EVENTS[0].a;
+    event(tt, a);
+    say(lRing, t < 1); 
+    const w = V(evC.x, evC.y, evC.z), lw = g.worldToLocal(w.clone());
+    at(lSplit, lw, 0, .5, 0); say(lSplit, tt >= .3 && tt < 1.4);
+    if (tt >= 1.4 && tt < 3.6) { const yo = g.worldToLocal(bh.localToWorld(evY.position.clone())); at(lOut, yo, 0, .42, 0); const po = g.worldToLocal(bh.localToWorld(evP.position.clone())); at(lIn, po, .2, -.42, .35); say(lOut, true); say(lIn, tt < 2.8); }
+  }
+  function s5(t) {
+    world(1, t, true); drawFar(t);
+    const s = 1 - .38 * ease(seg(t, 6, 11)); core.scale.setScalar(s);
+    haloM.opacity = .14 + .08 * Math.sin(t * 3);
+    glow(t, s); evC.copy(bh.localToWorld(P(R, .4, s)));
+    say(lGlow, t > 1 && t < 5.5); say(lLong, t > 5.6 && t < 8.4); say(lSmall, t > 8.4 && t < 11.8);
+  }
+  const draw = (t, ph) => {
+    allLabels.forEach(l => l.visible = false); hideEv(); core.scale.setScalar(1); haloM.opacity = 0;
+    if (ph === 1) return s1(t);
+    if (ph === 2) return s2(t);
+    if (ph === 3) return s3(t);
+    if (ph === 4) return s4(t);
+    if (ph === 5) return s5(t);
+    if (t < 8) return s3(t);          // 요약: 방울 → 알갱이로 바뀌기
+    s4(t - 8);                         // 그다음 고리 옆 짝꿍이 갈라져요
+  };
+  const evPt = () => evC.clone();
+  const evYW = () => bh.localToWorld(evY.position.clone());
+  const c0W = () => g.localToWorld(C0.clone()), c2W = () => g.localToWorld(C2.clone());
+  draw.spots = {
+    1: [['🔍 쌍둥이 방울', c0W, 2.4, '노란 방울과 보라 방울이 같이 퐁 생기고, 같이 톡 사라져요', null, { loop: [3.1, 6.0], slow: .5 }]],
+    2: [['🔍 같이 생겨요', c2W, 3.0, '둘은 언제나 같이 생겨요', null, { loop: [4.4, 6.0], slow: .5 }], ['🔍 같이 사라져요', c2W, 3.0, '둘은 다시 만나서 같이 톡 사라져요', null, { loop: [7.4, 9.9], slow: .5 }]],
+    3: [['🔍 바뀌는 방울', c0W, 2.6, '노란·보라 방울이 같은 자리에서 노란·보라 알갱이로 바뀌어요', null, { loop: [3.0, 6.0], slow: .5 }], ['🔍 우주의 짝꿍', c0W, 2.6, '텅 빈 우주에서도 짝꿍이 퐁 생겼다 톡 사라져요', null, { loop: [6.3, 9.0], slow: .5 }]],
+    4: [['🔍 갈라지는 짝꿍', evPt, 3.2, '빨간 고리 옆에서 생긴 짝꿍은 갈라져서 다시 못 만나요', null, { loop: [.8, 3.4], slow: .5 }], ['🔍 날아가는 빛', evYW, 3.8, '노란 알갱이는 밖으로 날아가요. 이게 블랙홀의 아주 작은 빛이에요', null, { loop: [2.2, 5.0], slow: .5 }]],
+    5: [['🔍 빠져나오는 빛', evPt, 3.2, '고리 여기저기서 노란 알갱이가 가끔 빠져나와요', null, { loop: [0, 3.0], slow: .5 }], ['🔍 작아지는 블랙홀', hole, 3.4, '아주아주 오래 지나면 블랙홀이 조금씩 작아져요', null, { loop: [6, 11.6], slow: .5 }]],
+    0: [['🔍 바뀌는 방울', c0W, 2.6, '방울이 같은 자리에서 알갱이로 바뀌어요', null, { loop: [3.0, 6.0], slow: .5 }], ['🔍 갈라지는 짝꿍', evPt, 3.2, '빨간 고리 옆에서는 하나만 빠져나와요', null, { loop: [8.8, 11.4], slow: .5 }]],
+  };
+  draw.cam = { 1: [[3.0, 0], [6.2, -1]], 2: [[.8, 0], [10.2, -1]], 3: [[2.6, 0], [7.2, -1]], 4: [[.8, 0], [3.0, 1], [5.4, -1], [6.4, 0], [8.8, 1], [11.6, -1]], 5: [[1, 0], [4.6, -1], [6.4, 1], [11.6, -1]], 0: [[2.6, 0], [7, -1], [8.8, 1], [13.6, -1]] };
   return draw;
 };
 
