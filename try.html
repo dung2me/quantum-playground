@@ -826,8 +826,8 @@ SCENES.q4_photon = (g, ctx) => {
 };
 
 // ── L02.js ──
-// 양자물리 4권 2. 파동-입자 이중성 (BRIEF11 v2) — 물놀이 통: 물결은 줄무늬 → 구슬은 두 무더기 → 같은 자리에서 구슬이 하늘색 전자로, 하나씩 콕(예측 멈춤) → 모이면 줄무늬 → 물결 줄무늬와 나란히
-// 색 짝: 파란 물결 #60a5fa = 물결 줄무늬(확률 파동) / 하늘색 구슬 #38bdf8 = 하늘색 전자 / 노란 반짝 #fde047
+// 양자물리 4권 2. 파동-입자 이중성 (BRIEF11 v2) — 물놀이 통: 물결은 줄무늬 → 주황 구슬(비교 친구)은 두 무더기 → 하늘색 전자를 하나씩 콕(예측 멈춤) → 모이면 줄무늬 → 물결 줄무늬와 나란히
+// 색 짝: 파란 물결 #60a5fa = 물결 줄무늬(확률 파동) / 하늘색 #38bdf8 = 전자 / 주황 구슬 #f97316 = 보통 물건(비교, 전자와 다른 것이라 다른 색, 바뀌는 장면 없음) / 노란 반짝 #fde047
 // 이 편은 "하나씩 와도 모이면 줄무늬"까지만. 전자 하나가 두 틈을 다 지나는 이야기는 4-3, 불빛이 건드리면 사라지는 이야기는 4-4.
 LESSONS[1] = {
   scene: 'q4_dual', law: '알갱이인데 물결처럼', title: '물놀이 통의 두 틈',
@@ -836,8 +836,8 @@ LESSONS[1] = {
   ask: '구슬처럼 콕? 물결처럼 줄무늬? 전자는 어느 쪽일까?',
   watch: [
     ['물결이 두 틈을 지나면 끝 벽에 줄무늬가 생겨요.', 12, '🔍 「겹치는 물결」을 누르면 두 틈에서 나온 물결이 겹치는 모습이 천천히 되풀이돼요'],
-    ['구슬은 한 틈으로만 쏙! 끝 벽에 두 무더기가 쌓여요.', 10, '🔍 「틈을 지나는 구슬」을 누르면 구슬이 한 틈으로 지나가는 순간이 천천히 되풀이돼요'],
-    ['구슬이 하늘색 전자로 바뀌어요. 하나씩 쏘아 볼까요?', 12, '🔍 「하나씩 콕」을 누르면 전자 하나가 끝 벽에 콕 찍히는 순간이 천천히 되풀이돼요'],
+    ['주황 구슬은 한 틈으로만 쏙! 끝 벽에 두 무더기가 쌓여요.', 10, '🔍 「틈을 지나는 구슬」을 누르면 구슬이 한 틈으로 지나가는 순간이 천천히 되풀이돼요'],
+    ['이번엔 하늘색 전자를 하나씩 쏴요.', 12, '🔍 「하나씩 콕」을 누르면 전자 하나가 끝 벽에 콕 찍히는 순간이 천천히 되풀이돼요'],
     ['하나씩 콕인데, 모이면 물결 줄무늬랑 똑같아요!', 11, '🔍 「똑같은 줄무늬」를 누르면 전자 점 위로 물결 줄무늬가 겹쳐지는 모습이 되풀이돼요'],
   ],
   predict: { scene: 2, at: 7.0, q: '전자가 아주 많이 모이면 벽은?',
@@ -856,13 +856,13 @@ LESSONS[1] = {
     core: '파동-입자 이중성: 전자와 빛은 검출될 때는 한 점씩 알갱이로 나타나지만, 어디에 나타날지의 확률은 파동처럼 간섭 무늬를 따른다.',
     cond: ['전자를 한 번에 하나씩 보내도 쌓이면 무늬가 생긴다. 전자끼리 부딪혀서 생기는 무늬가 아니다(문제 ②의 오답 "서로 부딪혀서"가 이 오개념).', '점 몇 개만으로는 무늬가 보이지 않는다. 무늬는 많이 쌓였을 때의 통계(확률 분포)다(문제 ③).', '틈 간격이 파장과 비슷할 만큼 작아야 무늬가 보인다. 공이나 사람처럼 무거운 것은 파장이 너무 짧아 무늬가 보이지 않는다.', '이 편은 "하나씩 와도 모이면 줄무늬"까지만 다룬다. 전자 하나의 파동이 두 틈을 함께 지나는 이야기(중첩)는 4-3, 어느 틈으로 갔는지 빛으로 확인하면 무늬가 사라지는 이야기(측정)는 4-4로 넘긴다.'],
     life: '전자 현미경은 전자의 아주 짧은 파장 덕분에 빛 현미경보다 훨씬 작은 것(바이러스, 원자 배열)을 볼 수 있다.',
-    map: '파란 물결 = 확률 파동, 칸막이의 두 틈 = 이중 슬릿, 하늘색 구슬·전자 = 전자, 끝 벽의 점 = 전자가 검출된 자리',
+    map: '파란 물결 = 확률 파동, 칸막이의 두 틈 = 이중 슬릿, 주황 구슬 = 보통 물건(비교 대상, 전자가 아님), 하늘색 = 전자, 끝 벽의 점 = 전자가 검출된 자리',
     more: '토머스 영이 1801년 빛으로 두 틈 실험을 했고, 1961년 옌손(Claus Jönsson)이 전자로, 1989년 도노무라 아키라 연구팀이 전자를 한 개씩 보내 점이 쌓여 무늬가 되는 것을 보였다. 드브로이(1924): 물질도 파장 λ = h/p를 가진다. 물결 통은 비유이며 실제 전자 무늬는 훨씬 작다.',
   },
 };
 
 SCENES.q4_dual = (g, ctx) => {
-  const WAVE = '#60a5fa', SKY = '#38bdf8', YEL = '#fde047';
+  const WAVE = '#60a5fa', SKY = '#38bdf8', YEL = '#fde047', ORG = '#f97316';
   const nm = () => typeof mode !== 'undefined' && mode === 'name';
   let sd = 20251109; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
   const gss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-9)) * Math.cos(2 * Math.PI * rnd());
@@ -911,8 +911,8 @@ SCENES.q4_dual = (g, ctx) => {
   // 구슬(장면 2): 한 틈을 골라 곧게, 두 무더기
   const NM = 24, MT = i => .8 + i * .34, MF = .75;
   const mInfo = Array.from({ length: NM }, () => { const s = rnd() < .5 ? 0 : 1, z = clamp(SLIT[s] * 2.1 + gss() * .16, -ZW, ZW); return { s, z, v: .15 + .7 * rnd() }; });
-  const mFly = Array.from({ length: NM }, () => { const b = ball(.09, SKY); b.visible = false; g.add(b); return b; });
-  const mDot = mInfo.map(o => { const d = ball(.065, '#0284c7'); d.position.copy(onScr(o.v, o.z)); d.visible = false; scr.add(d); return d; });
+  const mFly = Array.from({ length: NM }, () => { const b = ball(.09, ORG); b.visible = false; g.add(b); return b; });
+  const mDot = mInfo.map(o => { const d = ball(.065, '#ea580c'); d.position.copy(onScr(o.v, o.z)); d.visible = false; scr.add(d); return d; });
   const pathAt = (start, s, end, u) => u < .5 ? start.clone().lerp(V(0, .25, s), u * 2) : V(0, .25, s).lerp(end, (u - .5) * 2);
   const marblesAt = (t, k = 1) => mInfo.forEach((o, i) => {
     const a = t - MT(i), f = mFly[i]; f.visible = k > .5 && a > 0 && a < MF;
@@ -949,8 +949,8 @@ SCENES.q4_dual = (g, ctx) => {
 
   const LP = scrW(.5, -1.0).add(V(-.3, .2, 0));   // 끝 벽 라벨 자리(확대해도 화면 안)
   const l1a = lab('찰랑!', .48, YEL, -2.6, 1.2, 0), l1b = lab('물결이 겹쳐요', .42, YEL, .9, 1.6, -1.6), l1c = lab('● 끝 벽에 줄무늬!', .4, '#93c5fd', LP.x, LP.y, LP.z);
-  const l2a = lab('구슬은 한 틈으로만', .42, YEL, -.6, 1.4, -1.5), l2b = lab('● 두 무더기!', .42, '#7dd3fc', LP.x, LP.y, LP.z);
-  const l3a = lab('● 하늘색 구슬 → 하늘색 전자', .38, '#7dd3fc', -1.6, 1.6, -1.4), l3b = lab('하나씩 콕!', .46, YEL, LP.x, LP.y, LP.z), l3c = lab('어? 줄무늬!', .46, YEL, LP.x, LP.y, LP.z), l0a = lab('모이니 줄무늬!', .46, YEL, LP.x, LP.y, LP.z);
+  const l2a = lab('구슬은 한 틈으로만', .42, YEL, -.6, 1.4, -1.5), l2b = lab('● 두 무더기!', .42, '#fdba74', LP.x, LP.y, LP.z);
+  const l3a = lab('● 하늘색 전자', .4, '#7dd3fc', -1.9, 1.3, -1.0), l3b = lab('하나씩 콕!', .46, YEL, LP.x, LP.y, LP.z), l3c = lab('어? 줄무늬!', .46, YEL, LP.x, LP.y, LP.z), l0a = lab('모이니 줄무늬!', .46, YEL, LP.x, LP.y, LP.z);
   const l4a = lab('똑같은 줄무늬!', .44, YEL, LP.x, LP.y, LP.z), l4b = lab('● 하늘색 점 = 전자', .38, '#7dd3fc', -1.4, 1.5, 1.6);
   const L = [l1a, l1b, l1c, l2a, l2b, l3a, l3b, l3c, l4a, l4b, l0a];
   // ph 0(문제·이름표 화면 반복): 전자가 하나씩 콕콕 → 빠르게 모여 줄무늬 → 물결 줄무늬가 살짝 겹침
@@ -984,7 +984,7 @@ SCENES.q4_dual = (g, ctx) => {
       const mf = seg(t, .8, 3.0);
       fadeObj(bori, 1 - mf); fadeObj(gun, mf); setBands(0);
       marblesAt(99, 1 - mf);
-      morphBall.visible = t < 3.4; morphBall.position.set(-2.55, .36, 0); setOpacity(morphBall, 1 - mf);
+      morphBall.visible = false;
       eBig.visible = false; eSmall.forEach(b => b.visible = false);
       if (t < 3.4) { eBig.visible = mf > .02; eBig.position.set(-2.55, .36, 0); setOpacity(eBig, mf); wobble(eBig, t, .6); eDot.forEach(d => d.visible = false); haze.material.opacity = 0; flC.visible = false; }
       else { setOpacity(eBig, 1); elecAt(t, ET); }
@@ -999,13 +999,13 @@ SCENES.q4_dual = (g, ctx) => {
   };
   const sw = (v, z) => { const p = scrW(v, z); return [p.x, p.y, p.z]; };
   const bridgeSpots = [
-    ['🔍 바뀌는 구슬', [-2.55, .4, 0], 2.0, '하늘색 구슬이 같은 자리에서 하늘색 전자로 바뀌어요', null, { loop: [.6, 3.4], slow: .5 }],
+    ['🔍 하늘색 전자', [-2.55, .4, 0], 2.0, '쏘개에서 하늘색 전자가 나와요. 구슬과는 다른 친구예요', null, { loop: [.6, 3.4], slow: .5 }],
     ['🔍 하나씩 콕', sw(.5, 0), 3.8, '전자가 하나씩 와서 끝 벽에 콕 찍혀요. 점이 모이면 줄무늬!', null, { loop: [3.7, 6.8], slow: .5 }],
     ['🔍 끝 벽 줄무늬', sw(.5, 0), 4.3, '점이 모여서 줄이 생겼어요'],
   ];
   draw.spots = {
     1: [['🔍 겹치는 물결', [.9, .1, 0], 3.2, '두 틈에서 나온 물결이 겹쳐요. 만나면 커지고 엇갈리면 잔잔', [0, .7], { loop: [3.0, 6.0], slow: .5 }], ['🔍 끝 벽 줄무늬', sw(.5, 0), 4.3, '파란 줄과 하얀 줄이 번갈아 생겼어요']],
-    2: [['🔍 틈을 지나는 구슬', [0, .25, 0], 2.6, '구슬은 한 틈으로만 쏙 지나가요', [0, .8], { loop: [1.6, 3.6], slow: .5 }], ['🔍 두 무더기', sw(.5, 0), 4.3, '구슬은 끝 벽에 두 무더기만 쌓여요']],
+    2: [['🔍 틈을 지나는 구슬', [0, .25, 0], 2.6, '주황 구슬은 한 틈으로만 쏙 지나가요', [0, .8], { loop: [1.6, 3.6], slow: .5 }], ['🔍 두 무더기', sw(.5, 0), 4.3, '구슬은 끝 벽에 두 무더기만 쌓여요']],
     3: bridgeSpots,
     4: [['🔍 똑같은 줄무늬', sw(.5, 0), 4.3, '전자 점 위로 물결 줄무늬가 겹쳐요. 똑같아요!', null, { loop: [3.8, 8.0], slow: .5 }], ['🔍 두 틈', [0, .25, 0], 2.8]],
     0: [['🔍 하나씩 콕', sw(.5, 0), 3.8, '전자가 하나씩 와서 끝 벽에 콕 찍혀요', null, { loop: [.5, 4.8], slow: .5 }], ['🔍 모인 줄무늬', sw(.5, 0), 4.3, '점이 많이 모이니 줄무늬가 생겼어요']],
@@ -1015,61 +1015,61 @@ SCENES.q4_dual = (g, ctx) => {
 };
 
 // ── L03.js ──
-// 양자물리 4권 3. 중첩 (BRIEF11 v2) — 4-2와 같은 물놀이 통·두 틈·하늘색 전자. 빙글 동전 비유는 쓰지 않음.
-//  ① 구슬은 왼쪽이나 오른쪽, 한 틈으로만 → 두 무더기 (지나간 틈 하나만 반짝)
-//  ② 전자 하나를 쏴요 → (예측 멈춤) → 날아가다 하늘색 물결로 퍼져 두 틈을 다 지나요 (두 틈이 함께 반짝), 두 갈래 물결이 겹쳐요
-//  ③ 같은 일 + 벽에 닿는 순간 물결은 사라지고 한 점에 콕 (눈 달린 전자가 그 자리에 통째로 나타났다가 점이 됨 = 쪼개지지 않음)
-//  ④ 하나씩, 또 하나씩 → 콕 점이 모여 줄무늬
-//  색 짝: 하늘색 구슬 #38bdf8 = 하늘색 전자 = 하늘색 물결 / 노란 반짝 #fde047 = 지나간 틈·콕 / 파란 점 = 구슬 자리, 하늘색 점 = 전자 자리
+// 양자물리 4권 3. 중첩 (BRIEF11 v2, "퐁! 물결 하나" 비유, 2026-11-13 사용자 선택) — 4-2와 같은 물놀이 통·두 틈. 동전·구슬은 쓰지 않음.
+//  ① 돌멩이 하나 퐁! 파란 물결 하나가 퍼져 두 틈을 다 지나요
+//  ② 두 틈을 지난 물결이 다시 만나요: 만나면 출렁(노란 공 크게 흔들), 엇갈리면 잔잔 → 끝 벽에 노란 출렁 자리 표시
+//  ③ 이번엔 하늘색 전자 하나를 쏴요 → (예측 멈춤) → 예전 4-3 애니메이션: 전자가 물결처럼 두 갈래로 두 틈을 다 지나고 다시 만나요
+//  ④ 벽에 닿으면 쫙 퍼지지 않고 콕 하나! 하나씩 더 쏘면 콕이 노란 출렁 자리에 모여요
+//  색 짝: 파란 물결 #60a5fa = 물 물결 / 하늘색 #38bdf8 = 전자와 전자의 물결 / 노란 #fde047 = 출렁 큰 곳·콕 반짝
 LESSONS[2] = {
-  scene: 'q4_sup2', law: '날아갈 땐 물결처럼', title: '물놀이 통과 전자 하나',
-  cam: [-1.0, 6.6, 4.6], tgt: [.3, 0, .3], fit: 1.25, T: 10,
-  story: '전자도 하나씩 모이면 줄무늬였지요? 오늘은 그 까닭을 알아봐요.',
+  scene: 'q4_sup3', law: '날아갈 땐 물결처럼', title: '퐁! 물결과 전자 하나',
+  cam: [-1.0, 6.6, 4.6], tgt: [.3, 0, .3], fit: 1.25, T: 12,
+  story: '전자도 모이면 줄무늬였지요? 오늘은 전자 하나를 따라가 봐요.',
   ask: '전자 하나는 어느 틈으로 지나갈까?',
   watch: [
-    ['구슬은 왼쪽이나 오른쪽, 한 틈으로만 지나가요.', 10, '🔍 「한 틈으로 쏙」을 누르면 구슬이 한 틈을 지나는 순간이 천천히 되풀이돼요'],
-    ['이번엔 하늘색 전자 하나를 쏴요.', 10, '🔍 「두 틈 다」를 누르면 전자가 틈을 지나는 순간이 천천히 되풀이돼요'],
-    ['물결처럼 두 틈을 다 지나요. 벽에서는 콕 하나!', 10, '🔍 「콕 하나」를 누르면 전자가 벽에 닿는 순간이 천천히 되풀이돼요'],
-    ['하나씩 하나씩 쏘면, 콕 점이 모여 줄무늬!', 13, '🔍 「모인 줄무늬」를 누르면 점이 모여 줄무늬가 되는 모습이 되풀이돼요'],
+    ['보리가 물놀이 통에 돌멩이 하나를 퐁!', 10, '🔍 「두 틈 다」를 누르면 물결 하나가 두 틈을 지나는 순간이 천천히 되풀이돼요'],
+    ['두 틈을 지난 물결이 다시 만나요. 만나면 출렁, 엇갈리면 잔잔.', 10, '🔍 「출렁 큰 곳」을 누르면 노란 공이 크게 흔들리는 곳을 가까이 봐요'],
+    ['이번엔 퐁 대신 하늘색 전자 하나를 쏴요.', 10, '🔍 「두 틈 다」를 누르면 전자가 두 틈을 지나는 순간이 천천히 되풀이돼요'],
+    ['벽에 닿으면 물결처럼 쫙 퍼지지 않고, 콕 하나!', 14, '🔍 「콕 하나」를 누르면 전자가 벽에 닿는 순간이 천천히 되풀이돼요'],
   ],
   predict: {
-    scene: 1, at: 2.0, answer: -1,
+    scene: 2, at: 2.2, answer: -1,
     q: '전자 하나는 어느 틈으로 갈까?',
     choices: [['⬅️', '한쪽 틈으로만!'], ['↔️', '두 틈 다 지나요!'], ['🧱', '벽에 막혀요!']],
-    after: '물결처럼 퍼져서 두 틈을 다 지났어요!',
+    after: '퐁 물결처럼 두 틈을 다 지났어요!', afterAt: 4.4,
   },
-  q: '전자 하나씩인데 줄무늬가 생긴 건 왜일까?',
-  choices: [['↔️', '두 틈을 다 지나서!'], ['💥', '전자끼리 부딪혀서!'], ['📏', '틈이 아주 넓어서!']], answer: 0, back: 2,
-  hint: '전자는 하나씩 갔어요. 부딪힐 친구가 없었지요? 2번 장면에서 전자 하나가 틈을 어떻게 지나는지 봐요.',
-  q2: '전자 하나가 벽에 닿으면 몇 군데에 콕?',
-  choices2: [['☝️', '한 군데만 콕!'], ['✌️', '두 군데에 콕!'], ['🖐️', '벽 전체에 쫙!']], answer2: 0,
-  hint2: '3번 장면을 떠올려 봐요. 물결처럼 퍼져서 갔지만, 벽에서는 언제나 콕 하나였지요?',
-  kid: '날아갈 땐 물결처럼 두 틈 다! 벽에서는 콕 하나!',
-  name: { term: '중첩', kid: '여러 길이 겹친 모습', what: '전자 하나가 날아갈 때는 왼쪽 길과 오른쪽 길이 겹친 물결처럼 퍼져서 두 틈을 다 지나요. 그래도 벽에 닿을 때는 언제나 한 점에 콕!' },
-  habit: '미끄럼틀은 한 사람씩 차례대로 타요.',
+  q: '전자 하나가 두 틈을 다 지난 걸 어떻게 알까?',
+  choices: [['🌊', '물결처럼 다시 만나서!'], ['✂️', '전자가 둘로 쪼개져서!'], ['📏', '틈이 아주 넓어서!']], answer: 0, back: 3,
+  hint: '3번 장면을 다시 봐요. 두 틈을 지난 물결이 다시 만났지요? 한 틈으로만 갔다면 만날 짝이 없어요.',
+  q2: '출렁 큰 곳과 잔잔한 곳, 콕이 자주 찍히는 곳은?',
+  choices2: [['🌊', '출렁 큰 곳!'], ['💧', '잔잔한 곳!'], ['⚖️', '둘이 똑같이!']], answer2: 0,
+  hint2: '2번 장면에서 노란 공이 크게 출렁인 자리를 떠올려 봐요. 4번 장면에서 콕도 그 노란 자리에 모였어요.',
+  kid: '날아갈 땐 퐁 물결처럼 두 틈 다, 도착할 땐 콕 하나!',
+  name: { term: '중첩', kid: '여러 길이 겹친 모습', what: '전자 하나가 날아가는 동안은 퐁 물결처럼 여러 길에 겹쳐 퍼져 있어요. 벽에 닿으면 한 곳에 콕!' },
+  habit: '방문 두 개를 열고 "야호!" 해 봐요. 소리 하나가 두 문으로 다 들어가요.',
   adult: {
-    core: '중첩: 양자 상태는 여러 가능한 상태(여기서는 왼쪽 틈 경로와 오른쪽 틈 경로)가 더해진 하나의 상태일 수 있고, 두 경로의 확률 진폭이 겹쳐(간섭) 줄무늬를 만든다.',
+    core: '중첩: 전자 하나의 상태는 여러 가능한 상태(왼쪽 틈 경로와 오른쪽 틈 경로)가 더해진 하나의 상태일 수 있고, 두 경로의 확률 진폭이 물결처럼 겹쳐(간섭) 도착 확률을 정한다.',
     cond: [
-      '전자가 반으로 쪼개져 두 틈을 지나는 것이 아니다. 전자 하나의 상태(확률 진폭)가 두 경로에 함께 걸쳐 있다.',
-      '검출(벽에 닿음)은 언제나 한 점, 전자 하나 전체로 나타난다. 어디에 나타날지는 진폭을 제곱한 확률을 따른다.',
-      '줄무늬는 전자끼리 부딪혀서 생기는 것이 아니다. 한 번에 하나씩 보내도 쌓이면 생긴다.',
-      '이 편은 빙글 동전 비유를 쓰지 않는다. 도는 동전은 사실 매 순간 한쪽 면이라 "그냥 몰라서 섞여 보인다"는 오개념을 심기 쉽다.',
-      '어느 틈으로 갔는지 확인하거나 틈 하나를 막으면 줄무늬가 사라진다 → 다음 편(측정)에서 다룬다.',
+      '전자가 반으로 쪼개져 두 틈을 지나는 것이 아니다. 전자 하나의 확률 진폭(물결)이 두 경로에 함께 걸쳐 있다. 영상의 흐린 두 친구는 "두 길에 걸친 물결"을 그린 것이다.',
+      '검출(벽에 닿음)은 언제나 한 점, 전자 하나 전체로 나타난다. 어디에 나타날지는 물결이 크게 출렁이는 곳(진폭 제곱)이 더 잘 된다.',
+      '물결 비유의 한계: 물 물결은 벽에 닿을 때도 넓게 퍼져 있지만, 전자는 도착하는 순간 한 점에만 나타난다(장면 4가 이 차이를 보여 줌).',
+      '빙글 동전 비유는 이 편에서 쓰지 않는다(매 순간 한쪽 면이라 "몰라서 섞여 보인다"는 오개념). 동전은 4권 양자 컴퓨터(큐비트) 편에서만 쓴다.',
+      '어느 틈으로 갔는지 확인하거나 틈 하나를 막으면 겹침이 깨져 출렁 무늬가 사라진다 → 다음 편(측정)에서 다룬다.',
     ],
-    life: '양자 컴퓨터의 큐비트, 원자시계, MRI가 다루는 핵 스핀 상태가 모두 중첩을 쓴다. 일상말 "겹치다"와 달리, 여기서는 상태가 수학적으로 더해진다는 뜻이다.',
-    map: '물놀이 통 = 실험 장치, 칸막이 두 틈 = 이중 슬릿, 눈 달린 하늘색 공 = 전자, 하늘색 물결 = 전자 하나의 확률 파동(파동함수), 노란 반짝 + 하늘색 점 = 전자가 검출된 한 자리',
-    more: '상태 |ψ⟩ = (|왼쪽⟩ + |오른쪽⟩)/√2, 화면 위 확률 ∝ |ψ왼 + ψ오|². 디랙: "각 입자는 자기 자신과만 간섭한다." 1989년 도노무라 아키라 팀이 전자를 한 번에 하나씩 보내 점이 쌓여 무늬가 되는 것을 보였다. 물결 그림은 비유이며 실제 확률 파동은 눈에 보이지 않는다.',
+    life: '집에서: 방문 두 개를 열고 소리를 내면 소리 물결 하나가 두 문을 다 지나 들린다(소리도 물결). 기술: 양자 컴퓨터의 큐비트, 원자시계, MRI가 다루는 핵 스핀 상태가 모두 중첩을 쓴다.',
+    map: '파란 물결 = 물 물결, 하늘색 물결·흐린 두 친구 = 전자의 확률 물결(파동함수), 노란 출렁 자리 = 보강 간섭, 잔잔한 자리 = 상쇄 간섭, 노란 반짝 + 하늘색 점 = 전자가 검출된 한 자리',
+    more: '상태 |ψ⟩ = (|왼쪽⟩ + |오른쪽⟩)/√2, 화면 위 확률 ∝ |ψ왼 + ψ오|². 디랙: "각 입자는 자기 자신과만 간섭한다." 1989년 도노무라 아키라 팀이 전자를 한 번에 하나씩 보내 점이 쌓여 무늬가 되는 것을 보였다. 연못·기타 화음처럼 물결이 더해지는 것을 고전적 중첩이라 하고, 양자 중첩은 그 물결이 "확률의 물결"이라는 점이 다르다.',
   },
 };
 
-SCENES.q4_sup2 = (g, ctx) => {
-  const SKY = '#38bdf8', YEL = '#fde047', MARB = '#0284c7';
+SCENES.q4_sup3 = (g, ctx) => {
+  const SKY = '#38bdf8', YEL = '#fde047', WAVE = '#60a5fa';
   const nm = () => typeof mode !== 'undefined' && mode === 'name';
   let sd = 20261113; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
-  const gss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-9)) * Math.cos(2 * Math.PI * rnd());
   const lab = (txt, sz, col, x, y, z) => { const l = label(txt, sz, col); l.position.set(x, y, z); g.add(l); l.visible = false; return l; };
   const SRC = V(-2.7, .08, 0), SLIT = [-.5, .5], ZW = 1.9;
-  const I = z => Math.cos(Math.PI * z / .55) ** 2 * Math.exp(-((z / 1.7) ** 2));   // 줄무늬 밝기 (4-2와 같음)
+  const I = z => Math.cos(Math.PI * z / .55) ** 2 * Math.exp(-((z / 1.7) ** 2));   // 출렁 세기 (4-2 줄무늬와 같음)
+  const PEAKS = [0, -.55, .55, -1.1, 1.1, -1.65, 1.65];
 
   // 물놀이 통 + 두 틈 칸막이 (4-2와 같은 그림)
   g.add(box(6.6, .06, 4.2, '#bfdbfe', .2, 0, 0));
@@ -1080,158 +1080,170 @@ SCENES.q4_sup2 = (g, ctx) => {
   const onScr = (v, z, d = 0) => V(-.045 - d, .12 + v * .96, z);
   scr.updateMatrixWorld(true);
   const scrW = (v, z, d = 0) => scr.localToWorld(onScr(v, z, d));
-  const bands = []; const NB = 23;
-  for (let i = 0; i < NB; i++) {
-    const z = -ZW + (i + .5) * 2 * ZW / NB, b = box(.012, 1.0, 2 * ZW / NB, new THREE.MeshBasicMaterial({ color: new THREE.Color('#f8fafc').lerp(new THREE.Color('#0ea5e9'), I(z)), transparent: true, opacity: 0, depthWrite: false }));
-    b.position.copy(onScr(.5, z)).add(V(-.01, 0, 0)); scr.add(b); bands.push(b);
-  }
-  const setBands = k => bands.forEach(b => { b.visible = k > .02; b.material.opacity = k; });
+  // 끝 벽의 노란 출렁 자리 (장면 2와 4가 같은 표시)
+  const marks = PEAKS.map(z => { const b = box(.012, 1.0, .16, new THREE.MeshBasicMaterial({ color: YEL, transparent: true, opacity: 0, depthWrite: false })); b.position.copy(onScr(.5, z)).add(V(-.012, 0, 0)); scr.add(b); return b; });
+  const setMarks = k => marks.forEach((b, i) => { b.visible = k > .02; b.material.opacity = k * (.35 + .5 * I(PEAKS[i])); });
 
-  // 틈 반짝 (지나간 틈)
+  // 틈 반짝
   const glowG = new THREE.CircleGeometry(.3, 28);
   const glow = SLIT.map(z => { const m = new THREE.Mesh(glowG, new THREE.MeshBasicMaterial({ color: YEL, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide })); m.rotation.x = -Math.PI / 2; m.position.set(0, .4, z); g.add(m); return m; });
   const setGlow = (s, k) => { glow[s].visible = k > .02; glow[s].material.opacity = .85 * k; glow[s].scale.setScalar(.8 + .4 * k); };
 
-  // 하늘색 물결 반원 (전자 하나의 물결 묶음: 3겹)
-  //  물결은 통 안에서만 보이게 잘라요 (옆벽 z ±2.1, 끝 벽 x 3.2, 퍼지는 물결은 칸막이 앞 x 0까지)
+  // 물결 (통 안에서만 보이게 잘라요)
   ctx.renderer.localClippingEnabled = true;
   const PZ = [new THREE.Plane(V(0, 0, -1), 2.08), new THREE.Plane(V(0, 0, 1), 2.08)];
-  const CLIP_IN = [...PZ, new THREE.Plane(V(-1, 0, 0), 0)], CLIP_OUT = [...PZ, new THREE.Plane(V(-1, 0, 0), 3.2)];
-  const arcG = new THREE.RingGeometry(.95, 1, 64, 1, -Math.PI / 2, Math.PI);
-  const mkArc = clip => { const m = new THREE.Mesh(arcG, new THREE.MeshBasicMaterial({ color: SKY, transparent: true, side: THREE.DoubleSide, depthWrite: false, clippingPlanes: clip })); m.rotation.x = -Math.PI / 2; m.visible = false; g.add(m); return m; };
-  const srcA = [0, 1, 2].map(() => mkArc(CLIP_IN)), slA = [0, 1].map(() => [0, 1, 2].map(() => mkArc(CLIP_OUT)));
+  const CLIP_IN = [...PZ, new THREE.Plane(V(-1, 0, 0), 0), new THREE.Plane(V(1, 0, 0), 3.08)], CLIP_OUT = [...PZ, new THREE.Plane(V(-1, 0, 0), 3.2)];
+  const arcG = new THREE.RingGeometry(.95, 1, 64, 1, -Math.PI / 2, Math.PI), fullG = new THREE.RingGeometry(.94, 1, 72);
+  const mkArc = (clip, col, geo = arcG) => { const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: col, transparent: true, side: THREE.DoubleSide, depthWrite: false, clippingPlanes: clip })); m.rotation.x = -Math.PI / 2; m.visible = false; g.add(m); return m; };
+  const wSrc = [0, 1, 2].map(() => mkArc(CLIP_IN, WAVE, fullG)), wSl = [0, 1].map(() => [0, 1, 2, 3].map(() => mkArc(CLIP_OUT, WAVE)));
+  const srcA = [0, 1, 2].map(() => mkArc(CLIP_IN, SKY)), slA = [0, 1].map(() => [0, 1, 2].map(() => mkArc(CLIP_OUT, SKY)));
 
-  // 보리 + 쏘개 + 전자
+  // 보리 + 돌멩이 + 쏘개 + 전자
   const bori = animal('bear', '#c68642', .9); bori.position.set(-2.95, 0, 1.75); bori.rotation.y = .9; g.add(bori);
+  const D = V(-2.1, .08, 0);
+  const stone = ball(.14, '#94a3b8'); stone.visible = false; g.add(stone);
+  const splash = new THREE.Mesh(new THREE.SphereGeometry(.2, 12, 8), new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, depthWrite: false })); splash.visible = false; g.add(splash);
   const gun = new THREE.Group(); gun.position.set(-3.0, .32, 0); g.add(gun);
   const gb = cyl(.22, .28, .7, '#475569'); gb.rotation.z = -Math.PI / 2; gun.add(gb, cyl(.05, .05, .3, '#475569', 0, -.2, 0));
   const fadeObj = (o, k) => { o.visible = k > .02; if (o.visible) setOpacity(o, k); };
   const elec = critter(.16, SKY); elec.visible = false; g.add(elec);
+  const ghosts = SLIT.map(() => { const c = critter(.17, SKY); c.visible = false; g.add(c); return c; });
+  const meet = ball(.22, emat(YEL, 1)); meet.material.transparent = true; meet.visible = false; g.add(meet);
   const haze = mesh(new THREE.CircleGeometry(.5, 32), new THREE.MeshBasicMaterial({ color: SKY, transparent: true, opacity: 0, depthWrite: false })); haze.rotation.x = -Math.PI / 2; g.add(haze);
   const flC = new THREE.Mesh(new THREE.SphereGeometry(.12, 10, 8), new THREE.MeshBasicMaterial({ color: YEL, transparent: true, depthWrite: false })); flC.visible = false; scr.add(flC);
-  const hitDot = ball(.07, emat(SKY, .5)); hitDot.visible = false; scr.add(hitDot);
+  // 물 위 공(부표) 줄: 출렁 큰 곳은 노랑, 잔잔한 곳은 흰색
+  const FZ = Array.from({ length: 13 }, (_, i) => -1.65 + i * .275);
+  const floats = FZ.map(z => { const b = ball(.085, I(z) > .5 ? YEL : '#ffffff'); b.position.set(2.75, .12, z); b.visible = false; g.add(b); return b; });
 
-  // 전자 하나의 여행: 날아가기 → 물결로 퍼지기 → 두 틈 다 → (벽) 콕
-  const G0 = V(-2.55, .36, 0), G1 = V(-1.55, .3, 0), F1 = 1.6, SP = 1.1;
+  // ── 물 물결 ──
+  const SPW = .95, TS = 1.25, RSW = Math.hypot(D.x, .5), ASW = TS + RSW / SPW;
+  const pongAt = t => {
+    const fall = seg(t, .6, TS);
+    stone.visible = t > .45 && t < TS + .05; stone.position.set(D.x, .08 + 1.5 * (1 - fall * fall), D.z);
+    const sa = t - TS; splash.visible = sa >= 0 && sa < .5; if (splash.visible) { splash.position.copy(D); splash.scale.setScalar(1 + 3 * sa); splash.material.opacity = .9 * (1 - sa / .5); }
+    bori.userData.armR.rotation.z = t > .2 && t < .9 ? -2.0 : -.3;
+    wSrc.forEach((a, j) => { const r = SPW * (t - TS) - .3 * j; a.visible = r > .08 && r < 3.4; if (a.visible) { a.position.copy(D).setY(.08); a.scale.set(r, r, 1); a.material.opacity = .85 * (1 - .22 * j) * clamp((3.4 - r) / .5, 0, 1); } });
+    const gk = clamp(1 - Math.abs(t - ASW - .3) / .7, 0, 1); setGlow(0, gk); setGlow(1, gk);
+    wSl.forEach((arr, s) => arr.forEach((a, j) => { const r = SPW * (t - ASW) - .3 * j; a.visible = r > .05 && j < 3; if (a.visible) { a.position.set(0, .09, SLIT[s]); a.scale.set(r, r, 1); a.material.opacity = .85 * (1 - .22 * j) * clamp((4.2 - r) / .6, 0, 1); } }));
+  };
+  // 계속 오는 물결: 두 틈에서 나온 물결이 겹쳐 출렁/잔잔
+  const meetAt = t => {
+    wSl.forEach((arr, s) => arr.forEach((a, j) => { const r = ((t * SPW + j * 1.05) % 4.2); a.visible = r > .05; if (a.visible) { a.position.set(0, .09, SLIT[s]); a.scale.set(r, r, 1); a.material.opacity = .8 * clamp(r / .4, 0, 1) * clamp((4.2 - r) / .6, 0, 1); } }));
+    const k = seg(t, .3, 1.8);
+    floats.forEach((b, i) => { b.visible = true; b.position.y = .12 + .2 * k * I(FZ[i]) * Math.sin(6 * t); });
+    setMarks(seg(t, 2.5, 4));
+  };
+
+  // ── 전자 하나 (예전 4-3 애니메이션): 날아가기 → 두 갈래 물결로 두 틈 다 → 다시 만나요 ──
+  const G0 = V(-2.55, .36, 0), WALLP = V(-.45, .3, 0), MEET = V(2.0, .3, 0);
+  const ghostTrip = t => {
+    const u = seg(t, .6, 2.9);
+    const ef = t < 2.9 ? 1 : 1 - seg(t, 2.9, 3.2);
+    if (t >= .6 && ef > .02 && t < 3.2) { elec.visible = true; elec.scale.setScalar(1); elec.position.copy(G0).lerp(WALLP, u); elec.position.y += .04 * Math.sin(t * 9); setOpacity(elec, ef); wobble(elec, t, .7); }
+    const s = seg(t, 2.9, 7.3), go = .75 * seg(t, 2.9, 3.2) * (1 - seg(t, 7.3, 7.8));
+    if (t >= 2.9 && t < 7.8) ghosts.forEach((c, i) => {
+      const sz = SLIT[i], slit = V(0, .3, sz);
+      const p = s < .2 ? WALLP.clone().lerp(slit, s / .2) : slit.clone().lerp(MEET, (s - .2) / .8);
+      if (s > .2) p.z += Math.sin(Math.PI * (s - .2) / .8) * sz * .9;
+      c.visible = true; c.position.copy(p); setOpacity(c, go); wobble(c, t + i, .5);
+    });
+    const gk = clamp(1 - Math.abs(t - 3.5) / .6, 0, 1); setGlow(0, gk); setGlow(1, gk);
+    slA.forEach((arr, si) => arr.forEach((r, k) => { const a = t - 3.3 - .8 * k, life = 2.8; r.visible = a >= 0 && a <= life && t < 8; if (r.visible) { const rad = .15 + 1.15 * a; r.position.set(0, .09, SLIT[si]); r.scale.set(rad, rad, 1); r.material.opacity = .8 * (1 - a / life); } }));
+    if (t >= 7.3) {
+      elec.visible = true; elec.scale.setScalar(1); elec.position.copy(MEET); elec.position.y += .04 * Math.sin(t * 3); setOpacity(elec, seg(t, 7.3, 7.7)); wobble(elec, t, .4);
+      const f = (t - 7.3) / .6; meet.visible = f >= 0 && f < 1; if (meet.visible) { meet.position.copy(MEET); meet.scale.setScalar(.6 + 2 * f); meet.material.opacity = 1 - f; }
+    }
+  };
+
+  // ── 벽까지 가는 전자 (장면 4): 물결로 두 틈 다 → 벽에서 콕 하나 ──
+  const G1 = V(-1.55, .3, 0), F1 = 1.6, SP = 1.1;
   const R0 = Math.hypot(G1.x - SRC.x, G1.z - SRC.z), RS = Math.hypot(SRC.x, .5);
-  const AS = F1 + (RS - R0) / SP, AH = AS + 3.15 / SP;          // 틈에 닿는 때, 벽에 닿는 때
-  const HIT = { v: .5, z: 0 };                                 // 가운데: 구슬은 한 번도 못 간 자리
-  const hideTrip = () => { elec.visible = false; haze.material.opacity = 0; srcA.forEach(a => a.visible = false); slA.flat().forEach(a => a.visible = false); setGlow(0, 0); setGlow(1, 0); };
-  const trip = (t, t0, k = 1, o = {}) => {
+  const AS = F1 + (RS - R0) / SP, AH = AS + 3.15 / SP;
+  const hideAll = () => {
+    elec.visible = false; haze.material.opacity = 0; meet.visible = false; flC.visible = false; stone.visible = false; splash.visible = false;
+    [...srcA, ...slA.flat(), ...wSrc, ...wSl.flat(), ...ghosts, ...floats].forEach(a => a.visible = false);
+    setGlow(0, 0); setGlow(1, 0); setMarks(0);
+  };
+  const trip = (t, t0, k = 1) => {
     const a = (t - t0) * k;
-    hideTrip(); if (a < 0) return a;
-    // 눈 달린 전자: 날아가다가 물결로 바뀜
+    if (a < 0) return a;
     const ef = 1 - seg(a, F1, F1 + .45);
     if (ef > .02) { elec.visible = true; elec.position.copy(G0.clone().lerp(G1, clamp(a / F1, 0, 1))); elec.position.y += .04 * Math.sin(a * 9); setOpacity(elec, ef); wobble(elec, a, .8); elec.scale.setScalar(1); }
     const hz = clamp(1 - Math.abs(a - F1 - .1) / .45, 0, 1);
     haze.material.opacity = .45 * hz; haze.position.set(G1.x, .09, 0); haze.scale.setScalar(.5 + 1.2 * clamp((a - F1 + .3) / .9, 0, 1));
-    // 퍼지는 물결 (틈 앞)
     const fin = seg(a, F1, F1 + .35);
-    srcA.forEach((arc, j) => {
-      const r = R0 + SP * (a - F1) - .2 * j; arc.visible = a >= F1 && r > .1 && r < 2.7 && fin > .02;
-      if (arc.visible) { arc.position.set(SRC.x, .08, 0); arc.scale.set(r, r, 1); arc.material.opacity = fin * .9 * (1 - .25 * j) * clamp((2.7 - r) / .3, 0, 1); }
-    });
-    // 두 틈이 함께 반짝
+    srcA.forEach((arc, j) => { const r = R0 + SP * (a - F1) - .2 * j; arc.visible = a >= F1 && r > .1 && r < 2.7 && fin > .02; if (arc.visible) { arc.position.set(SRC.x, .08, 0); arc.scale.set(r, r, 1); arc.material.opacity = fin * .9 * (1 - .25 * j) * clamp((2.7 - r) / .3, 0, 1); } });
     const gk = clamp(1 - Math.abs(a - AS - .35) / .65, 0, 1); setGlow(0, gk); setGlow(1, gk);
-    // 두 틈에서 나온 두 갈래 물결이 겹쳐요
     const out = a < AH ? clamp((AH - a) / .35, 0, 1) : 0;
-    slA.forEach((arr, s) => arr.forEach((arc, j) => {
-      const r = SP * (a - AS) - .2 * j; arc.visible = r > .05 && out > .02;
-      if (arc.visible) { arc.position.set(0, .09, SLIT[s]); arc.scale.set(r, r, 1); arc.material.opacity = .85 * (1 - .25 * j) * out; }
-    }));
+    slA.forEach((arr, s) => arr.forEach((arc, j) => { const r = SP * (a - AS) - .2 * j; arc.visible = r > .05 && out > .02; if (arc.visible) { arc.position.set(0, .09, SLIT[s]); arc.scale.set(r, r, 1); arc.material.opacity = .85 * (1 - .25 * j) * out; } }));
     return a;
   };
-  // 콕: 물결이 사라지고 한 점 (o.whole: 눈 달린 전자가 그 자리에 통째로 나타났다가 점이 돼요)
-  const hitAt = (a, v, z, whole, dot) => {
-    const fa = a - AH; flC.visible = fa >= 0 && fa < .45;
-    if (flC.visible) { flC.position.copy(onScr(v, z)); flC.scale.setScalar(1 + 2.5 * fa); flC.material.opacity = 1 - fa / .45; }
-    if (whole && fa >= 0 && fa < 1.6) {
-      const sh = 1 - seg(fa, 1.1, 1.6); elec.visible = true; setOpacity(elec, 1); elec.scale.setScalar(.35 + .65 * sh);
-      elec.position.copy(scrW(v, z, .14 * sh)); wobble(elec, fa, .5);
-    }
-    if (dot) { dot.visible = fa >= (whole ? 1.5 : .05); dot.position.copy(onScr(v, z)); }
+  // 콕: 물결이 사라지고 한 점 (whole: 눈 달린 전자가 그 자리에 통째로 나타났다가 점이 돼요 = 쪼개지지 않아요)
+  const hitAt = (fa, v, z, whole) => {
+    const f = fa >= 0 && fa < .45; if (f) { flC.visible = true; flC.position.copy(onScr(v, z)); flC.scale.setScalar(1 + 2.5 * fa); flC.material.opacity = 1 - fa / .45; }
+    if (whole && fa >= 0 && fa < 1.6) { const sh = 1 - seg(fa, 1.1, 1.6); elec.visible = true; setOpacity(elec, 1); elec.scale.setScalar(.35 + .65 * sh); elec.position.copy(scrW(v, z, .14 * sh)); wobble(elec, fa, .5); }
+  };
+  // 장면 4의 콕 점들: 첫째(천천히) + 둘(조금 빠르게) + 나머지는 노란 출렁 자리 근처에 톡톡
+  const SHOTS = [{ t0: .4, k: 1, z: .55 }, { t0: 7.6, k: 3, z: 0 }, { t0: 9.7, k: 3, z: -1.1 }];
+  const extra = []; while (extra.length < 9) { const z = (rnd() * 2 - 1) * ZW; if (rnd() < I(z) ** 2) extra.push({ z, v: .2 + .6 * rnd() }); }
+  const dots = [...SHOTS.map(s => ({ z: s.z, v: .5 })), ...extra].map(o => { const d = ball(.06, emat(SKY, .5)); d.position.copy(onScr(o.v, o.z)); d.visible = false; scr.add(d); return { d, ...o }; });
+  const dotT = i => i < SHOTS.length ? SHOTS[i].t0 + AH / SHOTS[i].k + (i === 0 ? 1.5 : .05) : 11.9 + (i - SHOTS.length) * .17;
+  // 문제 화면(ph 0): 장면 3 → 만난 전자가 벽으로 가서 콕
+  const ph0Dot = ball(.06, emat(SKY, .5)); ph0Dot.visible = false; scr.add(ph0Dot);
+  const toWall = t => {
+    const end = scrW(.5, 0, .14);
+    if (t < 9.2) { elec.visible = true; setOpacity(elec, 1); elec.scale.setScalar(1); elec.position.copy(MEET).lerp(end, seg(t, 8.4, 9.2)); wobble(elec, t, .5); return; }
+    hitAt(t - 9.2, .5, 0, true); ph0Dot.visible = t > 10.7; ph0Dot.position.copy(onScr(.5, 0));
   };
 
-  // ① 구슬: 한 틈을 골라 곧게, 두 무더기
-  const NM = 14, MT = i => .8 + i * .6, MF = .8;
-  const mInfo = Array.from({ length: NM }, (_, i) => { const s = i % 2 ? (rnd() < .5 ? 0 : 1) : (i / 2) % 2; const z = clamp(SLIT[s] * 2.1 + gss() * .16, -ZW, ZW); return { s, z, v: .15 + .7 * rnd() }; });
-  const mFly = Array.from({ length: 2 }, () => { const b = ball(.09, SKY); b.visible = false; g.add(b); return b; });
-  const mDot = mInfo.map(o => { const d = ball(.065, MARB); d.position.copy(onScr(o.v, o.z)); d.visible = false; scr.add(d); return d; });
-  const pathAt = (s, end, u) => u < .5 ? V(-2.6, .35, .1).lerp(V(0, .25, SLIT[s]), u * 2) : V(0, .25, SLIT[s]).lerp(end, (u - .5) * 2);
-  const marblesAt = (t, k = 1) => {
-    let fi = 0; const gk = [0, 0];
-    mInfo.forEach((o, i) => {
-      const a = t - MT(i);
-      if (k > .5 && a > 0 && a < MF && fi < 2) { const f = mFly[fi++]; f.visible = true; f.position.copy(pathAt(o.s, scrW(o.v, o.z), a / MF)); gk[o.s] = Math.max(gk[o.s], clamp(1 - Math.abs(a / MF - .5) / .18, 0, 1)); }
-      mDot[i].visible = a >= MF && k > .02; if (mDot[i].visible) { mDot[i].material.transparent = true; mDot[i].material.opacity = k; }
-    });
-    for (let j = fi; j < 2; j++) mFly[j].visible = false;
-    return gk;
-  };
-
-  // ④ 하나씩 쌓이는 전자 점 (줄무늬 확률)
-  const NE = 70, eInfo = [];
-  while (eInfo.length < NE) { const z = (rnd() * 2 - 1) * ZW; if (rnd() < I(z)) eInfo.push({ z, v: .1 + .8 * rnd() }); }
-  const eDot = eInfo.map(o => { const d = ball(.055, emat(SKY, .5)); d.position.copy(onScr(o.v, o.z)); d.visible = false; scr.add(d); return d; });
-  const K4 = 2.6, T4 = i => .4 + i * 2.35, TR = i => 7.6 + (i - 3) * .045;
-
-  const l1a = lab('구슬은 한 틈으로만', .42, YEL, -.6, 1.4, -1.5), l1b = lab('● 두 무더기!', .42, '#7dd3fc', 2.6, 2.0, -1.3);
-  const l2a = lab('전자 하나', .42, YEL, 0, 0, 0), l2b = lab('물결처럼 퍼져요', .42, YEL, -1.5, 1.4, -1.5), l2c = lab('● 두 틈을 다!', .44, '#7dd3fc', .9, 1.6, -1.6);
-  const l3a = lab('날아갈 땐 물결', .42, YEL, -1.2, 1.4, -1.5), l3b = lab('● 벽에서는 콕 하나!', .44, '#7dd3fc', 2.4, 2.0, -1.4);
-  const l4a = lab('하나씩, 또 하나씩', .44, YEL, -.6, 1.5, -1.5), l4b = lab('● 콕 점이 모여 줄무늬!', .42, '#7dd3fc', 2.2, 2.1, -1.4);
-  const LB = [l1a, l1b, l2a, l2b, l2c, l3a, l3b, l4a, l4b];
+  const l1a = lab('퐁!', .6, YEL, -2.1, 1.0, 0), l1b = lab('● 물결 하나가 두 틈 다!', .42, '#93c5fd', 1.0, 1.5, -1.5);
+  const l2a = lab('만나면 출렁!', .44, YEL, 2.2, 1.25, -.2), l2b = lab('엇갈리면 잔잔', .4, '#93c5fd', 1.3, 1.1, 1.45);
+  const l3a = lab('전자 하나', .42, YEL, 0, 0, 0), l3b = lab('● 두 틈 다 지나요!', .44, '#7dd3fc', .9, 1.4, -1.6), l3c = lab('다시 만나요!', .46, YEL, 2.0, 1.1, 0);
+  const l4a = lab('콕 하나!', .5, YEL, 2.4, 1.9, -1.0), l4b = lab('● 출렁 큰 곳에 콕!', .42, '#7dd3fc', 2.2, 2.1, -1.4);
+  const LB = [l1a, l1b, l2a, l2b, l3a, l3b, l3c, l4a, l4b];
 
   const draw = (t, ph) => {
     LB.forEach(l => l.visible = false); const n = nm();
-    bori.userData.armR.rotation.z = -.2; waddle(bori, t, .1);
-    hideTrip(); flC.visible = false; hitDot.visible = false; setBands(0);
-    eDot.forEach(d => d.visible = false); mFly.forEach(b => b.visible = false); mDot.forEach(d => d.visible = false);
-    if (ph === 1) {
-      fadeObj(gun, 0);
-      const gk = marblesAt(t); setGlow(0, gk[0]); setGlow(1, gk[1]);
-      let w = 0; for (let i = 0; i < NM; i++) w = Math.max(w, clamp(1 - Math.abs(t - MT(i) + .05) / .2, 0, 1)); bori.userData.armR.rotation.z = -.3 - 1.0 * w;
-      l1a.visible = !n && t > 1 && t < 6.2; l1b.visible = !n && t > 6.4;
-      return;
-    }
+    bori.userData.armR.rotation.z = -.3; waddle(bori, t, .1);
+    hideAll(); ph0Dot.visible = false; dots.forEach(o => o.d.visible = false);
+    if (ph === 1) { fadeObj(gun, 0); pongAt(t); l1a.visible = !n && t > TS && t < TS + 1.4; l1b.visible = !n && t > ASW + .2; return; }
+    if (ph === 2) { fadeObj(gun, 0); meetAt(t); l2a.visible = !n && t > 1.6; l2b.visible = !n && t > 3.0; return; }
     fadeObj(gun, 1);
-    if (ph === 2) {
-      const a = trip(t, .6);
-      l2a.visible = !n && a > 0 && a < F1; if (l2a.visible) l2a.position.copy(elec.position).add(V(0, .55, 0));
-      l2b.visible = !n && a > F1 + .1 && a < AS; l2c.visible = !n && a > AS - .2 && a < AH + 1.2;
-      return;
-    }
     if (ph === 3 || ph === 0) {
-      const a = trip(t, .6);
-      hitAt(a, HIT.v, HIT.z, true, hitDot);
-      l3a.visible = !n && a > F1 + .1 && a < AH - .2; l3b.visible = !n && a > AH;
+      if (ph === 0 && t >= 8.4) { setMarks(.8); toWall(t); l4a.visible = !n && t > 9.2; return; }
+      ghostTrip(t);
+      l3a.visible = !n && t > .6 && t < 2.9; if (l3a.visible) l3a.position.copy(elec.position).add(V(0, .55, 0));
+      l3b.visible = !n && t > 3.4 && t < 7.3; l3c.visible = !n && t >= 7.3;
       return;
     }
-    // ph 4: 하나씩 세 번 천천히, 그다음 빠르게 많이 → 줄무늬
-    let act = -1; for (let i = 0; i < 3; i++) if (t >= T4(i)) act = i;
-    if (act >= 0) { const a = trip(t, T4(act), K4); hitAt(a, eInfo[act].v, eInfo[act].z, false, null); }
-    for (let i = 0; i < 3; i++) eDot[i].visible = (t - T4(i)) * K4 >= AH;
-    for (let i = 3; i < NE; i++) eDot[i].visible = t >= TR(i);
-    if (t >= TR(3)) hideTrip();
-    setBands(seg(t, 10.8, 12.0) * .55);
-    l4a.visible = !n && t > .4 && t < 7.4; l4b.visible = !n && t > 10.4;
+    // ph 4
+    setMarks(.85);
+    let act = -1; SHOTS.forEach((s, i) => { if (t >= s.t0) act = i; });
+    if (act >= 0) { const S = SHOTS[act], a = trip(t, S.t0, S.k); if (a >= AH) hitAt(a - AH, .5, S.z, act === 0); }
+    dots.forEach((o, i) => { o.d.visible = t >= dotT(i); });
+    l4a.visible = !n && t > SHOTS[0].t0 + AH && t < 9.6; l4b.visible = !n && t > 11.6;
   };
   const sw = (v, z) => { const p = scrW(v, z); return [p.x, p.y, p.z]; };
   const s3 = [
-    ['🔍 퍼지는 전자', [-1.3, .2, 0], 2.8, '눈 달린 전자가 날아가다가 하늘색 물결처럼 퍼져요', [0, .8], { loop: [1.7, 3.9], slow: .5 }],
-    ['🔍 콕 하나', sw(HIT.v, HIT.z), 3.0, '벽에 닿으면 물결은 사라지고 전자 하나가 한 점에 콕!', null, { loop: [6.0, 8.6], slow: .5 }],
+    ['🔍 두 틈 다', [0, .3, 0], 2.8, '전자 하나가 물결처럼 두 갈래로 두 틈을 다 지나요', [0, .8], { loop: [2.7, 5.6], slow: .5 }],
+    ['🔍 다시 만나는 곳', [MEET.x, MEET.y, 0], 2.4, '두 틈을 지난 물결이 다시 하나로 만나요', [0, .8], { loop: [5.6, 8.6], slow: .5 }],
   ];
   draw.spots = {
-    1: [['🔍 한 틈으로 쏙', [0, .25, 0], 2.6, '구슬은 한 틈으로만 쏙 지나가요. 지나간 틈 하나만 반짝!', [0, .8], { loop: [1.4, 3.8], slow: .5 }], ['🔍 두 무더기', sw(.5, 0), 4.3, '구슬은 끝 벽에 두 무더기만 쌓여요']],
-    2: [['🔍 두 틈 다', [0, .2, 0], 3.0, '물결처럼 퍼진 전자 하나가 두 틈을 다 지나요. 두 틈이 함께 반짝!', [0, .75], { loop: [2.6, 5.6], slow: .5 }], ['🔍 겹치는 물결', [1.5, .1, 0], 3.2, '두 틈에서 나온 두 갈래 물결이 겹쳐요']],
-    3: s3, 0: s3,
-    4: [['🔍 모인 줄무늬', sw(.5, 0), 4.3, '전자 점이 하나씩 모여서 줄무늬가 됐어요', null, { loop: [7.4, 12.8], slow: .5 }], ['🔍 두 틈', [0, .25, 0], 2.8]],
+    1: [['🔍 퐁! 물결', [D.x, .1, 0], 3.0, '돌멩이 하나가 퐁! 동그란 물결이 퍼져요', [0, .8], { loop: [.5, 3.0], slow: .5 }],
+        ['🔍 두 틈 다', [0, .2, 0], 3.0, '물결 하나가 두 틈을 다 지나요. 두 틈이 함께 반짝!', [0, .75], { loop: [3.4, 6.2], slow: .5 }]],
+    2: [['🔍 출렁 큰 곳', [2.75, .15, 0], 2.4, '물결이 만나면 출렁! 노란 공이 크게 흔들려요', [0, .9], { loop: [2.0, 6.0], slow: .5 }],
+        ['🔍 잔잔한 곳', [2.75, .15, .275], 2.0, '엇갈리면 잔잔! 흰 공은 거의 안 흔들려요', [0, .9]]],
+    3: s3,
+    4: [['🔍 콕 하나', sw(.5, .55), 3.0, '벽에 닿으면 쫙 퍼지지 않고 한 점에 콕!', null, { loop: [5.4, 8.2], slow: .5 }],
+        ['🔍 모인 콕', sw(.5, 0), 4.3, '콕이 노란 출렁 자리에 모여요']],
+    0: [...s3, ['🔍 콕 하나', sw(.5, 0), 3.0, '만난 전자가 벽에 닿으면 한 점에 콕!', null, { loop: [8.6, 11.0], slow: .5 }]],
   };
   draw.cam = {
-    1: [[1.4, 0], [4.2, -1], [6.6, 1], [9.2, -1]],
-    2: [[2.4, 0], [5.6, -1]],
-    3: [[1.8, 0], [4.2, -1], [6.4, 1], [9.4, -1]],
-    0: [[1.8, 0], [4.2, -1], [6.4, 1], [9.4, -1]],
-    4: [[8.2, 0]],
+    1: [[.5, 0], [2.6, -1], [3.6, 1], [6.6, -1]],
+    2: [[2.4, 0], [6.4, -1]],
+    3: [[3.0, 0], [5.8, 1], [8.8, -1]],
+    4: [[5.4, 0], [8.3, -1], [12.4, 1]],
+    0: [[3.0, 0], [5.8, 1], [8.6, 2], [11.4, -1]],
   };
   return draw;
 };
